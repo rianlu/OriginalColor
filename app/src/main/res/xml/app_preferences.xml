@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:icon="@drawable/ic_info"
+        app:key="version"
+        app:summary="1.0"
+        app:title="版本" />
+
+    <SwitchPreferenceCompat
+        app:icon="@drawable/ic_vibration"
+        app:key="vibration"
+        app:title="震动"
+        app:persistent="true"/>
+
+    <Preference
+        app:icon="@drawable/ic_coffee"
+        app:key="donate"
+        app:title="喝咖啡~" />
+
+    <Preference
+        app:key="share"
+        app:icon="@drawable/ic_share"
+        app:title="分享APP"
+        app:enabled="false"/>
+
+    <PreferenceCategory app:title="版权">
+        <Preference
+            app:key="author"
+            app:summary="@string/color_data_copyright" />
+    </PreferenceCategory>
+</PreferenceScreen>

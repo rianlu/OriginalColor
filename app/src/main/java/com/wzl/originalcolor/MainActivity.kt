@@ -1,24 +1,25 @@
 package com.wzl.originalcolor
 
-import android.app.UiModeManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.Preference
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.chip.Chip
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
 import com.wzl.originalcolor.utils.ColorItemDecoration
 import com.wzl.originalcolor.utils.OriginalColorUtils
 import com.wzl.originalcolor.utils.PxUtils
+import com.wzl.originalcolor.utils.VibratorUtils
 
 
-class MainActivity : BaseActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: ColorAdapter
@@ -30,6 +31,7 @@ class MainActivity : BaseActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initVibration()
         colorList = OriginalColorUtils.getAllColors(this)
         adapter = ColorAdapter()
         adapter.setItemAnimation(BaseQuickAdapter.AnimationType.AlphaIn)
@@ -76,7 +78,7 @@ class MainActivity : BaseActivity() {
         binding.colorSearchView.let { searchView ->
             searchView.editText.setOnEditorActionListener { v, actionId, event ->
                 val searchText = searchView.text.toString()
-                if (!searchText.isEmpty()) {
+                if (searchText.isNotEmpty()) {
                     updateColorList(searchColorByKeyword(searchText))
                 }
                 searchView.hide()
@@ -89,18 +91,19 @@ class MainActivity : BaseActivity() {
         }
 
         binding.topAppBar.setNavigationOnClickListener {
+            VibratorUtils.vibrate(this)
             binding.recyclerView.apply {
                 (layoutManager as GridLayoutManager).scrollToPositionWithOffset(OriginalColorUtils.getRandomIndex(this@MainActivity), PxUtils.dp2px(context, 16))
             }
         }
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.info -> {
-                    MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.menu_info)
-                        .setMessage(R.string.color_data_copyright)
-//                        .setView(R.layout.dialog_app_info)
-                        .show()
+                R.id.settings -> {
+//                    MaterialAlertDialogBuilder(this)
+//                        .setTitle(R.string.menu_info)
+//                        .setMessage(R.string.color_data_copyright)
+//                        .show()
+                    startActivity(Intent(this, SettingsActivity::class.java))
                     true
                 }
                 else -> false
@@ -128,6 +131,11 @@ class MainActivity : BaseActivity() {
 
     private fun updateColorList(list: List<OriginalColor>) {
         adapter.submitList(list)
+    }
+
+    private fun initVibration() {
+        val sp = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        VibratorUtils.updateVibration(sp.getBoolean("vibration", true))
     }
 }
 

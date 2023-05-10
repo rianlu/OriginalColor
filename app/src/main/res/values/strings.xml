@@ -19,10 +19,13 @@
     
     <string name="copied_to_clipboard">已复制到剪切板</string>
     <string name="menu_info">关于</string>
+    <string name="menu_settings">设置</string>
     <string name="menu_favorite_list">喜欢列表</string>
     <string name="quick_filter">快速筛选</string>
-    <string name="color_data_copyright">Copyright © 2013 by Perchouli Shanzhai to Nipponcolors \n 参看: 色谱 中科院科技情报编委会名词室.科学出版社,1957. Adobe RGB / CMYK FOGRA39, Dot Gain 15% Screenshot沪ICP备17025116号-2</string>
-    <string name="author_info">作者：禄眠</string>
+<!--    <string name="color_data_copyright">Copyright © 2013 by Perchouli Shanzhai to Nipponcolors \n 参看: 色谱 中科院科技情报编委会名词室.科学出版社,1957. Adobe RGB / CMYK FOGRA39, Dot Gain 15% Screenshot沪ICP备17025116号-2</string>-->
+    <string name="color_data_copyright"><p>Copyright © 2013 by <a href="http://dmyz.org/">Perchouli</a> Shanzhai to <a href="http://nipponcolors.com/">Nipponcolors</a><br />
+    参看: 色谱 中科院科技情报编委会名词室.科学出版社,1957. Adobe RGB / CMYK FOGRA39, Dot Gain 15% <img src="http://zhongguose.com/img/share.jpg" width="1" alt="Screenshot" /><a href="https://beian.miit.gov.cn/">沪ICP备17025116号-2</a></p></string>
+    <string name="author_info">禄眠</string>
 
     <string name="greet_morning">早上好</string>
     <string name="greet_afternoon">下午好</string>
@@ -30,4 +33,11 @@
     <string name="greet_deep_night">深夜了，早点休息~</string>
     <string name="btn_close">关闭</string>
     <string name="btn_next">换一个</string>
+    <string name="btn_back">返回</string>
+
+    <string name="share_app">一款配色APP——轻量简洁的配色工具：</string>
+    <string name="share_to">分享到</string>
+    <string name="donate_first_hint">作者很懒的~</string>
+    <string name="donate_second_hint">这样你还要继续点？</string>
+    <string name="donate_third_hint">(￣▽￣)～■干杯□～(￣▽￣)</string>
 </resources>

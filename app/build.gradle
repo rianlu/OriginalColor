@@ -48,4 +48,7 @@ dependencies {
     implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper:4.0.0-beta06"
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.github.Dimezis:BlurView:version-2.0.3'
+
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
 }
