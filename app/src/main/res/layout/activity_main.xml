@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/app_name"
+            app:menu="@menu/app_bar_menu"
+            app:navigationIcon="@drawable/ic_smile" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:spanCount="3"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+<!--    <com.google.android.material.search.SearchBar-->
+<!--        android:id="@+id/colorSearchBar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center|bottom"-->
+<!--        android:layout_marginBottom="24dp"-->
+<!--        android:hint="@string/search_bar_hint" />-->
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        app:srcCompat="@drawable/ic_search" />
+
+    <com.google.android.material.search.SearchView
+        android:id="@+id/colorSearchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/fabSearch">
+
+        <include
+            android:id="@+id/searchInnerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/layout_inner_search_view" />
+    </com.google.android.material.search.SearchView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

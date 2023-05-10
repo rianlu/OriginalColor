@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/bottomSheetLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <eightbitlab.com.blurview.BlurView
+            android:id="@+id/blurView"
+            style="@style/BlurViewStyle"
+            android:paddingTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                    android:id="@+id/drag_handle"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/colorName"
+                    style="@style/ColorNameText"
+                    android:textAppearance="?attr/textAppearanceHeadline4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/text_color_name"
+                    android:letterSpacing="0.1"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_share"
+                    app:layout_constraintBottom_toBottomOf="@+id/colorName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/colorName" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/colorCardView"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="24dp"
+                    app:cardCornerRadius="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/colorName"
+                    app:strokeWidth="0dp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/colorCardView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/colorCardView">
+
+                    <TextView
+                        android:id="@+id/colorHEX"
+                        style="@style/ColorInfoText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_color_hex"
+                        app:layout_constraintBottom_toTopOf="@+id/colorRGB"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/colorRGB"
+                        style="@style/ColorInfoText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_color_rgb"
+                        app:layout_constraintBottom_toTopOf="@+id/colorCMYK"
+                        app:layout_constraintEnd_toEndOf="@+id/colorHEX"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="@+id/colorHEX"
+                        app:layout_constraintTop_toBottomOf="@+id/colorHEX" />
+
+                    <TextView
+                        android:id="@+id/colorCMYK"
+                        style="@style/ColorInfoText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_color_cmyk"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/colorRGB"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/colorRGB" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.6" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </eightbitlab.com.blurview.BlurView>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

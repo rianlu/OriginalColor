@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.OriginalColor" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="chipStyle">@style/Widget.Material3.Chip.Filter</item>
+    </style>
+    <style name="ColorNameText">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="ColorInfoText">
+        <item name="drawableEndCompat">@drawable/ic_copy</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:padding">8dp</item>
+    </style>
+</resources>
