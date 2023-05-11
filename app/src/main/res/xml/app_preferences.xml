@@ -17,7 +17,7 @@
     <Preference
         app:icon="@drawable/ic_coffee"
         app:key="donate"
-        app:title="喝咖啡~" />
+        app:title="请作者喝咖啡~" />
 
     <Preference
         app:key="share"

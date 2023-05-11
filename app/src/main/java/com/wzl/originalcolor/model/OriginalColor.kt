@@ -1,4 +1,4 @@
-package com.wzl.originalcolor
+package com.wzl.originalcolor.model
 
 import com.google.gson.annotations.SerializedName
 

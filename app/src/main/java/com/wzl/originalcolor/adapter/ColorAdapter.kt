@@ -1,16 +1,14 @@
 package com.wzl.originalcolor.adapter
 
-import android.app.UiModeManager
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import com.chad.library.adapter.base.BaseDifferAdapter
 import com.chad.library.adapter.base.viewholder.QuickViewHolder
 import com.google.android.material.card.MaterialCardView
-import com.wzl.originalcolor.OriginalColor
+import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.R
 import com.wzl.originalcolor.utils.InnerColorUtils
 

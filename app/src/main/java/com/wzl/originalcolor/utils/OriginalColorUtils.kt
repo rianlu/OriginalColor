@@ -3,7 +3,7 @@ package com.wzl.originalcolor.utils
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.wzl.originalcolor.OriginalColor
+import com.wzl.originalcolor.model.OriginalColor
 import org.json.JSONException
 import java.io.BufferedReader
 import java.io.IOException

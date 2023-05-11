@@ -6,17 +6,18 @@ import android.content.pm.ActivityInfo
 import android.content.res.Resources
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.Preference
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.chip.Chip
 import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
+import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorItemDecoration
 import com.wzl.originalcolor.utils.OriginalColorUtils
 import com.wzl.originalcolor.utils.PxUtils
 import com.wzl.originalcolor.utils.VibratorUtils
+import kotlin.random.Random
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,7 +28,11 @@ class MainActivity : AppCompatActivity() {
     private var gridCount: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            super.onCreate(savedInstanceState)
+        } else {
+            super.onCreate(null)
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -93,7 +98,9 @@ class MainActivity : AppCompatActivity() {
         binding.topAppBar.setNavigationOnClickListener {
             VibratorUtils.vibrate(this)
             binding.recyclerView.apply {
-                (layoutManager as GridLayoutManager).scrollToPositionWithOffset(OriginalColorUtils.getRandomIndex(this@MainActivity), PxUtils.dp2px(context, 16))
+                (layoutManager as GridLayoutManager).scrollToPositionWithOffset(
+                    Random.nextInt(0, this@MainActivity.adapter.itemCount - 1), PxUtils.dp2px(context, 16)
+                )
             }
         }
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->

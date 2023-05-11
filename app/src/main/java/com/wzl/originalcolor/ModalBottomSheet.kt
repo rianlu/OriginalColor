@@ -2,31 +2,27 @@ package com.wzl.originalcolor
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lihang.ShadowLayout
 import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
+import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.BitmapUtils
 import com.wzl.originalcolor.utils.BlurViewUtils
 import com.wzl.originalcolor.utils.InnerColorUtils
 import com.wzl.originalcolor.utils.PxUtils
-
 
 /**
  * @Author lu
@@ -37,6 +33,10 @@ import com.wzl.originalcolor.utils.PxUtils
 class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDialogFragment() {
 
     private lateinit var binding: ModalBottomSheetContentBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(null)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -116,6 +116,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             shareIntent.type = "image/*"
             shareIntent = Intent.createChooser(shareIntent, "Original Color")
             startActivity(shareIntent)
+            dismiss()
         }
     }
 
@@ -141,7 +142,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         const val TAG = "ModalBottomSheet"
     }
 
-    fun IntArray.arrayToString(): String {
+    private fun IntArray.arrayToString(): String {
         val builder = StringBuilder()
         this.forEachIndexed { index, i ->
             builder.append(i)
