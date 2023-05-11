@@ -34,16 +34,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="@string/text_color_name"
-                    android:letterSpacing="0.1"
+                    android:letterSpacing="0.05"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
+                    android:id="@+id/shareColor"
                     style="?attr/materialIconButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/ic_share"
+                    android:contentDescription="@string/btn_share"
                     app:layout_constraintBottom_toBottomOf="@+id/colorName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/colorName" />

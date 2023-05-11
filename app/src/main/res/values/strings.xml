@@ -11,7 +11,7 @@
     <string name="chip_blue">蓝</string>
     <string name="chip_purple">紫</string>
     <string name="chip_other">其他</string>
-    <string name="search_bar_hint">搜索颜色…</string>
+    <string name="fab_search_hint">搜索颜色</string>
     <string name="text_color_name">COLOR NAME</string>
     <string name="text_color_hex">COLOR HEX</string>
     <string name="text_color_rgb">COLOR RGB</string>
@@ -34,6 +34,8 @@
     <string name="btn_close">关闭</string>
     <string name="btn_next">换一个</string>
     <string name="btn_back">返回</string>
+    <string name="btn_share">分享</string>
+    <string name="card_color_description">卡片颜色</string>
 
     <string name="share_app">一款配色APP——轻量简洁的配色工具：</string>
     <string name="share_to">分享到</string>

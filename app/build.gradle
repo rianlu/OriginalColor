@@ -51,4 +51,5 @@ dependencies {
 
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    implementation 'com.github.lihangleo2:ShadowLayout:3.3.3'
 }

@@ -1,24 +1,31 @@
 package com.wzl.originalcolor
 
-import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewOutlineProvider
-import android.widget.FrameLayout
-import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.lihang.ShadowLayout
 import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
+import com.wzl.originalcolor.utils.BitmapUtils
 import com.wzl.originalcolor.utils.BlurViewUtils
 import com.wzl.originalcolor.utils.InnerColorUtils
+import com.wzl.originalcolor.utils.PxUtils
 
 
 /**
@@ -44,7 +51,8 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         BlurViewUtils.initBlurView(
             requireActivity(),
             binding.blurView,
-            Color.parseColor(builder.toString()))
+            Color.parseColor(builder.toString())
+        )
         return binding.root
     }
 
@@ -73,7 +81,42 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             setOnClickListener { copyToClipboardAndToast(cmykString, clipboardManager) }
         }
 
-
+        binding.shareColor.setOnClickListener {
+            val shareView = layoutInflater.inflate(R.layout.layout_share_color_card, null, false)
+            shareView.findViewById<TextView>(R.id.colorName).text = originalColor.NAME
+            shareView.findViewById<TextView>(R.id.colorHEX).text = originalColor.HEX
+            shareView.findViewById<TextView>(R.id.colorRGB).text = originalColor.RGB.arrayToString()
+            shareView.findViewById<TextView>(R.id.colorCMYK).text =
+                originalColor.CMYK.arrayToString()
+            shareView.findViewById<ShadowLayout>(R.id.colorShadowView).apply {
+                val builder = StringBuilder(originalColor.HEX)
+                builder.insert(1, "80")
+                setShadowColor(Color.parseColor(builder.toString()))
+            }
+            shareView.findViewById<View>(R.id.colorDisplayView).setBackgroundColor(Color.parseColor(originalColor.HEX))
+            val brighterColor = InnerColorUtils.getBrighterColor(Color.parseColor(originalColor.HEX))
+            shareView.findViewById<ConstraintLayout>(R.id.shareCardView)
+                .setBackgroundColor(brighterColor)
+            val bitmap = BitmapUtils.viewToBitmap(
+                shareView,
+                PxUtils.dp2px(requireContext(), 400),
+                PxUtils.dp2px(requireContext(), 300)
+            )
+            val imgUri = Uri.parse(
+                MediaStore.Images.Media.insertImage(
+                    requireContext().contentResolver,
+                    bitmap,
+                    originalColor.NAME,
+                    null
+                )
+            )
+            var shareIntent = Intent()
+            shareIntent.action = Intent.ACTION_SEND
+            shareIntent.putExtra(Intent.EXTRA_STREAM, imgUri)
+            shareIntent.type = "image/*"
+            shareIntent = Intent.createChooser(shareIntent, "Original Color")
+            startActivity(shareIntent)
+        }
     }
 
     override fun onStart() {

@@ -43,7 +43,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_search" />
+        app:srcCompat="@drawable/ic_search"
+        android:contentDescription="@string/fab_search_hint" />
 
     <com.google.android.material.search.SearchView
         android:id="@+id/colorSearchView"
