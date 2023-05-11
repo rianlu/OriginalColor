@@ -9,6 +9,7 @@ import android.os.VibratorManager
 import android.util.Log
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wzl.originalcolor.utils.VibratorUtils
 
 
@@ -31,8 +32,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
             when (donateClickTime) {
                 1 -> donatePreference.setTitle(R.string.donate_first_hint)
                 2 -> donatePreference.setTitle(R.string.donate_second_hint)
-                3 -> {
-                    donatePreference.setTitle(R.string.donate_third_hint)
+                3 -> donatePreference.setTitle(R.string.donate_third_hint)
+                4 -> {
+                    donatePreference.setTitle(R.string.donate_last_hint)
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setView(R.layout.layout_donate)
+                        .show()
                 }
                 else -> {}
             }

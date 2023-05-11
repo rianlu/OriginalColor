@@ -41,5 +41,6 @@
     <string name="share_to">分享到</string>
     <string name="donate_first_hint">作者很懒的~</string>
     <string name="donate_second_hint">这样你还要继续点？</string>
-    <string name="donate_third_hint">(￣▽￣)～■干杯□～(￣▽￣)</string>
+    <string name="donate_third_hint">那我可就不客气了~</string>
+    <string name="donate_last_hint">(￣▽￣)～■干杯□～(￣▽￣)</string>
 </resources>
