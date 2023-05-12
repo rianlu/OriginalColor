@@ -3,19 +3,14 @@ package com.wzl.originalcolor
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.FileProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lihang.ShadowLayout
@@ -25,10 +20,6 @@ import com.wzl.originalcolor.utils.BitmapUtils
 import com.wzl.originalcolor.utils.BlurViewUtils
 import com.wzl.originalcolor.utils.InnerColorUtils
 import com.wzl.originalcolor.utils.PxUtils
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
 
 /**
  * @Author lu
@@ -106,43 +97,21 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
                 InnerColorUtils.getBrighterColor(Color.parseColor(originalColor.HEX))
             shareView.findViewById<ConstraintLayout>(R.id.shareCardView)
                 .setBackgroundColor(brighterColor)
+
             val bitmap = BitmapUtils.viewToBitmap(
                 shareView,
                 PxUtils.dp2px(requireContext(), 400),
                 PxUtils.dp2px(requireContext(), 250)
             )
-            shareBitmap(bitmap, originalColor.NAME)
+            BitmapUtils.shareBitmap(
+                requireContext(),
+                BitmapUtils.getRoundedCornerBitmap(
+                    bitmap,
+                    PxUtils.dp2px(requireContext(), 16).toFloat()
+                ), originalColor.NAME
+            )
             dismiss()
         }
-    }
-
-    private fun shareBitmap(bitmap: Bitmap, fileName: String) {
-        val cachePath = File(requireContext().externalCacheDir, "share_cards/")
-        cachePath.mkdirs()
-
-        val file = File(cachePath, "$fileName.png")
-        val fileOutputStream: FileOutputStream
-        try {
-            fileOutputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
-            fileOutputStream.flush()
-            fileOutputStream.close()
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        val myImageFileUri = FileProvider.getUriForFile(
-            requireContext(),
-            requireContext().applicationContext.packageName + ".provider",
-            file
-        )
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        intent.putExtra(Intent.EXTRA_STREAM, myImageFileUri)
-        intent.type = "image/png"
-        startActivity(Intent.createChooser(intent, getString(R.string.share_to)))
     }
 
     override fun onStart() {

@@ -5,11 +5,14 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.chip.Chip
+import com.google.android.material.search.SearchView
 import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
 import com.wzl.originalcolor.model.OriginalColor
@@ -48,6 +51,7 @@ class MainActivity : AppCompatActivity() {
                     val screenHeight = Resources.getSystem().displayMetrics.heightPixels
                     if (screenWidth > screenHeight) 3 else 1
                 }
+
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE -> 3
                 else -> 1
             }
@@ -76,18 +80,27 @@ class MainActivity : AppCompatActivity() {
 
         binding.searchInnerView.colorChipGroup.setOnCheckedChangeListener { group, checkedId ->
             val chipTag = group.findViewById<Chip>(checkedId).text.toString()
-            updateColorList(getColorListByTag(chipTag))
+            updateColorList(OriginalColorUtils.getColorListByTag(this, chipTag))
             binding.colorSearchView.hide()
         }
 
         binding.colorSearchView.let { searchView ->
             searchView.editText.setOnEditorActionListener { v, actionId, event ->
-                val searchText = searchView.text.toString()
-                if (searchText.isNotEmpty()) {
-                    updateColorList(searchColorByKeyword(searchText))
+                val keyword = searchView.text.toString()
+                if (keyword.isNotEmpty()) {
+                    updateColorList(OriginalColorUtils.searchColorByKeyword(this, keyword))
                 }
                 searchView.hide()
                 false
+            }
+            searchView.addTransitionListener { view, previousState, newState ->
+                if (previousState == SearchView.TransitionState.SHOWN && newState == SearchView.TransitionState.HIDING) {
+                    // 搜索框无内容时返回恢复全部列表
+                    val searchContent = searchView.editText.text.toString()
+                    if (searchContent.isEmpty()) {
+                        updateColorList(colorList)
+                    }
+                }
             }
         }
 
@@ -99,7 +112,8 @@ class MainActivity : AppCompatActivity() {
             VibratorUtils.vibrate(this)
             binding.recyclerView.apply {
                 (layoutManager as GridLayoutManager).scrollToPositionWithOffset(
-                    Random.nextInt(0, this@MainActivity.adapter.itemCount - 1), PxUtils.dp2px(context, 16)
+                    Random.nextInt(0, this@MainActivity.adapter.itemCount - 1),
+                    PxUtils.dp2px(context, 16)
                 )
             }
         }
@@ -113,27 +127,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(this, SettingsActivity::class.java))
                     true
                 }
+
                 else -> false
             }
         }
-    }
-
-    // 其他：淡肉色 棕色 粉色 褐色 赭 醉瓜肉 淡咖啡 金驼
-    private fun getColorListByTag(tag: String): List<OriginalColor> {
-        if (tag == getString(R.string.chip_full)) {
-            return colorList
-        }
-        return if (tag != getString(R.string.chip_other)) {
-            colorList.filter { it.NAME.last().toString() == tag }
-        } else {
-            colorList.filter {
-                !COLORS.contains(it.NAME.last().toString())
-            }
-        }
-    }
-
-    private fun searchColorByKeyword(keyword: String): List<OriginalColor> {
-        return colorList.filter { it.NAME.contains(keyword) }
     }
 
     private fun updateColorList(list: List<OriginalColor>) {
