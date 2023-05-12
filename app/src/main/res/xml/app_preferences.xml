@@ -22,8 +22,7 @@
     <Preference
         app:key="share"
         app:icon="@drawable/ic_share"
-        app:title="分享APP"
-        app:enabled="false"/>
+        app:title="分享APP" />
 
     <PreferenceCategory app:title="版权">
         <Preference

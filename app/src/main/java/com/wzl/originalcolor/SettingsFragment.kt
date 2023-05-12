@@ -11,6 +11,10 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wzl.originalcolor.utils.VibratorUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 /**
@@ -33,13 +37,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 1 -> donatePreference.setTitle(R.string.donate_first_hint)
                 2 -> donatePreference.setTitle(R.string.donate_second_hint)
                 3 -> donatePreference.setTitle(R.string.donate_third_hint)
-                4 -> {
+                else -> {
                     donatePreference.setTitle(R.string.donate_last_hint)
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setView(R.layout.layout_donate)
-                        .show()
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(200)
+                        MaterialAlertDialogBuilder(requireContext())
+                            .setView(R.layout.layout_donate)
+                            .show()
+                    }
                 }
-                else -> {}
             }
             true
         }
