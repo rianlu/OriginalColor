@@ -1,13 +1,13 @@
 package com.wzl.originalcolor
 
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -22,7 +22,6 @@ import com.wzl.originalcolor.utils.PxUtils
 import com.wzl.originalcolor.utils.VibratorUtils
 import kotlin.random.Random
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -31,11 +30,8 @@ class MainActivity : AppCompatActivity() {
     private var gridCount: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
-            super.onCreate(savedInstanceState)
-        } else {
-            super.onCreate(null)
-        }
+        super.onCreate(null)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -94,18 +90,19 @@ class MainActivity : AppCompatActivity() {
                 false
             }
             searchView.addTransitionListener { view, previousState, newState ->
-                if (previousState == SearchView.TransitionState.SHOWN && newState == SearchView.TransitionState.HIDING) {
-                    // 搜索框无内容时返回恢复全部列表
-                    val searchContent = searchView.editText.text.toString()
-                    if (searchContent.isEmpty()) {
-                        updateColorList(colorList)
-                    }
+                if (binding.searchInnerView.colorChipGroup.checkedChipId == R.id.chipFull) {
+                    return@addTransitionListener
                 }
             }
         }
 
         binding.fabSearch.setOnClickListener {
             binding.colorSearchView.show()
+        }
+
+        binding.fabSearch.setOnLongClickListener {
+            binding.recyclerView.smoothScrollToPosition(0)
+            true
         }
 
         binding.topAppBar.setNavigationOnClickListener {
@@ -120,11 +117,10 @@ class MainActivity : AppCompatActivity() {
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.settings -> {
-//                    MaterialAlertDialogBuilder(this)
-//                        .setTitle(R.string.menu_info)
-//                        .setMessage(R.string.color_data_copyright)
-//                        .show()
-                    startActivity(Intent(this, SettingsActivity::class.java))
+                    startActivity(
+                        Intent(this, SettingsActivity::class.java),
+                        ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+                    )
                     true
                 }
 
@@ -134,6 +130,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateColorList(list: List<OriginalColor>) {
+        binding.emptyDataView.isVisible = list.isEmpty()
         adapter.submitList(list)
     }
 

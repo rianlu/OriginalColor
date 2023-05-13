@@ -1,6 +1,8 @@
 package com.wzl.originalcolor
 
 import android.os.Bundle
+import android.transition.Fade
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import com.wzl.originalcolor.databinding.ActivitySettingsBinding
 
@@ -16,6 +18,9 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+        window.enterTransition = Fade()
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

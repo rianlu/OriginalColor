@@ -19,23 +19,22 @@
             app:navigationIcon="@drawable/ic_smile" />
 
     </com.google.android.material.appbar.AppBarLayout>
+    <ImageView
+        android:id="@+id/emptyDataView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_empty_search"
+        android:scaleType="centerInside"
+        android:visibility="invisible"
+        android:contentDescription="@string/empty_data" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:spanCount="3"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-<!--    <com.google.android.material.search.SearchBar-->
-<!--        android:id="@+id/colorSearchBar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center|bottom"-->
-<!--        android:layout_marginBottom="24dp"-->
-<!--        android:hint="@string/search_bar_hint" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabSearch"
@@ -58,4 +57,5 @@
             android:layout_height="wrap_content"
             layout="@layout/layout_inner_search_view" />
     </com.google.android.material.search.SearchView>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

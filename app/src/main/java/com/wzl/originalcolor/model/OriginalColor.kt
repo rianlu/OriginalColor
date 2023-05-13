@@ -10,7 +10,9 @@ import com.google.gson.annotations.SerializedName
  */
 data class OriginalColor(
     // CMYK 四色
+    @SerializedName("CMYK")
     val CMYK: IntArray = intArrayOf(0, 0, 0, 0),
+    @SerializedName("RGB")
     val RGB: IntArray = intArrayOf(0, 0, 0),
     @SerializedName("hex")
     val HEX: String = "#000000",
