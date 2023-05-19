@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 
 
 /**
@@ -60,6 +61,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+        val clearPreference = findPreference<Preference>("clear")
+        val cachePath = File(requireContext().externalCacheDir, "share_cards/")
+        var size = 0L
+        cachePath.listFiles()?.forEach {
+            size += it.length()
+        }
+        clearPreference?.summary = calculateFileSize(size)
+        clearPreference?.setOnPreferenceClickListener {
+            VibratorUtils.vibrate(requireContext())
+            clearShareCaches(cachePath)
+            clearPreference.summary = calculateFileSize(0)
+                true
+        }
+
         val sp = requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
         val vibrationPreference = findPreference<Preference>("vibration")
         vibrationPreference?.setDefaultValue(sp.getBoolean("vibration", true))
@@ -72,5 +87,23 @@ class SettingsFragment : PreferenceFragmentCompat() {
             VibratorUtils.updateVibration(state)
             true
         }
+    }
+
+    private fun clearShareCaches(folder: File) {
+        if (!folder.exists()) {
+            return
+        }
+        folder.listFiles()?.forEach {
+            it.delete()
+        }
+        folder.delete()
+    }
+
+    private fun calculateFileSize(size: Long): String {
+        return if (size >= 1024 * 1024) {
+            "${size/1024} MB"
+        } else if (size >= 1024) {
+            "${size/1024} KB"
+        } else  "$size B"
     }
 }

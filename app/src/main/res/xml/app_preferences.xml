@@ -24,6 +24,10 @@
         app:icon="@drawable/ic_share"
         app:title="分享APP" />
 
+    <Preference
+        app:key="clear"
+        app:icon="@drawable/ic_clear_cache"
+        app:title="清除缓存" />
     <PreferenceCategory app:title="版权">
         <Preference
             app:key="author"

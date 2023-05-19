@@ -129,6 +129,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (binding.colorSearchView.currentTransitionState == SearchView.TransitionState.SHOWN) {
+            binding.colorSearchView.hide()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
     private fun updateColorList(list: List<OriginalColor>) {
         binding.emptyDataView.isVisible = list.isEmpty()
         adapter.submitList(list)
