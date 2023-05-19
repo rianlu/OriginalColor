@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.RectF
@@ -26,14 +25,21 @@ import java.io.IOException
  */
 object BitmapUtils {
 
-    fun viewToBitmap(view: View, width: Int, height: Int): Bitmap {
+    fun viewToBitmap(view: View, width: Int, height: Int, roundPx: Float = 0f): Bitmap {
         val measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY)
         val measuredHeight = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
         view.measure(measuredWidth, measuredHeight)
         view.layout(0, 0, view.measuredWidth, view.measuredHeight)
         val bmp = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val c = Canvas(bmp)
-        c.drawColor(Color.WHITE)
+        c.drawColor(Color.TRANSPARENT)
+        if (roundPx != 0f) {
+            val rect = Rect(0, 0, bmp.width, bmp.height)
+            val rectF = RectF(rect)
+            val paint = Paint()
+            paint.isAntiAlias = true
+            c.drawRoundRect(rectF, roundPx, roundPx, paint)
+        }
         view.draw(c)
         return bmp
     }
@@ -63,29 +69,5 @@ object BitmapUtils {
         intent.putExtra(Intent.EXTRA_STREAM, myImageFileUri)
         intent.type = "image/png"
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_to)))
-    }
-
-    fun getRoundedCornerBitmap(bitmap: Bitmap, roundPx: Float): Bitmap {
-        try {
-            val output = Bitmap.createBitmap(
-                bitmap.width,
-                bitmap.height, Bitmap.Config.ARGB_8888
-            )
-            val canvas = Canvas(output)
-            val color = -0xbdbdbe
-            val paint = Paint()
-            val rect = Rect(0, 0, bitmap.width, bitmap.height)
-            val rectF = RectF(rect)
-            paint.isAntiAlias = true
-            canvas.drawARGB(0, 0, 0, 0)
-            paint.color = color
-            canvas.drawRoundRect(rectF, roundPx, roundPx, paint)
-            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-            canvas.drawBitmap(bitmap, null, rect, paint)
-            return output
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return bitmap
-        }
     }
 }

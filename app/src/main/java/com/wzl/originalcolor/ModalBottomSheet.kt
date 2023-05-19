@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -95,21 +96,16 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
                 .setBackgroundColor(Color.parseColor(originalColor.HEX))
             val brighterColor =
                 InnerColorUtils.getBrighterColor(Color.parseColor(originalColor.HEX))
-            shareView.findViewById<ConstraintLayout>(R.id.shareCardView)
-                .setBackgroundColor(brighterColor)
+            shareView.findViewById<CardView>(R.id.shareCardView)
+                .setCardBackgroundColor(brighterColor)
 
             val bitmap = BitmapUtils.viewToBitmap(
                 shareView,
                 PxUtils.dp2px(requireContext(), 400),
-                PxUtils.dp2px(requireContext(), 250)
+                PxUtils.dp2px(requireContext(), 250),
+                PxUtils.dp2px(requireContext(), 16).toFloat()
             )
-            BitmapUtils.shareBitmap(
-                requireContext(),
-                BitmapUtils.getRoundedCornerBitmap(
-                    bitmap,
-                    PxUtils.dp2px(requireContext(), 16).toFloat()
-                ), originalColor.NAME
-            )
+            BitmapUtils.shareBitmap(requireContext(), bitmap, originalColor.NAME)
             dismiss()
         }
     }

@@ -1,103 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/shareCardView"
     android:layout_width="match_parent"
-    android:layout_height="250dp">
-
-    <TextView
-        android:id="@+id/colorName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:letterSpacing="0.05"
-        android:text="@string/text_color_name"
-        android:textAppearance="?attr/textAppearanceHeadline4"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.lihang.ShadowLayout
-        android:id="@+id/colorShadowView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:hl_cornerRadius="16dp"
-        app:hl_shadowLimit="16dp"
-        android:contentDescription="@string/card_color_description"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/colorName">
-
-        <View
-            android:id="@+id/colorDisplayView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </com.lihang.ShadowLayout>
+    android:layout_height="250dp"
+    app:cardCornerRadius="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/colorShadowView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/colorShadowView">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <TextView
-            android:id="@+id/colorHEX"
+            android:id="@+id/colorName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="@string/text_color_hex"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:letterSpacing="0.05"
+            android:text="@string/text_color_name"
+            android:textAppearance="?attr/textAppearanceHeadline4"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/colorRGB"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/colorRGB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="@string/text_color_rgb"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/colorCMYK"
-            app:layout_constraintEnd_toEndOf="@+id/colorHEX"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/colorHEX"
-            app:layout_constraintTop_toBottomOf="@+id/colorHEX" />
-
-        <TextView
-            android:id="@+id/colorCMYK"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="@string/text_color_cmyk"
-            android:textColor="@color/black"
-            android:textSize="16sp"
+        <com.lihang.ShadowLayout
+            android:id="@+id/colorShadowView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:hl_cornerRadius="16dp"
+            app:hl_shadowLimit="16dp"
+            android:contentDescription="@string/card_color_description"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/colorRGB"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/colorRGB" />
+            app:layout_constraintTop_toBottomOf="@+id/colorName">
 
+            <View
+                android:id="@+id/colorDisplayView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.lihang.ShadowLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/colorShadowView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/colorShadowView">
+
+            <TextView
+                android:id="@+id/colorHEX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="@string/text_color_hex"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/colorRGB"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/colorRGB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="@string/text_color_rgb"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/colorCMYK"
+                app:layout_constraintEnd_toEndOf="@+id/colorHEX"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/colorHEX"
+                app:layout_constraintTop_toBottomOf="@+id/colorHEX" />
+
+            <TextView
+                android:id="@+id/colorCMYK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="@string/text_color_cmyk"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/colorRGB"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/colorRGB" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.65" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.65" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
