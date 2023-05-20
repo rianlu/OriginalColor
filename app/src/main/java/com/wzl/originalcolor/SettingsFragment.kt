@@ -11,6 +11,7 @@ import android.os.VibratorManager
 import android.util.Log
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wzl.originalcolor.utils.VibratorUtils
 import kotlinx.coroutines.CoroutineScope
@@ -86,8 +87,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         val sp = requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val vibrationPreference = findPreference<Preference>("vibration")
-        vibrationPreference?.setDefaultValue(sp.getBoolean("vibration", true))
+        val vibrationPreference = findPreference<SwitchPreferenceCompat>("vibration")
+        vibrationPreference?.isChecked = sp.getBoolean("vibration", false)
         vibrationPreference?.setOnPreferenceChangeListener { preference, newValue ->
             val state = newValue as Boolean
             sp.edit().apply {

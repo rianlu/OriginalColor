@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initVibration() {
         val sp = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        VibratorUtils.updateVibration(sp.getBoolean("vibration", true))
+        VibratorUtils.updateVibration(sp.getBoolean("vibration", false))
     }
 
     private fun IntArray.arrayToString(): String {

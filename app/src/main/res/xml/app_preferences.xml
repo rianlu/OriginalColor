@@ -11,8 +11,7 @@
     <SwitchPreferenceCompat
         app:icon="@drawable/ic_vibration"
         app:key="vibration"
-        app:title="震动"
-        app:persistent="true"/>
+        app:title="震动" />
 
     <Preference
         app:icon="@drawable/ic_coffee"
