@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
@@ -74,8 +75,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        binding.searchInnerView.colorChipGroup.setOnCheckedChangeListener { group, checkedId ->
-            val chipTag = group.findViewById<Chip>(checkedId).text.toString()
+        binding.searchInnerView.colorChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            Log.d("checkedIds: ", checkedIds.toIntArray().arrayToString())
+            // 选择标签自动清除搜索框文本
+            binding.colorSearchView.editText.text.clear()
+            val chipTag = group.findViewById<Chip>(checkedIds.first()).text.toString()
             updateColorList(OriginalColorUtils.getColorListByTag(this, chipTag))
             binding.colorSearchView.hide()
         }
@@ -85,6 +89,11 @@ class MainActivity : AppCompatActivity() {
                 val keyword = searchView.text.toString()
                 if (keyword.isNotEmpty()) {
                     updateColorList(OriginalColorUtils.searchColorByKeyword(this, keyword))
+                } else {
+                    binding.searchInnerView.colorChipGroup.let { group ->
+                        val chipTag = group.findViewById<Chip>(group.checkedChipId).text.toString()
+                        updateColorList(OriginalColorUtils.getColorListByTag(this, chipTag))
+                    }
                 }
                 searchView.hide()
                 false
@@ -145,6 +154,17 @@ class MainActivity : AppCompatActivity() {
     private fun initVibration() {
         val sp = getSharedPreferences("settings", Context.MODE_PRIVATE)
         VibratorUtils.updateVibration(sp.getBoolean("vibration", true))
+    }
+
+    private fun IntArray.arrayToString(): String {
+        val builder = StringBuilder()
+        this.forEachIndexed { index, i ->
+            builder.append(i)
+            if (index != this.size - 1) {
+                builder.append(", ")
+            }
+        }
+        return builder.toString()
     }
 }
 

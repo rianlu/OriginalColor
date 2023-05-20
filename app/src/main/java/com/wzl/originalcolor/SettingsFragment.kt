@@ -3,6 +3,8 @@ package com.wzl.originalcolor
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager.PackageInfoFlags
+import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -29,6 +31,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private var donateClickTime = 0
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.app_preferences, rootKey)
+
+        val versionPreference = findPreference<Preference>("version")
+        val versionName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireContext().packageManager.getPackageInfo(requireContext().packageName, PackageInfoFlags.of(0)).versionName
+        } else {
+            requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName
+        }
+        versionPreference?.summary = versionName
 
         val donatePreference = findPreference<Preference>("donate")
         donatePreference?.setOnPreferenceClickListener {
