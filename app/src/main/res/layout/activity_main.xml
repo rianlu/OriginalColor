@@ -16,7 +16,7 @@
             android:layout_height="?attr/actionBarSize"
             app:title="@string/app_name"
             app:menu="@menu/app_bar_menu"
-            app:navigationIcon="@drawable/ic_smile" />
+            app:navigationIcon="@drawable/ic_random_cube" />
 
     </com.google.android.material.appbar.AppBarLayout>
     <ImageView

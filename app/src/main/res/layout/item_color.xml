@@ -1,29 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/colorBackground"
     android:layout_width="match_parent"
-    android:layout_height="159dp">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_height="240dp">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/colorCardView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:clickable="true"
-        android:focusable="true"
-        style="@style/ColorCardView"
-        app:cardBackgroundColor="#feba07"
-        app:cardCornerRadius="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-            <TextView
-                android:id="@+id/colorName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/ItemColorNameText"
-                android:text="@string/text_color_name"
-                android:layout_gravity="bottom|end" />
-    </com.google.android.material.card.MaterialCardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/colorPinyin"
+            android:text="@string/text_color_pinyin"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/colorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_color_name"
+            android:layout_marginTop="4dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+</LinearLayout>

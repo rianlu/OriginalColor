@@ -3,6 +3,8 @@
     <style name="Base.Theme.OriginalColor" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimaryContainer">@color/my_light_primary</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
@@ -15,11 +17,6 @@
     </style>
     <style name="ColorNameText">
         <item name="android:textColor">@color/black</item>
-    </style>
-    <style name="ItemColorNameText" parent="ColorNameText">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:background">@drawable/bg_color_info</item>
     </style>
     <style name="ColorInfoText">
         <item name="drawableEndCompat">@drawable/ic_copy</item>

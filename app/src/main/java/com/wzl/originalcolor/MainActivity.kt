@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(ColorItemDecoration(this@MainActivity, gridCount))
         }
         binding.recyclerView.adapter = adapter
-        adapter.addOnItemChildClickListener(R.id.colorCardView) { adapter, view, position ->
+        adapter.addOnItemChildClickListener(R.id.colorBackground) { adapter, view, position ->
             val originalColor = adapter.getItem(position) ?: return@addOnItemChildClickListener
             val modalBottomSheet = ModalBottomSheet(originalColor)
             modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)

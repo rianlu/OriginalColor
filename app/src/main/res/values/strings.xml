@@ -12,6 +12,7 @@
     <string name="chip_purple">紫</string>
     <string name="chip_other">其他</string>
     <string name="fab_search_hint">搜索颜色</string>
+    <string name="text_color_pinyin">COLOR PINYIN</string>
     <string name="text_color_name">COLOR NAME</string>
     <string name="text_color_hex">COLOR HEX</string>
     <string name="text_color_rgb">COLOR RGB</string>

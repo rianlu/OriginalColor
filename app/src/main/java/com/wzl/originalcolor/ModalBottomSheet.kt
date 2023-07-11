@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lihang.ShadowLayout
@@ -20,6 +19,7 @@ import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.BitmapUtils
 import com.wzl.originalcolor.utils.BlurViewUtils
 import com.wzl.originalcolor.utils.InnerColorUtils
+import com.wzl.originalcolor.utils.InnerColorUtils.setBrightness
 import com.wzl.originalcolor.utils.PxUtils
 
 /**
@@ -42,7 +42,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         savedInstanceState: Bundle?
     ): View {
         binding = ModalBottomSheetContentBinding.inflate(inflater)
-        val darkColor = InnerColorUtils.getDarkerColor(Color.parseColor(originalColor.HEX))
+        val darkColor = Color.parseColor(originalColor.HEX).setBrightness(-0.1F)
         val hexColor = String.format("#%06X", 0xFFFFFF and darkColor)
         val builder = StringBuilder(hexColor)
         // 80 99 B3 CC
@@ -95,7 +95,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             shareView.findViewById<View>(R.id.colorDisplayView)
                 .setBackgroundColor(Color.parseColor(originalColor.HEX))
             val brighterColor =
-                InnerColorUtils.getBrighterColor(Color.parseColor(originalColor.HEX))
+                Color.parseColor(originalColor.HEX).setBrightness(0.3F)
             shareView.findViewById<CardView>(R.id.shareCardView)
                 .setCardBackgroundColor(brighterColor)
 

@@ -2,8 +2,11 @@ package com.wzl.originalcolor.adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import com.chad.library.adapter.base.BaseDifferAdapter
 import com.chad.library.adapter.base.viewholder.QuickViewHolder
@@ -11,6 +14,9 @@ import com.google.android.material.card.MaterialCardView
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.R
 import com.wzl.originalcolor.utils.InnerColorUtils
+import com.wzl.originalcolor.utils.InnerColorUtils.setAlpha
+import com.wzl.originalcolor.utils.InnerColorUtils.setBrightness
+import com.wzl.originalcolor.utils.PxUtils
 
 
 /**
@@ -19,7 +25,7 @@ import com.wzl.originalcolor.utils.InnerColorUtils
  * @ClassName: ColorAdapter
  * @Description:
  */
-class ColorAdapter() : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiffCallback()) {
+class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiffCallback()) {
 
     override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): QuickViewHolder {
         return QuickViewHolder(R.layout.item_color, parent)
@@ -29,10 +35,21 @@ class ColorAdapter() : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDi
         if (item == null) {
             return
         }
-        holder.getView<MaterialCardView>(R.id.colorCardView).setCardBackgroundColor(Color.parseColor(item.HEX))
+        holder.getView<TextView>(R.id.colorPinyin).apply {
+            text = item.pinyin
+            setTextColor(Color.parseColor(item.HEX).setBrightness(-0.1F).setAlpha(0.6F))
+        }
         holder.getView<TextView>(R.id.colorName).apply {
             text = item.NAME
-            setTextColor(InnerColorUtils.getContrastColor(Color.parseColor(item.HEX)))
+            setTextColor(Color.parseColor(item.HEX).setBrightness(-0.1F))
+        }
+        holder.getView<LinearLayout>(R.id.colorBackground).apply {
+            val gradientDrawable = GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                intArrayOf(item.getRGBColor().setAlpha(0.6F), item.getRGBColor())
+            )
+            gradientDrawable.cornerRadius = PxUtils.dp2px(context, 16).toFloat()
+            background = gradientDrawable
         }
     }
 }
