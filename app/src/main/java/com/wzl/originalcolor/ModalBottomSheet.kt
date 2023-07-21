@@ -19,6 +19,7 @@ import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.BitmapUtils
 import com.wzl.originalcolor.utils.BlurViewUtils
 import com.wzl.originalcolor.utils.InnerColorUtils
+import com.wzl.originalcolor.utils.InnerColorUtils.setAlpha
 import com.wzl.originalcolor.utils.InnerColorUtils.setBrightness
 import com.wzl.originalcolor.utils.PxUtils
 
@@ -42,15 +43,20 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         savedInstanceState: Bundle?
     ): View {
         binding = ModalBottomSheetContentBinding.inflate(inflater)
-        val darkColor = Color.parseColor(originalColor.HEX).setBrightness(-0.1F)
-        val hexColor = String.format("#%06X", 0xFFFFFF and darkColor)
-        val builder = StringBuilder(hexColor)
-        // 80 99 B3 CC
-        builder.insert(1, "B3")
+//        val darkColor = Color.parseColor(originalColor.HEX).setBrightness(-0.1F)
+//        val hexColor = String.format("#%06X", 0xFFFFFF and darkColor)
+//        val builder = StringBuilder(hexColor)
+//        // 80 99 B3 CC
+//        builder.insert(1, "B3")
+//        BlurViewUtils.initBlurView(
+//            requireActivity(),
+//            binding.blurView,
+//            Color.parseColor(builder.toString())
+//        )
         BlurViewUtils.initBlurView(
             requireActivity(),
             binding.blurView,
-            Color.parseColor(builder.toString())
+            Color.parseColor(originalColor.HEX).setAlpha(0.5F)
         )
         return binding.root
     }
@@ -64,7 +70,12 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         binding.colorCardView.apply {
             setCardBackgroundColor(Color.parseColor(originalColor.HEX))
         }
-        binding.colorName.text = originalColor.NAME
+        binding.colorName.apply {
+            text = originalColor.NAME
+            // TODO Adapt Light Mode and Dark Mode
+            setTextColor(originalColor.getRGBColor().setAlpha(0.6F)
+                .setBrightness(-0.1F))
+        }
         binding.colorHEX.apply {
             text = originalColor.HEX
             setOnClickListener { copyToClipboardAndToast(originalColor.HEX, clipboardManager) }
@@ -137,7 +148,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         this.forEachIndexed { index, i ->
             builder.append(i)
             if (index != this.size - 1) {
-                builder.append(", ")
+                builder.append(" | ")
             }
         }
         return builder.toString()

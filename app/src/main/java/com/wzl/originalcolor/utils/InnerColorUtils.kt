@@ -1,7 +1,9 @@
 package com.wzl.originalcolor.utils
 
 import android.graphics.Color
+import android.os.Build
 import androidx.annotation.ColorInt
+import androidx.annotation.RequiresApi
 import androidx.core.graphics.ColorUtils
 import kotlin.math.roundToInt
 
@@ -19,6 +21,14 @@ object InnerColorUtils {
         val whiteContrast = ColorUtils.calculateContrast(Color.WHITE, color)
         val blackContrast = ColorUtils.calculateContrast(Color.BLACK, color)
         return if (whiteContrast > blackContrast) color.setBrightness(0.3F) else color.setBrightness(-0.1F)
+    }
+
+    fun @receiver:ColorInt Int.isLight(): Boolean {
+        val red = Color.valueOf(this).red()
+        val green = Color.valueOf(this).green()
+        val blue = Color.valueOf(this).blue()
+        val brightness = (red * 299 + green * 587 + blue * 114) / 1000
+        return brightness > 0.5
     }
 
     @ColorInt

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Resources
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -66,10 +67,15 @@ class MainActivity : AppCompatActivity() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 binding.fabSearch.let { fabSearch ->
-                    if (dy > 30 && fabSearch.isShown) {
-                        fabSearch.hide()
-                    } else if (dy < -30 && !fabSearch.isShown) {
-                        fabSearch.show()
+                    if (dy > 30) {
+//                        fabSearch.hide()
+                        fabSearch.setImageIcon(Icon.createWithResource(this@MainActivity, R.drawable.ic_top))
+                        fabSearch.tag = "scrollToTop"
+                    } else if (dy < -30) {
+//                        fabSearch.show()
+                        fabSearch.setImageIcon(Icon.createWithResource(this@MainActivity, R.drawable.ic_search))
+                        fabSearch.tag = "search"
+
                     }
                 }
             }
@@ -106,12 +112,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fabSearch.setOnClickListener {
-            binding.colorSearchView.show()
-        }
-
-        binding.fabSearch.setOnLongClickListener {
-            binding.recyclerView.smoothScrollToPosition(0)
-            true
+            if (binding.fabSearch.tag == "search") {
+                binding.colorSearchView.show()
+            } else if (binding.fabSearch.tag == "scrollToTop") {
+                binding.recyclerView.scrollToPosition(0)
+            }
         }
 
         binding.topAppBar.setNavigationOnClickListener {

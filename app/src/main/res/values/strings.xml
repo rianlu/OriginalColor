@@ -23,7 +23,7 @@
     <string name="menu_settings">设置</string>
     <string name="menu_favorite_list">喜欢列表</string>
     <string name="quick_filter">快速筛选</string>
-    <string name="color_data_copyright">Copyright © 2023 by 禄眠\n<p>Copyright © 2013 by <a href="http://dmyz.org/">Perchouli</a> Shanzhai to <a href="http://nipponcolors.com/">Nipponcolors</a>\n参看: 色谱 中科院科技情报编委会名词室.科学出版社,1957. Adobe RGB / CMYK FOGRA39, Dot Gain 15% <img src="http://zhongguose.com/img/share.jpg" width="1" alt="Screenshot" /><a href="https://beian.miit.gov.cn/">沪ICP备17025116号-2</a></p></string>
+    <string name="color_data_copyright">App developed by 禄眠\n<p>Copyright © 2013 by <a href="http://dmyz.org/">Perchouli</a> Shanzhai to <a href="http://nipponcolors.com/">Nipponcolors</a>\n参看: 色谱 中科院科技情报编委会名词室.科学出版社,1957. Adobe RGB / CMYK FOGRA39, Dot Gain 15% <img src="http://zhongguose.com/img/share.jpg" width="1" alt="Screenshot" /><a href="https://beian.miit.gov.cn/">沪ICP备17025116号-2</a></p></string>
     <string name="author_info">禄眠</string>
 
     <string name="greet_morning">早上好</string>

@@ -53,7 +53,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/colorCardView"
                     android:layout_width="0dp"
-                    android:layout_height="200dp"
+                    android:layout_height="160dp"
                     android:layout_marginTop="24dp"
                     app:cardCornerRadius="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -64,16 +64,19 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/linearLayout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
                     app:layout_constraintBottom_toBottomOf="@+id/colorCardView"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/colorCardView"
                     app:layout_constraintTop_toTopOf="@+id/colorCardView">
 
                     <TextView
                         android:id="@+id/colorHEX"
                         style="@style/ColorInfoText"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/text_color_hex"
                         app:layout_constraintBottom_toTopOf="@+id/colorRGB"
@@ -85,7 +88,7 @@
                     <TextView
                         android:id="@+id/colorRGB"
                         style="@style/ColorInfoText"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/text_color_rgb"
                         app:layout_constraintBottom_toTopOf="@+id/colorCMYK"
@@ -97,7 +100,7 @@
                     <TextView
                         android:id="@+id/colorCMYK"
                         style="@style/ColorInfoText"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/text_color_cmyk"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -113,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.6" />
+                    app:layout_constraintGuide_percent="0.5" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </eightbitlab.com.blurview.BlurView>

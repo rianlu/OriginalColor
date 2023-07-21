@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.wzl.originalcolor"
-        minSdk 24
+        minSdk 25
         targetSdk 33
         versionCode 3
         versionName "1.2"
