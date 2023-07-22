@@ -6,18 +6,16 @@ import android.graphics.drawable.GradientDrawable
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import com.chad.library.adapter.base.BaseDifferAdapter
 import com.chad.library.adapter.base.viewholder.QuickViewHolder
-import com.google.android.material.card.MaterialCardView
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.R
-import com.wzl.originalcolor.utils.InnerColorUtils
-import com.wzl.originalcolor.utils.InnerColorUtils.isLight
-import com.wzl.originalcolor.utils.InnerColorUtils.setAlpha
-import com.wzl.originalcolor.utils.InnerColorUtils.setBrightness
+import com.wzl.originalcolor.utils.ColorExtensions.brightness
+import com.wzl.originalcolor.utils.ColorExtensions.isLight
+import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxUtils
+import com.wzl.originalcolor.utils.UiModeUtils
 
 
 /**
@@ -36,31 +34,30 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
         if (item == null) {
             return
         }
-        // TODO Adapt Light Mode and Dark Mode
         val textColor = Color.parseColor(item.HEX)
         holder.getView<TextView>(R.id.colorPinyin).apply {
             text = item.pinyin
-            setTextColor(Color.parseColor(item.HEX).setBrightness(if (textColor.isLight()) {
-                -0.3F
-            } else {
-                0F
-            }).setAlpha(0.6F))
+            setTextColor(Color.parseColor(item.HEX).brightness(
+                if (textColor.isLight()) -0.3F else if (UiModeUtils.isLightMode(context)) 0F else 0.3F)
+                .setAlpha(0.6F)
+            )
         }
         holder.getView<TextView>(R.id.colorName).apply {
             text = item.NAME
-            setTextColor(Color.parseColor(item.HEX).setBrightness(if (textColor.isLight()) {
-                -0.3F
-            } else {
-                0F
-            }))
+            setTextColor(Color.parseColor(item.HEX).brightness(
+                if (textColor.isLight()) -0.3F else if (UiModeUtils.isLightMode(context)) 0F else 0.3F)
+            )
         }
         holder.getView<LinearLayout>(R.id.colorBackground).apply {
             val gradientDrawable = GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
-                intArrayOf(item.getRGBColor().setAlpha(0.6F), item.getRGBColor())
+                intArrayOf(item.getRGBColor().setAlpha(
+                    if (UiModeUtils.isLightMode(context)) 0.7F else 1F
+                ), item.getRGBColor())
             )
             gradientDrawable.cornerRadius = PxUtils.dp2px(context, 16).toFloat()
             background = gradientDrawable
+
         }
     }
 }

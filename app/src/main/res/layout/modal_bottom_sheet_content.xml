@@ -9,12 +9,6 @@
         android:id="@+id/bottomSheetLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <eightbitlab.com.blurview.BlurView
-            android:id="@+id/blurView"
-            style="@style/BlurViewStyle"
-            android:paddingTop="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -119,6 +113,5 @@
                     app:layout_constraintGuide_percent="0.5" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </eightbitlab.com.blurview.BlurView>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

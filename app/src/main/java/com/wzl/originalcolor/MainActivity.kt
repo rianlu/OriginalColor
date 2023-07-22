@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,17 +20,17 @@ import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorItemDecoration
-import com.wzl.originalcolor.utils.OriginalColorUtils
 import com.wzl.originalcolor.utils.PxUtils
 import com.wzl.originalcolor.utils.VibratorUtils
+import com.wzl.originalcolor.viewmodel.ColorViewModel
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: ColorAdapter
-    private var colorList = listOf<OriginalColor>()
     private var gridCount: Int = 1
+    private val colorViewModel by viewModels<ColorViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(null)
@@ -38,10 +39,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initVibration()
-        colorList = OriginalColorUtils.getAllColors(this)
         adapter = ColorAdapter()
         adapter.setItemAnimation(BaseQuickAdapter.AnimationType.AlphaIn)
-        updateColorList(colorList)
+        updateColorList(colorViewModel.getColorList(this))
         binding.recyclerView.apply {
             gridCount = when (requestedOrientation) {
                 ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED -> {
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             // 选择标签自动清除搜索框文本
             binding.colorSearchView.editText.text.clear()
             val chipTag = group.findViewById<Chip>(checkedIds.first()).text.toString()
-            updateColorList(OriginalColorUtils.getColorListByTag(this, chipTag))
+            updateColorList(colorViewModel.getColorListByTag(this, chipTag))
             binding.colorSearchView.hide()
         }
 
@@ -94,11 +94,11 @@ class MainActivity : AppCompatActivity() {
             searchView.editText.setOnEditorActionListener { v, actionId, event ->
                 val keyword = searchView.text.toString()
                 if (keyword.isNotEmpty()) {
-                    updateColorList(OriginalColorUtils.searchColorByKeyword(this, keyword))
+                    updateColorList(colorViewModel.searchColorByKeyword(this, keyword))
                 } else {
                     binding.searchInnerView.colorChipGroup.let { group ->
                         val chipTag = group.findViewById<Chip>(group.checkedChipId).text.toString()
-                        updateColorList(OriginalColorUtils.getColorListByTag(this, chipTag))
+                        updateColorList(colorViewModel.getColorListByTag(this, chipTag))
                     }
                 }
                 searchView.hide()

@@ -1,6 +1,8 @@
-package com.wzl.originalcolor.utils
+package com.wzl.originalcolor.viewmodel
 
 import android.content.Context
+import android.graphics.Color
+import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.wzl.originalcolor.COLORS
@@ -10,17 +12,19 @@ import org.json.JSONException
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.util.Collections
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 /**
  * @Author lu
- * @Date 2023/4/29 01:18
- * @ClassName: ColorUtils
+ * @Date 2023/7/22 16:13
+ * @ClassName: ColorViewModel
  * @Description:
  */
-object OriginalColorUtils {
+class ColorViewModel : ViewModel() {
 
-    private lateinit var colorList: List<OriginalColor>
+    private var colorList: List<OriginalColor> = mutableListOf()
 
     fun getRandomColor(context: Context): OriginalColor? {
         checkColorList(context)
@@ -32,8 +36,8 @@ object OriginalColorUtils {
         }
     }
 
-    fun getAllColors(context: Context): List<OriginalColor> {
-        if (this::colorList.isInitialized) {
+    fun getColorList(context: Context): List<OriginalColor> {
+        if (colorList.isNotEmpty()) {
             return colorList
         }
         val stringBuilder = StringBuilder()
@@ -52,8 +56,21 @@ object OriginalColorUtils {
             e.printStackTrace()
         }
         val jsonString = stringBuilder.toString()
-        colorList =
+        val tempColorList: List<OriginalColor> =
             Gson().fromJson(jsonString, object : TypeToken<ArrayList<OriginalColor>>() {}.type)
+        Collections.sort(tempColorList, object : Comparator<OriginalColor> {
+            override fun compare(o1: OriginalColor?, o2: OriginalColor?): Int {
+                if (o1 == null || o2 == null) {
+                    return -1
+                }
+                return if (rgbToHsv(o1.getRGBColor())[0] == rgbToHsv(o2.getRGBColor())[0]) {
+                    (rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1]).roundToInt()
+                } else {
+                    (rgbToHsv(o2.getRGBColor())[0] - rgbToHsv(o1.getRGBColor())[0]).roundToInt()
+                }
+            }
+        })
+        colorList = tempColorList
         return colorList
     }
 
@@ -78,10 +95,14 @@ object OriginalColorUtils {
     }
 
     private fun checkColorList(context: Context) {
-        if (this::colorList.isInitialized) {
-            colorList
-        } else {
-            getAllColors(context)
+        colorList.ifEmpty {
+            getColorList(context)
         }
+    }
+
+    private fun rgbToHsv(color: Int): FloatArray {
+        val hsv = FloatArray(3)
+        Color.colorToHSV(color, hsv)
+        return hsv
     }
 }

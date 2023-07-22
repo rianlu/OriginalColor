@@ -27,32 +27,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.lihang.ShadowLayout
-            android:id="@+id/colorShadowView"
+        <View
+            android:id="@+id/colorDisplayView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:hl_cornerRadius="16dp"
-            app:hl_shadowLimit="16dp"
-            android:contentDescription="@string/card_color_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/colorName">
-
-            <View
-                android:id="@+id/colorDisplayView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.lihang.ShadowLayout>
+            app:layout_constraintTop_toBottomOf="@+id/colorName"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/colorShadowView"
+            app:layout_constraintBottom_toBottomOf="@+id/colorDisplayView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/colorShadowView">
+            app:layout_constraintTop_toTopOf="@+id/colorDisplayView">
 
             <TextView
                 android:id="@+id/colorHEX"

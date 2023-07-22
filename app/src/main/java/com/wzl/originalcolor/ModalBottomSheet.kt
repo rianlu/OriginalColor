@@ -13,12 +13,11 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.lihang.ShadowLayout
 import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.BitmapUtils
-import com.wzl.originalcolor.utils.InnerColorUtils.setAlpha
-import com.wzl.originalcolor.utils.InnerColorUtils.setBrightness
+import com.wzl.originalcolor.utils.ColorExtensions.brightness
+import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxUtils
 
 /**
@@ -57,7 +56,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             text = originalColor.NAME
             // TODO Adapt Light Mode and Dark Mode
             setTextColor(originalColor.getRGBColor().setAlpha(0.6F)
-                .setBrightness(-0.1F))
+                .brightness(-0.1F))
         }
         binding.colorHEX.apply {
             text = originalColor.HEX
@@ -81,15 +80,10 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             shareView.findViewById<TextView>(R.id.colorRGB).text = originalColor.RGB.arrayToString()
             shareView.findViewById<TextView>(R.id.colorCMYK).text =
                 originalColor.CMYK.arrayToString()
-            shareView.findViewById<ShadowLayout>(R.id.colorShadowView).apply {
-                val builder = StringBuilder(originalColor.HEX)
-                builder.insert(1, "80")
-                setShadowColor(Color.parseColor(builder.toString()))
-            }
             shareView.findViewById<View>(R.id.colorDisplayView)
                 .setBackgroundColor(Color.parseColor(originalColor.HEX))
             val brighterColor =
-                Color.parseColor(originalColor.HEX).setBrightness(0.3F)
+                Color.parseColor(originalColor.HEX).brightness(0.3F)
             shareView.findViewById<CardView>(R.id.shareCardView)
                 .setCardBackgroundColor(brighterColor)
 
