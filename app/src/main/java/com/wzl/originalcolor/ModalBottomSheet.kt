@@ -17,8 +17,6 @@ import com.lihang.ShadowLayout
 import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.BitmapUtils
-import com.wzl.originalcolor.utils.BlurViewUtils
-import com.wzl.originalcolor.utils.InnerColorUtils
 import com.wzl.originalcolor.utils.InnerColorUtils.setAlpha
 import com.wzl.originalcolor.utils.InnerColorUtils.setBrightness
 import com.wzl.originalcolor.utils.PxUtils
@@ -43,21 +41,6 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         savedInstanceState: Bundle?
     ): View {
         binding = ModalBottomSheetContentBinding.inflate(inflater)
-//        val darkColor = Color.parseColor(originalColor.HEX).setBrightness(-0.1F)
-//        val hexColor = String.format("#%06X", 0xFFFFFF and darkColor)
-//        val builder = StringBuilder(hexColor)
-//        // 80 99 B3 CC
-//        builder.insert(1, "B3")
-//        BlurViewUtils.initBlurView(
-//            requireActivity(),
-//            binding.blurView,
-//            Color.parseColor(builder.toString())
-//        )
-        BlurViewUtils.initBlurView(
-            requireActivity(),
-            binding.blurView,
-            Color.parseColor(originalColor.HEX).setAlpha(0.5F)
-        )
         return binding.root
     }
 
