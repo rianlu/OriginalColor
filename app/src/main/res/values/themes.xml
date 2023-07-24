@@ -2,9 +2,13 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.OriginalColor" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+         <item name="colorPrimary">@color/my_light_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
         <item name="colorPrimaryContainer">@color/my_light_primary</item>
-        <item name="colorOnPrimaryContainer">@color/white</item>
+        <!--Main Background-->
+        <item name="android:colorBackground">@color/white</item>
+        <!--Top App Bar Background-->
+        <item name="colorSurface">@color/white</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
@@ -26,10 +30,14 @@
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:padding">8dp</item>
     </style>
-    <style name="ColorCardView" parent="Widget.MaterialComponents.CardView">
-        <item name="strokeColor">@color/black</item>
+
+    <style name="Widget.App.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
     </style>
-    <style name="BlurDialogTheme" parent="Theme.MaterialComponents.Dialog">
-        <item name="android:windowIsTranslucent">true</item>
+
+    <style name="ThemeOverlay.App.Switch" parent="">
+        <item name="colorPrimary">@color/my_light_primary</item>
+        <item name="colorOutline">#80EE6C4D</item>
+        <item name="trackDecorationTint">@color/my_light_primary</item>
     </style>
 </resources>

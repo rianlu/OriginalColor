@@ -15,12 +15,132 @@
         app:navigationIcon="@drawable/ic_back"
         app:title="@string/btn_back" />
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/settings_container"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settingsTopAppBar" />
+        app:layout_constraintTop_toBottomOf="@+id/settingsTopAppBar">
+
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/app_version" />
+
+            <TextView
+                android:id="@+id/appVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:alpha="0.5" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/vibrationSwitchItem"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/vibration" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/vibrationSwitch"
+                style="@style/Widget.App.Switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:background="@null"
+                android:checked="true"
+                android:clickable="false"
+                android:focusable="false" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/shareAppItem"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/vibrationSwitchItem">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/share_app" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/clearCacheItem"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shareAppItem">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/clear_cache" />
+
+            <TextView
+                android:id="@+id/cacheSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:alpha="0.5" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|center"
+            android:padding="16dp"
+            android:textSize="12sp"
+            android:text="@string/color_data_copyright"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clearCacheItem" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/author_info"
+            android:textColor="@color/my_light_primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

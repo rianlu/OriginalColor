@@ -112,10 +112,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fabSearch.setOnClickListener {
-            if (binding.fabSearch.tag == "search") {
+            if (it.tag == "search") {
                 binding.colorSearchView.show()
-            } else if (binding.fabSearch.tag == "scrollToTop") {
+            } else if (it.tag == "scrollToTop") {
                 binding.recyclerView.scrollToPosition(0)
+                binding.fabSearch.setImageIcon(Icon.createWithResource(this@MainActivity, R.drawable.ic_search))
+                it.tag = "search"
             }
         }
 
@@ -158,7 +160,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initVibration() {
         val sp = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        VibratorUtils.updateVibration(sp.getBoolean("vibration", false))
+        VibratorUtils.updateVibration(sp.getBoolean("vibration", true))
     }
 
     private fun IntArray.arrayToString(): String {

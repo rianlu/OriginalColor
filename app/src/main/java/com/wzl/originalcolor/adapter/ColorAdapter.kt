@@ -2,7 +2,11 @@ package com.wzl.originalcolor.adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RectShape
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -38,14 +42,14 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
         holder.getView<TextView>(R.id.colorPinyin).apply {
             text = item.pinyin
             setTextColor(Color.parseColor(item.HEX).brightness(
-                if (textColor.isLight()) -0.3F else if (UiModeUtils.isLightMode(context)) 0F else 0.3F)
+                if (textColor.isLight()) -0.3F else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F)
                 .setAlpha(0.6F)
             )
         }
         holder.getView<TextView>(R.id.colorName).apply {
             text = item.NAME
             setTextColor(Color.parseColor(item.HEX).brightness(
-                if (textColor.isLight()) -0.3F else if (UiModeUtils.isLightMode(context)) 0F else 0.3F)
+                if (textColor.isLight()) -0.3F else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F)
             )
         }
         holder.getView<LinearLayout>(R.id.colorBackground).apply {
@@ -53,11 +57,10 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
                 GradientDrawable.Orientation.TOP_BOTTOM,
                 intArrayOf(item.getRGBColor().setAlpha(
                     if (UiModeUtils.isLightMode(context)) 0.7F else 1F
-                ), item.getRGBColor())
+                ), item.getRGBColor(), item.getRGBColor())
             )
             gradientDrawable.cornerRadius = PxUtils.dp2px(context, 16).toFloat()
             background = gradientDrawable
-
         }
     }
 }
