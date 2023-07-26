@@ -5,113 +5,112 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomSheetLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/drag_handle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-                    android:id="@+id/drag_handle"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/colorName"
+            style="@style/ColorNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:letterSpacing="0.05"
+            android:text="@string/text_color_name"
+            android:textAppearance="?attr/textAppearanceHeadline4"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/colorName"
-                    style="@style/ColorNameText"
-                    android:textAppearance="?attr/textAppearanceHeadline4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/text_color_name"
-                    android:letterSpacing="0.05"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/shareColor"
+            style="?attr/materialIconButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/btn_share"
+            app:icon="@drawable/ic_share"
+            app:layout_constraintBottom_toBottomOf="@+id/colorName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/colorName" />
 
-                <Button
-                    android:id="@+id/shareColor"
-                    style="?attr/materialIconButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:icon="@drawable/ic_share"
-                    android:contentDescription="@string/btn_share"
-                    app:layout_constraintBottom_toBottomOf="@+id/colorName"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/colorName" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/colorCardView"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/colorName"
+            app:strokeWidth="0dp" />
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/colorCardView"
-                    android:layout_width="0dp"
-                    android:layout_height="160dp"
-                    android:layout_marginTop="24dp"
-                    app:cardCornerRadius="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/colorName"
-                    app:strokeWidth="0dp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/colorCardView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/colorCardView"
+            app:layout_constraintTop_toTopOf="@+id/colorCardView">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/colorCardView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toEndOf="@+id/colorCardView"
-                    app:layout_constraintTop_toTopOf="@+id/colorCardView">
+            <TextView
+                android:id="@+id/colorHEX"
+                style="@style/ColorInfoText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_color_hex"
+                app:layout_constraintBottom_toTopOf="@+id/colorRGB"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/colorHEX"
-                        style="@style/ColorInfoText"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_color_hex"
-                        app:layout_constraintBottom_toTopOf="@+id/colorRGB"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/colorRGB"
+                style="@style/ColorInfoText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_color_rgb"
+                app:layout_constraintBottom_toTopOf="@+id/colorCMYK"
+                app:layout_constraintEnd_toEndOf="@+id/colorHEX"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/colorHEX"
+                app:layout_constraintTop_toBottomOf="@+id/colorHEX" />
 
-                    <TextView
-                        android:id="@+id/colorRGB"
-                        style="@style/ColorInfoText"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_color_rgb"
-                        app:layout_constraintBottom_toTopOf="@+id/colorCMYK"
-                        app:layout_constraintEnd_toEndOf="@+id/colorHEX"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="@+id/colorHEX"
-                        app:layout_constraintTop_toBottomOf="@+id/colorHEX" />
+            <TextView
+                android:id="@+id/colorCMYK"
+                style="@style/ColorInfoText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_color_cmyk"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/colorRGB"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/colorRGB" />
 
-                    <TextView
-                        android:id="@+id/colorCMYK"
-                        style="@style/ColorInfoText"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_color_cmyk"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/colorRGB"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/colorRGB" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="206dp" />
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.5" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

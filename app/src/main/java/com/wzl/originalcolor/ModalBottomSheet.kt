@@ -1,5 +1,6 @@
 package com.wzl.originalcolor
 
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -12,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
 import com.wzl.originalcolor.model.OriginalColor
@@ -19,6 +21,7 @@ import com.wzl.originalcolor.utils.BitmapUtils
 import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxUtils
+import com.wzl.originalcolor.utils.UiModeUtils
 
 /**
  * @Author lu
@@ -30,10 +33,6 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
 
     private lateinit var binding: ModalBottomSheetContentBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(null)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,12 +42,26 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         return binding.root
     }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        dialog?.setOnShowListener { it ->
+            val d = it as BottomSheetDialog
+            val bottomSheet = d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+        return super.onCreateDialog(savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val clipboardManager =
             requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-
+        binding.bottomSheetLayout.setBackgroundColor(
+            Color.parseColor(originalColor.HEX).setAlpha(0.5F)
+        )
         binding.colorCardView.apply {
             setCardBackgroundColor(Color.parseColor(originalColor.HEX))
         }
@@ -56,7 +69,8 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             text = originalColor.NAME
             // TODO Adapt Light Mode and Dark Mode
             setTextColor(originalColor.getRGBColor().setAlpha(0.6F)
-                .brightness(-0.1F))
+                .brightness(if (UiModeUtils.isLightMode(requireContext())) -0.1F else 0.3F)
+            )
         }
         binding.colorHEX.apply {
             text = originalColor.HEX
@@ -96,14 +110,6 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             BitmapUtils.shareBitmap(requireContext(), bitmap, originalColor.NAME)
             dismiss()
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val dialogView = view?.parent as View
-        val mDialogBehavior = BottomSheetBehavior.from(dialogView)
-        mDialogBehavior.peekHeight = 2000
-        mDialogBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun copyToClipboardAndToast(content: String, clipboardManager: ClipboardManager) {

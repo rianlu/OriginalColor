@@ -18,4 +18,6 @@
 
     <color name="my_light_primary">#EE6C4D</color>
     <color name="my_dark_primary">#FF6B6B</color>
+
+    <color name="transparent">#00000000</color>
 </resources>
