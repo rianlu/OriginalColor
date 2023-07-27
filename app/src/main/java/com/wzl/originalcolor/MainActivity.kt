@@ -47,10 +47,10 @@ class MainActivity : AppCompatActivity() {
                 ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED -> {
                     val screenWidth = Resources.getSystem().displayMetrics.widthPixels
                     val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-                    if (screenWidth > screenHeight) 3 else 1
+                    if (screenWidth > screenHeight) 2 else 1
                 }
 
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE -> 3
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE -> 2
                 else -> 1
             }
             layoutManager = GridLayoutManager(this@MainActivity, gridCount)

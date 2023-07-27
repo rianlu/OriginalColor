@@ -50,6 +50,6 @@ dependencies {
     implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper:4.0.0-beta06"
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    implementation 'androidx.preference:preference:1.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    implementation 'androidx.activity:activity-ktx:1.4.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 }

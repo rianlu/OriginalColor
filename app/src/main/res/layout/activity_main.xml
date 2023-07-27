@@ -54,6 +54,7 @@
         android:layout_margin="16dp"
         android:tag="search"
         app:srcCompat="@drawable/ic_search"
+        app:tint="@color/white"
         android:contentDescription="@string/fab_search_hint" />
 
     <com.google.android.material.search.SearchView

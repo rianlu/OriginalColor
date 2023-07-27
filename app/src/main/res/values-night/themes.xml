@@ -24,9 +24,15 @@
         <item name="android:padding">8dp</item>
     </style>
 
+    <!--Custom Switch-->
     <style name="ThemeOverlay.App.Switch" parent="">
         <item name="colorPrimary">@color/my_dark_primary</item>
         <item name="colorOutline">#80FF6B6B</item>
         <item name="trackDecorationTint">@color/my_dark_primary</item>
+    </style>
+
+    <!--Share Button-->
+    <style name="ThemeOverlay.App.IconButton" parent="Widget.Material3.Button.IconButton">
+        <item name="iconTint">@color/white</item>
     </style>
 </resources>

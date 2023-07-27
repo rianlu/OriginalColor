@@ -17,9 +17,7 @@
     </style>
 
     <style name="Theme.OriginalColor" parent="Base.Theme.OriginalColor" />
-    <style name="BlurViewStyle">
-        <item name="android:background">@drawable/bg_blur_overlay</item>
-    </style>
+
     <style name="ColorNameText">
         <item name="android:textColor">@color/black</item>
     </style>
@@ -32,6 +30,7 @@
         <item name="android:padding">8dp</item>
     </style>
 
+    <!--Custom Switch-->
     <style name="Widget.App.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
     </style>
@@ -42,6 +41,12 @@
         <item name="trackDecorationTint">@color/my_light_primary</item>
     </style>
 
+    <!--Share Button-->
+    <style name="ThemeOverlay.App.IconButton" parent="Widget.Material3.Button.IconButton">
+        <item name="iconTint">@color/black</item>
+    </style>
+
+    <!--Rounded Bottom Sheet-->
     <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
     </style>
