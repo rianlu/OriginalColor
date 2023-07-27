@@ -13,6 +13,7 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Collections
+import kotlin.math.floor
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -58,19 +59,16 @@ class ColorViewModel : ViewModel() {
         val jsonString = stringBuilder.toString()
         val tempColorList: List<OriginalColor> =
             Gson().fromJson(jsonString, object : TypeToken<ArrayList<OriginalColor>>() {}.type)
-        Collections.sort(tempColorList, object : Comparator<OriginalColor> {
-            override fun compare(o1: OriginalColor?, o2: OriginalColor?): Int {
-                if (o1 == null || o2 == null) {
-                    return -1
-                }
-                return if (rgbToHsv(o1.getRGBColor())[0] == rgbToHsv(o2.getRGBColor())[0]) {
-                    (rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1]).roundToInt()
-                } else {
-                    (rgbToHsv(o2.getRGBColor())[0] - rgbToHsv(o1.getRGBColor())[0]).roundToInt()
-                }
+        colorList = tempColorList.sortedWith <OriginalColor> { o1, o2 ->
+            if (o1.NAME == "栗紫" || o2.NAME == "栗紫") {
+                print(rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1])
             }
-        })
-        colorList = tempColorList
+            if (rgbToHsv(o1.getRGBColor())[0] == rgbToHsv(o2.getRGBColor())[0]) {
+                floor(rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1]).toInt()
+            } else {
+                floor(rgbToHsv(o2.getRGBColor())[0] - rgbToHsv(o1.getRGBColor())[0]).toInt()
+            }
+        }
         return colorList
     }
 
