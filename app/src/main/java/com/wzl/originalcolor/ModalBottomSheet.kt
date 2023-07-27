@@ -5,6 +5,8 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +24,7 @@ import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxUtils
 import com.wzl.originalcolor.utils.UiModeUtils
+
 
 /**
  * @Author lu
@@ -59,9 +62,13 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
 
         val clipboardManager =
             requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        binding.bottomSheetLayout.setBackgroundColor(
-            Color.parseColor(originalColor.HEX).setAlpha(0.5F)
-        )
+        val radius = PxUtils.dp2px(requireContext(), 21).toFloat()
+        val shape = ShapeDrawable(RoundRectShape(floatArrayOf(radius, radius, radius, radius, 0F, 0F, 0F, 0F), null, null))
+        shape.paint.color = Color.parseColor(originalColor.HEX).setAlpha(0.5F)
+        binding.bottomSheetLayout.background = shape
+//        binding.bottomSheetLayout.setBackgroundColor(
+//            Color.parseColor(originalColor.HEX).setAlpha(0.5F)
+//        )
         binding.colorCardView.apply {
             setCardBackgroundColor(Color.parseColor(originalColor.HEX))
         }
