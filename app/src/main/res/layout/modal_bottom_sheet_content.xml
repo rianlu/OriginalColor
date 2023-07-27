@@ -24,6 +24,7 @@
             app:layout_constraintEnd_toEndOf="@+id/colorName"
             app:layout_constraintStart_toStartOf="@+id/colorName"
             app:layout_constraintTop_toTopOf="@+id/colorName" />
+
         <TextView
             android:id="@+id/colorName"
             style="@style/ColorNameText"

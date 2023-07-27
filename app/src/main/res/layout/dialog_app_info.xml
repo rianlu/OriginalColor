@@ -6,10 +6,10 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/color_data_copyright"
-            android:textStyle="bold" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/color_data_copyright"
+        android:textStyle="bold" />
 </LinearLayout>

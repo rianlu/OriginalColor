@@ -17,34 +17,36 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/collapsingToolbarLayoutMediumSize"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/topAppBar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:elevation="0dp"
-                app:title="@string/app_name"
-                app:menu="@menu/app_bar_menu"
                 app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/ic_random_cube" />
+                app:menu="@menu/app_bar_menu"
+                app:navigationIcon="@drawable/ic_random_cube"
+                app:title="@string/app_name" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
+
     <ImageView
         android:id="@+id/emptyDataView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/bg_empty_search"
+        android:contentDescription="@string/empty_data"
         android:scaleType="centerInside"
-        android:visibility="invisible"
-        android:contentDescription="@string/empty_data" />
+        android:src="@drawable/bg_empty_search"
+        android:visibility="invisible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        app:spanCount="3"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:spanCount="3" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabSearch"
@@ -52,10 +54,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:contentDescription="@string/fab_search_hint"
         android:tag="search"
         app:srcCompat="@drawable/ic_search"
-        app:tint="@color/white"
-        android:contentDescription="@string/fab_search_hint" />
+        app:tint="@color/white" />
 
     <com.google.android.material.search.SearchView
         android:id="@+id/colorSearchView"
@@ -65,9 +67,9 @@
 
         <include
             android:id="@+id/searchInnerView"
+            layout="@layout/layout_inner_search_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            layout="@layout/layout_inner_search_view" />
+            android:layout_height="wrap_content" />
     </com.google.android.material.search.SearchView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
