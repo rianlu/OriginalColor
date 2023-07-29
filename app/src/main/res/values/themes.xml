@@ -58,6 +58,6 @@
 
     <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">21dp</item>
+        <item name="cornerSize">20dp</item>
     </style>
 </resources>

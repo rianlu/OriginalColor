@@ -45,40 +45,44 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         return binding.root
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        dialog?.setOnShowListener { it ->
-            val d = it as BottomSheetDialog
-            val bottomSheet = d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(it)
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            }
-        }
-        return super.onCreateDialog(savedInstanceState)
-    }
+//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+//        dialog?.setOnShowListener { it ->
+//            val d = it as BottomSheetDialog
+//            val bottomSheet = d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+//            bottomSheet?.let {
+//                val behavior = BottomSheetBehavior.from(it)
+//                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+//            }
+//        }
+//        return super.onCreateDialog(savedInstanceState)
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val clipboardManager =
             requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val radius = PxUtils.dp2px(requireContext(), 21).toFloat()
+        // 需要比 theme 中的值大一点，防止没有完全覆盖
+        val radius = PxUtils.dp2px(requireContext(), 28).toFloat()
         val shape = ShapeDrawable(RoundRectShape(floatArrayOf(radius, radius, radius, radius, 0F, 0F, 0F, 0F), null, null))
         shape.paint.color = Color.parseColor(originalColor.HEX).setAlpha(0.5F)
         binding.bottomSheetLayout.background = shape
-//        binding.bottomSheetLayout.setBackgroundColor(
-//            Color.parseColor(originalColor.HEX).setAlpha(0.5F)
-//        )
         binding.colorCardView.apply {
             setCardBackgroundColor(Color.parseColor(originalColor.HEX))
         }
+        binding.colorPinyin.setTextColor(
+            originalColor.getRGBColor()
+                .brightness(if (UiModeUtils.isLightMode(requireContext())) -0.1F else 0.3F)
+                .setAlpha(0.3F)
+        )
         binding.colorName.apply {
             text = originalColor.NAME
-            // TODO Adapt Light Mode and Dark Mode
-            setTextColor(originalColor.getRGBColor().setAlpha(0.6F)
+            setTextColor(originalColor.getRGBColor()
                 .brightness(if (UiModeUtils.isLightMode(requireContext())) -0.1F else 0.3F)
             )
         }
+
+        binding.copyColorLayout.setBackgroundColor(originalColor.getRGBColor().setAlpha(0.1F))
         binding.colorHEX.apply {
             text = originalColor.HEX
             setOnClickListener { copyToClipboardAndToast(originalColor.HEX, clipboardManager) }
@@ -117,6 +121,12 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             BitmapUtils.shareBitmap(requireContext(), bitmap, originalColor.NAME)
             dismiss()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val behavior = BottomSheetBehavior.from(requireView().parent as View)
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun copyToClipboardAndToast(content: String, clipboardManager: ClipboardManager) {

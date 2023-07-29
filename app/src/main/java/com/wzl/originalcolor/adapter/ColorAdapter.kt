@@ -42,14 +42,16 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
         holder.getView<TextView>(R.id.colorPinyin).apply {
             text = item.pinyin
             setTextColor(Color.parseColor(item.HEX).brightness(
-                if (textColor.isLight()) -0.3F else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F)
+                if (textColor.isLight()) -0.3F
+                else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F)
                 .setAlpha(0.6F)
             )
         }
         holder.getView<TextView>(R.id.colorName).apply {
             text = item.NAME
             setTextColor(Color.parseColor(item.HEX).brightness(
-                if (textColor.isLight()) -0.3F else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F)
+                if (textColor.isLight()) -0.3F
+                else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F)
             )
         }
         holder.getView<LinearLayout>(R.id.colorBackground).apply {

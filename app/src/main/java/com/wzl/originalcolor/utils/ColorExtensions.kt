@@ -42,7 +42,7 @@ object ColorExtensions {
     fun @receiver:ColorInt Int.brightness(changeBrightness: Float): Int {
         val outHsl = FloatArray(3)
         ColorUtils.colorToHSL(this, outHsl)
-        outHsl[2] += changeBrightness
+        outHsl[2] = (outHsl[2] * (1 + changeBrightness))
         return ColorUtils.HSLToColor(outHsl)
     }
 }
