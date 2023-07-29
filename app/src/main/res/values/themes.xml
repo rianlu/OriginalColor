@@ -19,6 +19,7 @@
     <style name="Theme.OriginalColor" parent="Base.Theme.OriginalColor" />
 
     <style name="ColorInfoText">
+        <item name="android:textSize">18sp</item>
         <item name="drawableEndCompat">@drawable/ic_copy</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="android:textColor">@color/black</item>

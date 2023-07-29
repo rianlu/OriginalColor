@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -24,6 +25,10 @@ import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxUtils
 import com.wzl.originalcolor.utils.UiModeUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 /**
@@ -84,17 +89,23 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         binding.copyColorLayout.setBackgroundColor(originalColor.getRGBColor().setAlpha(0.1F))
         binding.colorHEX.apply {
             text = originalColor.HEX
-            setOnClickListener { copyToClipboardAndToast(originalColor.HEX, clipboardManager) }
+            setOnClickListener {
+                copyToClipboardAndToast(this, originalColor.HEX, clipboardManager)
+            }
         }
         binding.colorRGB.apply {
             val rgbString = originalColor.RGB.arrayToString()
             text = rgbString
-            setOnClickListener { copyToClipboardAndToast(rgbString, clipboardManager) }
+            setOnClickListener {
+                copyToClipboardAndToast(this, rgbString, clipboardManager)
+            }
         }
         binding.colorCMYK.apply {
             val cmykString = originalColor.CMYK.arrayToString()
             text = cmykString
-            setOnClickListener { copyToClipboardAndToast(cmykString, clipboardManager) }
+            setOnClickListener {
+                copyToClipboardAndToast(this, cmykString, clipboardManager)
+            }
         }
 
         binding.shareColor.setOnClickListener {
@@ -128,9 +139,18 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun copyToClipboardAndToast(content: String, clipboardManager: ClipboardManager) {
+    private fun copyToClipboardAndToast(view: TextView, content: String, clipboardManager: ClipboardManager) {
         val clipData = ClipData.newPlainText("color", content)
         clipboardManager.setPrimaryClip(clipData)
+        CoroutineScope(Dispatchers.Main).launch {
+            view.setCompoundDrawablesWithIntrinsicBounds(
+                0, 0, R.drawable.ic_check, 0
+            )
+            delay(700)
+            view.setCompoundDrawablesWithIntrinsicBounds(
+                0, 0, R.drawable.ic_copy, 0
+            )
+        }
         Toast.makeText(
             requireContext(),
             getString(R.string.copied_to_clipboard),
