@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Resources
+import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
@@ -130,18 +131,11 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.settings -> {
-                    startActivity(
-                        Intent(this, SettingsActivity::class.java),
-                        ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
-                    )
-                    true
-                }
-
-                else -> false
-            }
+        binding.settingsBtn.setOnClickListener {
+            startActivity(
+                Intent(this, SettingsActivity::class.java),
+                ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+            )
         }
     }
 

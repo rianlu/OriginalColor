@@ -62,8 +62,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
 
         val clipboardManager =
             requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        // 需要比 theme 中的值大一点，防止没有完全覆盖
-        val radius = PxUtils.dp2px(requireContext(), 28).toFloat()
+        val radius = PxUtils.dp2px(requireContext(), 24).toFloat()
         val shape = ShapeDrawable(RoundRectShape(floatArrayOf(radius, radius, radius, radius, 0F, 0F, 0F, 0F), null, null))
         shape.paint.color = Color.parseColor(originalColor.HEX).setAlpha(0.5F)
         binding.bottomSheetLayout.background = shape

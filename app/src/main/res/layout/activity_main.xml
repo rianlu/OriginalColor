@@ -23,10 +23,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:elevation="0dp"
+                style="@style/TopAppBar"
                 app:layout_collapseMode="pin"
-                app:menu="@menu/app_bar_menu"
                 app:navigationIcon="@drawable/ic_random_cube"
-                app:title="@string/app_name" />
+                app:title="@string/app_name">
+
+                <Button
+                    android:id="@+id/settingsBtn"
+                    style="@style/PrimaryIconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:contentDescription="@string/menu_settings"
+                    app:icon="@drawable/ic_settings" />
+            </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -62,14 +72,14 @@
     <com.google.android.material.search.SearchView
         android:id="@+id/colorSearchView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_anchor="@id/fabSearch">
 
         <include
             android:id="@+id/searchInnerView"
             layout="@layout/layout_inner_search_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </com.google.android.material.search.SearchView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

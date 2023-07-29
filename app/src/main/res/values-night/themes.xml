@@ -4,16 +4,13 @@
         <!-- Customize your dark theme here. -->
         <item name="colorPrimary">@color/my_dark_primary</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorPrimaryContainer">@color/my_light_primary</item>
+        <item name="colorPrimaryContainer">@color/my_dark_primary</item>
         <item name="android:colorBackground">@color/black</item>
         <item name="colorSurface">@color/black</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="chipStyle">@style/Widget.Material3.Chip.Filter</item>
-    </style>
-    <style name="ColorNameText">
-        <item name="android:textColor">@color/white</item>
     </style>
     <style name="ColorInfoText">
         <item name="drawableEndCompat">@drawable/ic_copy</item>
@@ -22,6 +19,10 @@
         <item name="android:clickable">true</item>
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="TopAppBar" parent="">
+        <item name="navigationIconTint">@color/my_dark_primary</item>
     </style>
 
     <!--Custom Switch-->

@@ -18,9 +18,6 @@
 
     <style name="Theme.OriginalColor" parent="Base.Theme.OriginalColor" />
 
-    <style name="ColorNameText">
-        <item name="android:textColor">@color/black</item>
-    </style>
     <style name="ColorInfoText">
         <item name="drawableEndCompat">@drawable/ic_copy</item>
         <item name="android:drawablePadding">8dp</item>
@@ -28,6 +25,18 @@
         <item name="android:clickable">true</item>
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:padding">8dp</item>
+    </style>
+    
+    <style name="TopAppBar" parent="">
+        <item name="android:textColor">@color/my_light_primary</item>
+        <item name="expandedTitleTextColor">@color/my_light_primary</item>
+        <item name="collapsedTitleTextColor">@color/my_light_primary</item>
+        <item name="navigationIconTint">@color/my_light_primary</item>
+        <item name="titleTextColor">@color/my_light_primary</item>
+    </style>
+
+    <style name="PrimaryIconButton" parent="ThemeOverlay.App.IconButton">
+        <item name="iconTint">@color/my_light_primary</item>
     </style>
 
     <!--Custom Switch-->
@@ -58,6 +67,6 @@
 
     <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">20dp</item>
+        <item name="cornerSize">24dp</item>
     </style>
 </resources>
