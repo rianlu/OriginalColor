@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Resources
-import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +20,8 @@ import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorItemDecoration
-import com.wzl.originalcolor.utils.PxUtils
+import com.wzl.originalcolor.utils.PxExtensions
+import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.VibratorUtils
 import com.wzl.originalcolor.viewmodel.ColorViewModel
 import kotlin.random.Random
@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity() {
             binding.recyclerView.apply {
                 (layoutManager as GridLayoutManager).scrollToPositionWithOffset(
                     Random.nextInt(0, this@MainActivity.adapter.itemCount - 1),
-                    PxUtils.dp2px(context, 16)
+                    16.dp(this@MainActivity)
                 )
             }
         }

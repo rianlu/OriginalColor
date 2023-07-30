@@ -2,11 +2,7 @@ package com.wzl.originalcolor.adapter
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.LinearGradient
-import android.graphics.Shader
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RectShape
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -18,7 +14,8 @@ import com.wzl.originalcolor.R
 import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
-import com.wzl.originalcolor.utils.PxUtils
+import com.wzl.originalcolor.utils.PxExtensions
+import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.UiModeUtils
 
 
@@ -61,7 +58,7 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
                     if (UiModeUtils.isLightMode(context)) 0.7F else 1F
                 ), item.getRGBColor(), item.getRGBColor())
             )
-            gradientDrawable.cornerRadius = PxUtils.dp2px(context, 16).toFloat()
+            gradientDrawable.cornerRadius = 16.dp(context).toFloat()
             background = gradientDrawable
         }
     }

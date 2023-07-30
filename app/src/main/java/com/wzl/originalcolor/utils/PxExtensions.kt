@@ -6,24 +6,24 @@ import android.util.TypedValue
 /**
  * @Author lu
  * @Date 2023/5/3 01:18
- * @ClassName: PxUtils
+ * @ClassName: PxExtensions
  * @Description:
  */
-object PxUtils {
+object PxExtensions {
 
-    fun dp2px(context: Context, dp: Int): Int {
+    fun Int.dp(context: Context): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
-            dp.toFloat(),
-            context.getResources().getDisplayMetrics()
+            this.toFloat(),
+            context.resources.displayMetrics
         ).toInt()
     }
 
-    fun sp2px(context: Context, sp: Int): Int {
+    fun Int.sp(context: Context): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
-            sp.toFloat(),
-            context.getResources().getDisplayMetrics()
+            this.toFloat(),
+            context.resources.displayMetrics
         ).toInt()
     }
 }

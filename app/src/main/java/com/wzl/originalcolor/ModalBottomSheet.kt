@@ -1,6 +1,5 @@
 package com.wzl.originalcolor
 
-import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -13,17 +12,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.cardview.widget.CardView
-import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.BitmapUtils
 import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
-import com.wzl.originalcolor.utils.PxUtils
+import com.wzl.originalcolor.utils.PxExtensions
+import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.UiModeUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,27 +49,12 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         return binding.root
     }
 
-//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-//        dialog?.setOnShowListener { it ->
-//            val d = it as BottomSheetDialog
-//            val bottomSheet = d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-//            bottomSheet?.let {
-//                val behavior = BottomSheetBehavior.from(it)
-//                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-//            }
-//        }
-//        return super.onCreateDialog(savedInstanceState)
-//    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val clipboardManager =
             requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val radius = PxUtils.dp2px(requireContext(), 24).toFloat()
-        val shape = ShapeDrawable(RoundRectShape(floatArrayOf(radius, radius, radius, radius, 0F, 0F, 0F, 0F), null, null))
-        shape.paint.color = Color.parseColor(originalColor.HEX).setAlpha(0.5F)
-        binding.bottomSheetLayout.background = shape
+        binding.bottomSheetLayout.setCornerBackground(24, originalColor.getRGBColor().setAlpha(0.5F))
         binding.colorCardView.apply {
             setCardBackgroundColor(Color.parseColor(originalColor.HEX))
         }
@@ -86,7 +70,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             )
         }
 
-        binding.copyColorLayout.setBackgroundColor(originalColor.getRGBColor().setAlpha(0.1F))
+        binding.copyColorLayout.setCornerBackground(24, originalColor.getRGBColor().setAlpha(0.1F))
         binding.colorHEX.apply {
             text = originalColor.HEX
             setOnClickListener {
@@ -124,9 +108,9 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
 
             val bitmap = BitmapUtils.viewToBitmap(
                 shareView,
-                PxUtils.dp2px(requireContext(), 400),
-                PxUtils.dp2px(requireContext(), 250),
-                PxUtils.dp2px(requireContext(), 16).toFloat()
+                400.dp(requireContext()),
+                250.dp(requireContext()),
+                16.dp(requireContext()).toFloat()
             )
             BitmapUtils.shareBitmap(requireContext(), bitmap, originalColor.NAME)
             dismiss()
@@ -156,6 +140,34 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             getString(R.string.copied_to_clipboard),
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private fun View.setCornerBackground(radius: Int, @ColorInt color: Int) {
+        val cornerRadius = radius.toFloat()
+        val shape = ShapeDrawable(RoundRectShape(
+            floatArrayOf(cornerRadius, cornerRadius, cornerRadius, cornerRadius,
+                cornerRadius, cornerRadius, cornerRadius, cornerRadius
+            ), null, null)
+        )
+        shape.paint.color = color
+        this.background = shape
+    }
+
+    private fun View.setCornerBackground(leftRadius: Int, topRadius: Int, rightRadius: Int, bottomRadius: Int, @ColorInt color: Int) {
+        val shape = ShapeDrawable(RoundRectShape(
+            floatArrayOf(
+                leftRadius.dp(requireContext()).toFloat(),
+                leftRadius.dp(requireContext()).toFloat(),
+                topRadius.dp(requireContext()).toFloat(),
+                topRadius.dp(requireContext()).toFloat(),
+                rightRadius.dp(requireContext()).toFloat(),
+                rightRadius.dp(requireContext()).toFloat(),
+                bottomRadius.dp(requireContext()).toFloat(),
+                bottomRadius.dp(requireContext()).toFloat(),
+            ), null, null)
+        )
+        shape.paint.color = color
+        this.background = shape
     }
 
     companion object {

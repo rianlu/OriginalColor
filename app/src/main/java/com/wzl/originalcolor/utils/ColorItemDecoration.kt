@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.wzl.originalcolor.utils.PxExtensions.dp
 
 /**
  * @Author lu
@@ -21,7 +22,7 @@ class ColorItemDecoration(private val context: Context, private val gridCount: I
     ) {
 //        super.getItemOffsets(outRect, view, parent, state)
         val position = parent.getChildAdapterPosition(view)
-        val margin = PxUtils.dp2px(context, 16)
+        val margin = 16.dp(context)
         if (gridCount == 1) {
             if (position == 0) {
                 outRect.top = margin
