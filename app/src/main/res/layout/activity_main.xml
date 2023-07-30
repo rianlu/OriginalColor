@@ -13,9 +13,10 @@
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            style="?attr/collapsingToolbarLayoutMediumStyle"
             android:layout_width="match_parent"
             android:layout_height="?attr/collapsingToolbarLayoutMediumSize"
+            app:collapsedTitleTextColor="@color/primary_color"
+            app:expandedTitleTextColor="@color/primary_color"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -23,16 +24,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:elevation="0dp"
-                style="@style/TopAppBar"
                 app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/ic_random_cube"
+                app:navigationIconTint="@color/primary_color"
                 app:title="@string/app_name">
 
                 <Button
                     android:id="@+id/settingsBtn"
-                    style="@style/PrimaryIconButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    style="@style/ThemeOverlay.App.IconButton"
+                    app:iconTint="@color/primary_color"
                     android:layout_gravity="end"
                     android:contentDescription="@string/menu_settings"
                     app:icon="@drawable/ic_settings" />

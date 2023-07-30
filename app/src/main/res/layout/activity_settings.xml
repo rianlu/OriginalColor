@@ -136,7 +136,7 @@
             android:gravity="center"
             android:padding="16dp"
             android:text="@string/author_info"
-            android:textColor="@color/my_light_primary"
+            android:textColor="@color/primary_color"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
