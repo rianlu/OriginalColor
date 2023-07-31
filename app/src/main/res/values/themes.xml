@@ -12,11 +12,23 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="chipStyle">@style/Widget.Material3.Chip.Filter</item>
+        <item name="chipStyle">@style/Widget.App.Chip</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
     </style>
 
     <style name="Theme.OriginalColor" parent="Base.Theme.OriginalColor" />
+
+    <style name="Widget.App.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipStrokeColor">@color/background_tint</item>
+<!--        <item name="chipStrokeWidth">2dp</item>-->
+        <item name="checkedIconTint">@color/primary_color</item>
+        <item name="chipBackgroundColor">@color/white</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Chip</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Chip" parent="">
+        <item name="colorOnSurface">@color/primary_color</item>
+    </style>
 
     <style name="ColorInfoText">
         <item name="android:textSize">@dimen/copy_text_size</item>
