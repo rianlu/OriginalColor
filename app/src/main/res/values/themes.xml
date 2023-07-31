@@ -19,15 +19,7 @@
     <style name="Theme.OriginalColor" parent="Base.Theme.OriginalColor" />
 
     <style name="Widget.App.Chip" parent="Widget.Material3.Chip.Filter">
-        <item name="chipStrokeColor">@color/background_tint</item>
-<!--        <item name="chipStrokeWidth">2dp</item>-->
-        <item name="checkedIconTint">@color/primary_color</item>
-        <item name="chipBackgroundColor">@color/white</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Chip</item>
-    </style>
-
-    <style name="ThemeOverlay.App.Chip" parent="">
-        <item name="colorOnSurface">@color/primary_color</item>
+        <item name="chipBackgroundColor">@color/background_tint</item>
     </style>
 
     <style name="ColorInfoText">

@@ -10,7 +10,7 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="chipStyle">@style/Widget.Material3.Chip.Filter</item>
+        <item name="chipStyle">@style/Widget.App.Chip</item>
     </style>
     <style name="ColorInfoText">
         <item name="android:textSize">@dimen/copy_text_size</item>
