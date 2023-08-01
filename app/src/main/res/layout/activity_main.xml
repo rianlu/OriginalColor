@@ -31,26 +31,38 @@
 
                 <Button
                     android:id="@+id/settingsBtn"
+                    style="@style/ThemeOverlay.App.IconButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/ThemeOverlay.App.IconButton"
-                    app:iconTint="@color/primary_color"
                     android:layout_gravity="end"
                     android:contentDescription="@string/menu_settings"
-                    app:icon="@drawable/ic_settings" />
+                    app:icon="@drawable/ic_settings"
+                    app:iconTint="@color/primary_color" />
             </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/emptyDataView"
+    <LinearLayout
+        android:id="@+id/emptyListPlaceholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/empty_data"
-        android:scaleType="centerInside"
-        android:src="@drawable/bg_empty_search"
-        android:visibility="invisible" />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/empty_data"
+            android:scaleType="centerInside"
+            android:src="@drawable/empty_list_placeholder" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_list_hint" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

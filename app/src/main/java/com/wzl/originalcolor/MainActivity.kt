@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateColorList(list: List<OriginalColor>) {
-        binding.emptyDataView.isVisible = list.isEmpty()
+        binding.emptyListPlaceholder.isVisible = list.isEmpty()
         adapter.submitList(list)
     }
 
