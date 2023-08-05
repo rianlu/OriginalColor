@@ -14,12 +14,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.cardview.widget.CardView
+import androidx.core.view.WindowCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.BitmapUtils
 import com.wzl.originalcolor.utils.ColorExtensions.brightness
+import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxExtensions
 import com.wzl.originalcolor.utils.PxExtensions.dp
@@ -54,7 +56,16 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
 
         val clipboardManager =
             requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        binding.bottomSheetLayout.setCornerBackground(24, originalColor.getRGBColor().setAlpha(0.5F))
+
+        val sheetBackground = originalColor.getRGBColor().setAlpha(0.5F)
+        binding.bottomSheetLayout.setCornerBackground(24, 24, 0, 0, sheetBackground)
+
+        // 设置虚拟键同色
+        dialog?.window?.run {
+            navigationBarColor = sheetBackground
+            WindowCompat.getInsetsController(this, this.decorView).isAppearanceLightNavigationBars = true
+        }
+
         binding.colorCardView.apply {
             setCardBackgroundColor(Color.parseColor(originalColor.HEX))
         }
@@ -67,6 +78,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             text = originalColor.NAME
             setTextColor(originalColor.getRGBColor()
                 .brightness(if (UiModeUtils.isLightMode(requireContext())) -0.1F else 0.3F)
+                .setAlpha(0.9F)
             )
         }
 
