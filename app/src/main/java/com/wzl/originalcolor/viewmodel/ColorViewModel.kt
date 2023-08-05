@@ -26,6 +26,7 @@ import kotlin.random.Random
 class ColorViewModel : ViewModel() {
 
     private var colorList: List<OriginalColor> = mutableListOf()
+    private var filterList: List<OriginalColor> = mutableListOf()
 
     fun getRandomColor(context: Context): OriginalColor? {
         checkColorList(context)
@@ -69,6 +70,7 @@ class ColorViewModel : ViewModel() {
                 floor(rgbToHsv(o2.getRGBColor())[0] - rgbToHsv(o1.getRGBColor())[0]).toInt()
             }
         }
+        filterList = colorList
         return colorList
     }
 
@@ -76,26 +78,33 @@ class ColorViewModel : ViewModel() {
     fun getColorListByTag(context: Context, tag: String): List<OriginalColor> {
         checkColorList(context)
         if (tag == context.getString(R.string.chip_full)) {
-            return colorList
+            filterList = colorList
+            return filterList
         }
-        return if (tag != context.getString(R.string.chip_other)) {
+        filterList =  if (tag != context.getString(R.string.chip_other)) {
             colorList.filter { it.NAME.last().toString() == tag }
         } else {
             colorList.filter {
                 !COLORS.contains(it.NAME.last().toString())
             }
         }
+        return  filterList
     }
 
     fun searchColorByKeyword(context: Context, keyword: String): List<OriginalColor> {
         checkColorList(context)
-        return colorList.filter { it.NAME.contains(keyword) }
+        filterList =  colorList.filter { it.NAME.contains(keyword) }
+        return filterList
     }
 
     private fun checkColorList(context: Context) {
         colorList.ifEmpty {
             getColorList(context)
         }
+    }
+
+    fun checkFilterList(): Boolean {
+        return filterList.isEmpty()
     }
 
     private fun rgbToHsv(color: Int): FloatArray {

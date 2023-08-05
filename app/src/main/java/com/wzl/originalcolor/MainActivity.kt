@@ -123,6 +123,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.topAppBar.setNavigationOnClickListener {
+            if (colorViewModel.checkFilterList()) {
+                return@setNavigationOnClickListener
+            }
             VibratorUtils.vibrate(this)
             binding.recyclerView.apply {
                 (layoutManager as GridLayoutManager).scrollToPositionWithOffset(
