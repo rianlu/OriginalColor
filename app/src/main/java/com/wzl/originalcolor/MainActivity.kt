@@ -24,6 +24,8 @@ import com.wzl.originalcolor.utils.PxExtensions
 import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.VibratorUtils
 import com.wzl.originalcolor.viewmodel.ColorViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
@@ -42,7 +44,14 @@ class MainActivity : AppCompatActivity() {
         initVibration()
         adapter = ColorAdapter()
         adapter.setItemAnimation(BaseQuickAdapter.AnimationType.AlphaIn)
-        updateColorList(colorViewModel.getColorList(this))
+
+        runBlocking {
+            colorViewModel.getFlowList(this@MainActivity).collect { list ->
+                updateColorList(list)
+            }
+        }
+
+//        updateColorList(colorViewModel.getColorList(this))
         binding.recyclerView.apply {
             gridCount = when (requestedOrientation) {
                 ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED -> {
@@ -134,6 +143,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+
         binding.settingsBtn.setOnClickListener {
             startActivity(
                 Intent(this, SettingsActivity::class.java),

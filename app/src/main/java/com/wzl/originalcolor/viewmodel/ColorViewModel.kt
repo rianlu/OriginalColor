@@ -8,6 +8,10 @@ import com.google.gson.reflect.TypeToken
 import com.wzl.originalcolor.COLORS
 import com.wzl.originalcolor.R
 import com.wzl.originalcolor.model.OriginalColor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import org.json.JSONException
 import java.io.BufferedReader
 import java.io.IOException
@@ -36,6 +40,41 @@ class ColorViewModel : ViewModel() {
             val max = colorList.size
             colorList[Random.nextInt(0, max - 1)]
         }
+    }
+
+    suspend fun getFlowList(context: Context): Flow<List<OriginalColor>> {
+        return flow {
+            val stringBuilder = StringBuilder()
+            try {
+                val isr = InputStreamReader(context.assets.open("colors.json"))
+                val br = BufferedReader(isr)
+                var line: String?
+                while (br.readLine().also { line = it } != null) {
+                    stringBuilder.append(line)
+                }
+                br.close()
+                isr.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+            val jsonString = stringBuilder.toString()
+            val tempColorList: List<OriginalColor> =
+                Gson().fromJson(jsonString, object : TypeToken<ArrayList<OriginalColor>>() {}.type)
+            colorList = tempColorList.sortedWith <OriginalColor> { o1, o2 ->
+                if (o1.NAME == "栗紫" || o2.NAME == "栗紫") {
+                    print(rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1])
+                }
+                if (rgbToHsv(o1.getRGBColor())[0] == rgbToHsv(o2.getRGBColor())[0]) {
+                    floor(rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1]).toInt()
+                } else {
+                    floor(rgbToHsv(o2.getRGBColor())[0] - rgbToHsv(o1.getRGBColor())[0]).toInt()
+                }
+            }
+            filterList = colorList
+            emit(colorList)
+        }.flowOn(Dispatchers.IO)
     }
 
     fun getColorList(context: Context): List<OriginalColor> {
