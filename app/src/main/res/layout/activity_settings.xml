@@ -137,7 +137,7 @@
             android:padding="16dp"
             android:text="@string/author_info"
             android:textColor="@color/primary_color"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
