@@ -69,11 +69,13 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         binding.colorCardView.apply {
             setCardBackgroundColor(Color.parseColor(originalColor.HEX))
         }
-        binding.colorPinyin.setTextColor(
-            originalColor.getRGBColor()
-                .brightness(if (UiModeUtils.isLightMode(requireContext())) -0.1F else 0.3F)
-                .setAlpha(0.3F)
-        )
+        binding.colorPinyin.apply {
+            text = originalColor.pinyin.uppercase()
+            setTextColor(originalColor.getRGBColor()
+                    .brightness(if (UiModeUtils.isLightMode(requireContext())) -0.1F else 0.3F)
+                    .setAlpha(0.3F)
+            )
+        }
         binding.colorName.apply {
             text = originalColor.NAME
             setTextColor(originalColor.getRGBColor()
