@@ -10,15 +10,15 @@ import com.wzl.originalcolor.R
 import com.wzl.originalcolor.model.OriginalColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.json.JSONException
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
-import java.util.Collections
 import kotlin.math.floor
-import kotlin.math.roundToInt
 import kotlin.random.Random
 
 /**
@@ -32,52 +32,11 @@ class ColorViewModel : ViewModel() {
     private var colorList: List<OriginalColor> = mutableListOf()
     private var filterList: List<OriginalColor> = mutableListOf()
 
-    fun getRandomColor(context: Context): OriginalColor? {
-        checkColorList(context)
-        return if (colorList.isEmpty()) {
-            null
-        } else {
-            val max = colorList.size
-            colorList[Random.nextInt(0, max - 1)]
-        }
-    }
+    private var _flowLst = MutableStateFlow<List<OriginalColor>>(emptyList())
+    var flowList = _flowLst
+        private set
 
-    suspend fun getFlowList(context: Context): Flow<List<OriginalColor>> {
-        return flow {
-            val stringBuilder = StringBuilder()
-            try {
-                val isr = InputStreamReader(context.assets.open("colors.json"))
-                val br = BufferedReader(isr)
-                var line: String?
-                while (br.readLine().also { line = it } != null) {
-                    stringBuilder.append(line)
-                }
-                br.close()
-                isr.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-            val jsonString = stringBuilder.toString()
-            val tempColorList: List<OriginalColor> =
-                Gson().fromJson(jsonString, object : TypeToken<ArrayList<OriginalColor>>() {}.type)
-            colorList = tempColorList.sortedWith <OriginalColor> { o1, o2 ->
-                if (o1.NAME == "栗紫" || o2.NAME == "栗紫") {
-                    print(rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1])
-                }
-                if (rgbToHsv(o1.getRGBColor())[0] == rgbToHsv(o2.getRGBColor())[0]) {
-                    floor(rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1]).toInt()
-                } else {
-                    floor(rgbToHsv(o2.getRGBColor())[0] - rgbToHsv(o1.getRGBColor())[0]).toInt()
-                }
-            }
-            filterList = colorList
-            emit(colorList)
-        }.flowOn(Dispatchers.IO)
-    }
-
-    fun getColorList(context: Context): List<OriginalColor> {
+    fun initData(context: Context): List<OriginalColor> {
         if (colorList.isNotEmpty()) {
             return colorList
         }
@@ -110,12 +69,12 @@ class ColorViewModel : ViewModel() {
             }
         }
         filterList = colorList
+        _flowLst.value = colorList
         return colorList
     }
 
     // 其他：淡肉色 棕色 粉色 褐色 赭 醉瓜肉 淡咖啡 金驼
     fun getColorListByTag(context: Context, tag: String): List<OriginalColor> {
-        checkColorList(context)
         if (tag == context.getString(R.string.chip_full)) {
             filterList = colorList
             return filterList
@@ -130,20 +89,27 @@ class ColorViewModel : ViewModel() {
         return  filterList
     }
 
-    fun searchColorByKeyword(context: Context, keyword: String): List<OriginalColor> {
-        checkColorList(context)
-        filterList =  colorList.filter { it.NAME.contains(keyword) }
-        return filterList
-    }
-
-    private fun checkColorList(context: Context) {
-        colorList.ifEmpty {
-            getColorList(context)
+    // 筛选
+    fun filterByTag(context: Context, tag: String) {
+        _flowLst.value = if (tag == context.getString(R.string.chip_full)) {
+            colorList
+        } else if (tag != context.getString(R.string.chip_other)) {
+            colorList.filter { it.NAME.last().toString() == tag }
+        } else {
+            colorList.filter {
+                !COLORS.contains(it.NAME.last().toString())
+            }
         }
     }
 
-    fun checkFilterList(): Boolean {
-        return filterList.isEmpty()
+    // 搜索
+    fun searchByKeyword(keyword: String) {
+        _flowLst.value = colorList.filter { it.NAME.contains(keyword) }
+    }
+
+    fun searchColorByKeyword(keyword: String): List<OriginalColor> {
+        filterList =  colorList.filter { it.NAME.contains(keyword) }
+        return filterList
     }
 
     private fun rgbToHsv(color: Int): FloatArray {

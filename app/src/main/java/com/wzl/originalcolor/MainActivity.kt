@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -20,12 +21,9 @@ import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorItemDecoration
-import com.wzl.originalcolor.utils.PxExtensions
 import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.VibratorUtils
 import com.wzl.originalcolor.viewmodel.ColorViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
@@ -45,13 +43,18 @@ class MainActivity : AppCompatActivity() {
         adapter = ColorAdapter()
         adapter.setItemAnimation(BaseQuickAdapter.AnimationType.AlphaIn)
 
-        runBlocking {
-            colorViewModel.getFlowList(this@MainActivity).collect { list ->
-                updateColorList(list)
+        lifecycleScope.launchWhenCreated {
+            colorViewModel.flowList.collect { list ->
+                binding.emptyListPlaceholder.isVisible = list.isEmpty()
+                adapter.submitList(list)
+                binding.recyclerView.isVisible = list.isNotEmpty()
+                binding.recyclerView.scrollToPositionWithOffset(
+                    0, 16.dp(this@MainActivity)
+                )
             }
         }
 
-//        updateColorList(colorViewModel.getColorList(this))
+        colorViewModel.initData(this)
         binding.recyclerView.apply {
             gridCount = when (requestedOrientation) {
                 ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED -> {
@@ -78,14 +81,11 @@ class MainActivity : AppCompatActivity() {
                 super.onScrolled(recyclerView, dx, dy)
                 binding.fabSearch.let { fabSearch ->
                     if (dy > 30) {
-//                        fabSearch.hide()
                         fabSearch.setImageIcon(Icon.createWithResource(this@MainActivity, R.drawable.ic_top))
                         fabSearch.tag = "scrollToTop"
                     } else if (dy < -30) {
-//                        fabSearch.show()
                         fabSearch.setImageIcon(Icon.createWithResource(this@MainActivity, R.drawable.ic_search))
                         fabSearch.tag = "search"
-
                     }
                 }
             }
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
             // 选择标签自动清除搜索框文本
             binding.colorSearchView.editText.text.clear()
             val chipTag = group.findViewById<Chip>(checkedIds.first()).text.toString()
-            updateColorList(colorViewModel.getColorListByTag(this, chipTag))
+            colorViewModel.filterByTag(this, chipTag)
             binding.colorSearchView.hide()
         }
 
@@ -104,11 +104,11 @@ class MainActivity : AppCompatActivity() {
             searchView.editText.setOnEditorActionListener { v, actionId, event ->
                 val keyword = searchView.text.toString()
                 if (keyword.isNotEmpty()) {
-                    updateColorList(colorViewModel.searchColorByKeyword(this, keyword))
+                    colorViewModel.searchByKeyword(keyword)
                 } else {
                     binding.searchInnerView.colorChipGroup.let { group ->
                         val chipTag = group.findViewById<Chip>(group.checkedChipId).text.toString()
-                        updateColorList(colorViewModel.getColorListByTag(this, chipTag))
+                        colorViewModel.filterByTag(this, chipTag)
                     }
                 }
                 searchView.hide()
@@ -132,16 +132,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.topAppBar.setNavigationOnClickListener {
-            if (colorViewModel.checkFilterList()) {
+            if (adapter.itemCount == 0) {
                 return@setNavigationOnClickListener
             }
             VibratorUtils.vibrate(this)
-            binding.recyclerView.apply {
-                (layoutManager as GridLayoutManager).scrollToPositionWithOffset(
-                    Random.nextInt(0, this@MainActivity.adapter.itemCount - 1),
-                    16.dp(this@MainActivity)
-                )
-            }
+            binding.recyclerView.scrollToPositionWithOffset(
+                Random.nextInt(0, adapter.itemCount - 1),
+                16.dp(this)
+            )
         }
 
         binding.settingsBtn.setOnClickListener {
@@ -160,11 +158,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateColorList(list: List<OriginalColor>) {
-        binding.emptyListPlaceholder.isVisible = list.isEmpty()
-        adapter.submitList(list)
-    }
-
     private fun initVibration() {
         val sp = getSharedPreferences("settings", Context.MODE_PRIVATE)
         VibratorUtils.updateVibration(sp.getBoolean("vibration", true))
@@ -179,6 +172,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return builder.toString()
+    }
+
+    private fun RecyclerView.scrollToPositionWithOffset(position: Int, offset: Int) {
+        (layoutManager as GridLayoutManager)
+            .scrollToPositionWithOffset(position, offset)
     }
 }
 
