@@ -114,7 +114,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             shareView.findViewById<TextView>(R.id.colorCMYK).text =
                 originalColor.CMYK.arrayToString()
             shareView.findViewById<View>(R.id.colorDisplayView)
-                .setBackgroundColor(Color.parseColor(originalColor.HEX))
+                .setCornerBackground(16.dp(requireContext()), Color.parseColor(originalColor.HEX))
             val brighterColor =
                 Color.parseColor(originalColor.HEX).brightness(0.3F)
             shareView.findViewById<CardView>(R.id.shareCardView)
