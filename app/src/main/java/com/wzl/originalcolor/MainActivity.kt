@@ -142,11 +142,17 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        binding.settingsBtn.setOnClickListener {
-            startActivity(
-                Intent(this, SettingsActivity::class.java),
-                ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
-            )
+        binding.topAppBar.setOnMenuItemClickListener {menuItem ->
+            when (menuItem.itemId) {
+                R.id.settings -> {
+                    startActivity(
+                        Intent(this, SettingsActivity::class.java),
+                        ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+                    )
+                    true
+                }
+                else -> false
+            }
         }
     }
 

@@ -25,20 +25,10 @@
                 android:layout_height="?attr/actionBarSize"
                 android:elevation="0dp"
                 app:layout_collapseMode="pin"
+                app:menu="@menu/app_bar_menu"
                 app:navigationIcon="@drawable/ic_random_cube"
                 app:navigationIconTint="@color/primary_color"
-                app:title="@string/app_name">
-
-                <Button
-                    android:id="@+id/settingsBtn"
-                    style="@style/ThemeOverlay.App.IconButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:contentDescription="@string/menu_settings"
-                    app:icon="@drawable/ic_settings"
-                    app:iconTint="@color/primary_color" />
-            </com.google.android.material.appbar.MaterialToolbar>
+                app:title="@string/app_name" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
