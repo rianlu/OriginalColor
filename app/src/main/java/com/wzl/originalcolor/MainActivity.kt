@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
+import android.view.animation.OvershootInterpolator
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -175,8 +176,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun RecyclerView.scrollToPositionWithOffset(position: Int, offset: Int) {
+        // 折叠标题栏，保持视觉统一
+        if (position != 0) {
+            binding.appBarLayout.setExpanded(false, true)
+        }
         (layoutManager as GridLayoutManager)
             .scrollToPositionWithOffset(position, offset)
+        this.translationY = 100F
+        animate()
+            .translationY(0F)
+            .setDuration(500)
+            .setInterpolator(OvershootInterpolator(3F))
     }
 }
 
