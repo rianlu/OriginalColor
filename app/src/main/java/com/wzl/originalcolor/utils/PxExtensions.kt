@@ -12,18 +12,12 @@ import android.util.TypedValue
 object PxExtensions {
 
     fun Int.dp(context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            this.toFloat(),
-            context.resources.displayMetrics
-        ).toInt()
+        val scale: Float = context.resources.displayMetrics.density
+        return (this * scale + 0.5f).toInt()
     }
 
-    fun Int.sp(context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP,
-            this.toFloat(),
-            context.resources.displayMetrics
-        ).toInt()
+    fun Int.dip(context: Context): Int {
+        val scale: Float = context.resources.displayMetrics.density
+        return (this * scale + 0.5f).toInt()
     }
 }

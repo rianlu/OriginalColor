@@ -12,7 +12,7 @@ import com.wzl.originalcolor.utils.PxExtensions.dp
  * @ClassName: ColorItemDecoration
  * @Description:
  */
-class ColorItemDecoration(private val context: Context, private val gridCount: Int = 1): RecyclerView.ItemDecoration() {
+class ColorItemDecoration(private val context: Context, private val gridCount: Int = PHONE_GRID_COUNT): RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(
         outRect: Rect,
@@ -23,33 +23,34 @@ class ColorItemDecoration(private val context: Context, private val gridCount: I
 //        super.getItemOffsets(outRect, view, parent, state)
         val position = parent.getChildAdapterPosition(view)
         val margin = 16.dp(context)
-        if (gridCount == 1) {
+        if (gridCount == PHONE_GRID_COUNT) {
             if (position == 0) {
                 outRect.top = margin
             }
             outRect.left = margin
             outRect.right = margin
             outRect.bottom = margin
-        } else if (gridCount == 3) {
-            if (position % 3 == 1) {
-                outRect.left = 0
-                outRect.right = 0
-            } else {
-                outRect.left = margin
-                outRect.right = margin
-            }
-            if (position < 3) {
+        } else if (gridCount == TABLET_GRID_COUNT) {
+            if (position < gridCount) {
                 outRect.top = margin
             } else {
                 outRect.top = 0
             }
-        }
-        else {
+            if (position % gridCount == 0) {
+                outRect.left = margin
+                outRect.right = margin / 2
+            } else {
+                outRect.left = margin / 2
+                outRect.right = margin
+            }
+        } else {
             outRect.top = margin
             outRect.left = margin
             outRect.right = margin
-            outRect.bottom = margin
         }
         outRect.bottom = margin
     }
 }
+
+const val PHONE_GRID_COUNT = 1
+const val TABLET_GRID_COUNT = 2
