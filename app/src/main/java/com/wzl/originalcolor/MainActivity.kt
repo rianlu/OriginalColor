@@ -22,6 +22,7 @@ import com.wzl.originalcolor.databinding.ActivityMainBinding
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorItemDecoration
 import com.wzl.originalcolor.utils.PxExtensions.dp
+import com.wzl.originalcolor.utils.ScreenUtils
 import com.wzl.originalcolor.utils.VibratorUtils
 import com.wzl.originalcolor.viewmodel.ColorViewModel
 import kotlin.random.Random
@@ -55,17 +56,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         colorViewModel.initData(this)
+        if (ScreenUtils.isPad(this@MainActivity)) {
+            gridCount = 2
+        }
         binding.recyclerView.apply {
-            gridCount = when (requestedOrientation) {
-                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED -> {
-                    val screenWidth = Resources.getSystem().displayMetrics.widthPixels
-                    val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-                    if (screenWidth > screenHeight) 2 else 1
-                }
-
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE -> 2
-                else -> 1
-            }
             layoutManager = GridLayoutManager(this@MainActivity, gridCount)
             addItemDecoration(ColorItemDecoration(this@MainActivity, gridCount))
         }

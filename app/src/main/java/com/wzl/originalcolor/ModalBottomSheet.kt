@@ -1,5 +1,6 @@
 package com.wzl.originalcolor
 
+import android.animation.ObjectAnimator
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -10,21 +11,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewPropertyAnimator
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AnticipateInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.cardview.widget.CardView
 import androidx.core.view.WindowCompat
+import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.BitmapUtils
 import com.wzl.originalcolor.utils.ColorExtensions.brightness
-import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
-import com.wzl.originalcolor.utils.PxExtensions
 import com.wzl.originalcolor.utils.PxExtensions.dp
+import com.wzl.originalcolor.utils.ScreenUtils
 import com.wzl.originalcolor.utils.UiModeUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -129,6 +134,8 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             BitmapUtils.shareBitmap(requireContext(), bitmap, originalColor.NAME)
             dismiss()
         }
+
+        startOrderedAnimation()
     }
 
     override fun onStart() {
@@ -197,5 +204,39 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             }
         }
         return builder.toString()
+    }
+
+    fun startOrderedAnimation() {
+        binding.colorName.animationPrepare()
+        binding.colorCardView.animationPrepare()
+        binding.copyColorLayout.animationPrepare()
+        val isPad = ScreenUtils.isPad(requireContext())
+        CoroutineScope(Dispatchers.Main).launch {
+            if (isPad) {
+                binding.colorPinyin.animationPrepare()
+                binding.colorPinyin.translationAnimation().start()
+                delay(100)
+            }
+            binding.colorName.translationAnimation().start()
+            delay(100)
+            binding.colorCardView.translationAnimation().start()
+            if (isPad) {
+                delay(100)
+            }
+            binding.copyColorLayout.translationAnimation().start()
+        }
+    }
+
+    private fun View.animationPrepare() {
+        this.alpha = 0F
+        this.translationY = 100F
+    }
+
+    private fun View.translationAnimation(): ViewPropertyAnimator {
+        return animate()
+            .alpha(1F)
+            .translationY(0F)
+            .setDuration(500)
+            .setInterpolator(OvershootInterpolator(3F))
     }
 }
