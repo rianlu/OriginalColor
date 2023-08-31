@@ -3,12 +3,14 @@ package com.wzl.originalcolor
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.transition.Fade
-import android.view.Window
+import android.text.method.LinkMovementMethod
 import androidx.appcompat.app.AppCompatActivity
 import com.wzl.originalcolor.databinding.ActivitySettingsBinding
+import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.VibratorUtils
 import java.io.File
 
@@ -25,29 +27,37 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
-        window.enterTransition = Fade()
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.settingsTopAppBar.setNavigationOnClickListener {
-            finish()
+        // 文本包含链接挑传
+        binding.copyrightText.movementMethod = LinkMovementMethod.getInstance()
+        val themeSp = getSharedPreferences(
+            Config.SP_GLOBAL_THEME_COLOR, Context.MODE_PRIVATE)
+        themeSp.getString(Config.SP_PARAM_THEME_COLOR, null)?.let { hex ->
+            initCustomThemeColor(hex)
         }
+        binding.settingsTopAppBar
+            .setNavigationOnClickListener { finish() }
 
         binding.appVersion.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0)).versionName
+            packageManager.getPackageInfo(
+                packageName,
+                PackageManager.PackageInfoFlags.of(0)
+            ).versionName
         } else {
             packageManager.getPackageInfo(packageName, 0).versionName
         }
 
-        val sp = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        binding.vibrationSwitch.isChecked = sp.getBoolean("vibration", true)
+        val settingsSp = getSharedPreferences(Config.SP_SETTINGS, Context.MODE_PRIVATE)
+        binding.vibrationSwitch.isChecked = settingsSp.getBoolean(
+            Config.SP_PARAM_VIBRATION, true)
         binding.vibrationSwitchItem.setOnClickListener {
             binding.vibrationSwitch.isChecked = !binding.vibrationSwitch.isChecked
         }
         binding.vibrationSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            sp.edit().apply {
-                putBoolean("vibration", isChecked)
+            settingsSp.edit().apply {
+                putBoolean(Config.SP_PARAM_VIBRATION, isChecked)
                 apply()
             }
             VibratorUtils.updateVibration(isChecked)
@@ -86,9 +96,36 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun calculateFileSize(size: Long): String {
         return if (size >= 1024 * 1024) {
-            "${size/1024} MB"
+            "${size / 1024} MB"
         } else if (size >= 1024) {
-            "${size/1024} KB"
-        } else  "$size B"
+            "${size / 1024} KB"
+        } else "$size B"
+    }
+
+    private fun initCustomThemeColor(hex: String) {
+        val themeColor = Color.parseColor(hex)
+        // Copyright
+        binding.copyrightText.setLinkTextColor(themeColor)
+        // Author
+        binding.authorText.setTextColor(themeColor)
+        binding.vibrationSwitch.apply {
+            val trackStates = arrayOf(
+                intArrayOf(android.R.attr.state_checked),
+                intArrayOf(-android.R.attr.state_checked)
+            )
+            val trackColors = intArrayOf(
+                themeColor, themeColor.setAlpha(0.1F)
+            )
+            trackTintList = ColorStateList(trackStates, trackColors)
+            trackDecorationTintList = ColorStateList.valueOf(themeColor)
+            val thumbStates = arrayOf(
+                intArrayOf(android.R.attr.state_checked),
+                intArrayOf(-android.R.attr.state_checked)
+            )
+            val thumbColors = intArrayOf(
+                Color.WHITE, themeColor
+            )
+            thumbTintList = ColorStateList(thumbStates, thumbColors)
+        }
     }
 }

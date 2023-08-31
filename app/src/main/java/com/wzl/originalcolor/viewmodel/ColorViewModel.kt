@@ -5,21 +5,14 @@ import android.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.wzl.originalcolor.COLORS
 import com.wzl.originalcolor.R
 import com.wzl.originalcolor.model.OriginalColor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import org.json.JSONException
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import kotlin.math.floor
-import kotlin.random.Random
 
 /**
  * @Author lu
@@ -83,7 +76,7 @@ class ColorViewModel : ViewModel() {
             colorList.filter { it.NAME.last().toString() == tag }
         } else {
             colorList.filter {
-                !COLORS.contains(it.NAME.last().toString())
+                !COLOR_TAGS.contains(it.NAME.last().toString())
             }
         }
         return  filterList
@@ -97,7 +90,7 @@ class ColorViewModel : ViewModel() {
             colorList.filter { it.NAME.last().toString() == tag }
         } else {
             colorList.filter {
-                !COLORS.contains(it.NAME.last().toString())
+                !COLOR_TAGS.contains(it.NAME.last().toString())
             }
         }
     }
@@ -118,3 +111,5 @@ class ColorViewModel : ViewModel() {
         return hsv
     }
 }
+
+val COLOR_TAGS = arrayOf("白", "灰", "红", "橙", "黄", "绿", "青", "蓝", "紫")

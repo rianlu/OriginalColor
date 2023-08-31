@@ -2,13 +2,11 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.OriginalColor" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-         <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimary">@color/primary_color</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorPrimaryContainer">@color/primary_color</item>
         <!--Main Background-->
         <item name="android:colorBackground">@color/white</item>
-        <!--Top App Bar Background-->
-        <item name="colorSurface">@color/white</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>

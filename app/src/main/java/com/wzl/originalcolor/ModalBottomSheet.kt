@@ -1,6 +1,5 @@
 package com.wzl.originalcolor
 
-import android.animation.ObjectAnimator
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -12,15 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.AnticipateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.cardview.widget.CardView
 import androidx.core.view.WindowCompat
-import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
@@ -93,21 +89,21 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         binding.colorHEX.apply {
             text = originalColor.HEX
             setOnClickListener {
-                copyToClipboardAndToast(this, originalColor.HEX, clipboardManager)
+                copyToClipboard(this, originalColor.HEX, clipboardManager)
             }
         }
         binding.colorRGB.apply {
             val rgbString = originalColor.RGB.arrayToString()
             text = rgbString
             setOnClickListener {
-                copyToClipboardAndToast(this, rgbString, clipboardManager)
+                copyToClipboard(this, rgbString, clipboardManager)
             }
         }
         binding.colorCMYK.apply {
             val cmykString = originalColor.CMYK.arrayToString()
             text = cmykString
             setOnClickListener {
-                copyToClipboardAndToast(this, cmykString, clipboardManager)
+                copyToClipboard(this, cmykString, clipboardManager)
             }
         }
 
@@ -144,7 +140,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun copyToClipboardAndToast(view: TextView, content: String, clipboardManager: ClipboardManager) {
+    private fun copyToClipboard(view: TextView, content: String, clipboardManager: ClipboardManager) {
         val clipData = ClipData.newPlainText("color", content)
         clipboardManager.setPrimaryClip(clipData)
         CoroutineScope(Dispatchers.Main).launch {
@@ -206,7 +202,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         return builder.toString()
     }
 
-    fun startOrderedAnimation() {
+    private fun startOrderedAnimation() {
         binding.colorName.animationPrepare()
         binding.colorCardView.animationPrepare()
         binding.copyColorLayout.animationPrepare()

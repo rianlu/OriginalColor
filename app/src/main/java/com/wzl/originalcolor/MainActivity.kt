@@ -4,13 +4,18 @@ import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.ColorStateList
 import android.content.res.Resources
+import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,6 +26,7 @@ import com.google.android.material.search.SearchView
 import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
 import com.wzl.originalcolor.model.OriginalColor
+import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.ColorItemDecoration
 import com.wzl.originalcolor.utils.PHONE_GRID_COUNT
 import com.wzl.originalcolor.utils.PxExtensions.dp
@@ -53,6 +59,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val themeSp = getSharedPreferences(
+            Config.SP_GLOBAL_THEME_COLOR, Context.MODE_PRIVATE)
+        themeSp.getString(Config.SP_PARAM_THEME_COLOR, null)?.let { hex ->
+            updateGlobalThemeColor(hex)
+        }
+
         if (ScreenUtils.isPad(this@MainActivity)) {
             gridCount = TABLET_GRID_COUNT
         }
@@ -63,6 +75,18 @@ class MainActivity : AppCompatActivity() {
                 val originalColor = adapter.getItem(position) ?: return@addOnItemChildClickListener
                 val modalBottomSheet = ModalBottomSheet(originalColor)
                 modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
+            }
+            it.addOnItemChildLongClickListener(R.id.colorBackground) {
+                    adapter, view, position ->
+                adapter.getItem(position)?.let { originColor ->
+                    val themeColor = originColor.HEX
+                    themeSp.edit().apply {
+                        putString(Config.SP_PARAM_THEME_COLOR, themeColor)
+                        apply()
+                    }
+                    updateGlobalThemeColor(themeColor)
+                }
+                true
             }
         }
 
@@ -129,11 +153,12 @@ class MainActivity : AppCompatActivity() {
                 searchView.hide()
                 false
             }
-            searchView.addTransitionListener { view, previousState, newState ->
-                if (binding.searchInnerView.colorChipGroup.checkedChipId == R.id.chipFull) {
-                    return@addTransitionListener
-                }
-            }
+            // TODO
+//            searchView.addTransitionListener { view, previousState, newState ->
+//                if (binding.searchInnerView.colorChipGroup.checkedChipId == R.id.chipFull) {
+//                    return@addTransitionListener
+//                }
+//            }
         }
 
         binding.fabSearch.setOnClickListener {
@@ -163,8 +188,7 @@ class MainActivity : AppCompatActivity() {
                 when (menuItem.itemId) {
                     R.id.settings -> {
                         startActivity(
-                            Intent(this@MainActivity, SettingsActivity::class.java),
-                            ActivityOptions.makeSceneTransitionAnimation(this@MainActivity).toBundle()
+                            Intent(this@MainActivity, SettingsActivity::class.java)
                         )
                         true
                     }
@@ -214,6 +238,41 @@ class MainActivity : AppCompatActivity() {
             .setDuration(500)
             .setInterpolator(OvershootInterpolator(3F))
     }
-}
 
-val COLORS = arrayOf("白", "灰", "红", "橙", "黄", "绿", "青", "蓝", "紫")
+    private fun updateGlobalThemeColor(hex: String) {
+        val themeColor = Color.parseColor(hex)
+
+        // 标题
+        binding.collapsingToolbarLayout.apply {
+            setExpandedTitleColor(themeColor)
+            setCollapsedTitleTextColor(themeColor)
+        }
+        binding.topAppBar.apply {
+//            setBackgroundColor(themeColor)
+            // Toolbar NavigationIcon
+            setNavigationIconTint(themeColor)
+            // 菜单——设置
+            menu.getItem(0).icon?.setTint(themeColor)
+        }
+        // FAB
+        binding.fabSearch.backgroundTintList = ColorStateList.valueOf(themeColor)
+
+        binding.searchInnerView.colorChipGroup.apply {
+            val states = arrayOf(
+                intArrayOf(android.R.attr.state_selected),
+                intArrayOf(android.R.attr.state_checked),
+                intArrayOf(-android.R.attr.state_selected),
+                intArrayOf(-android.R.attr.state_checked)
+                )
+            val colors = intArrayOf(
+                themeColor, themeColor,
+                themeColor.setAlpha(0.1F),
+                themeColor.setAlpha(0.1F)
+            )
+            forEach {
+                (it as Chip).chipBackgroundColor =
+                    ColorStateList(states, colors)
+            }
+        }
+    }
+}

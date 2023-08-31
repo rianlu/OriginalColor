@@ -20,6 +20,7 @@
             android:id="@+id/colorPinyin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/colorName"
             app:layout_constraintEnd_toEndOf="@+id/colorName"
             app:layout_constraintStart_toStartOf="@+id/colorName"
