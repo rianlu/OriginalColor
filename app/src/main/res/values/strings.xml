@@ -47,6 +47,7 @@
     <string name="app_version">版本</string>
     <string name="vibration">震动</string>
     <string name="share_app">分享APP</string>
+    <string name="add_app_widget">添加小组件</string>
     <string name="clear_cache">清除缓存</string>
     <string name="empty_list_hint">抱歉，没有找到～</string>
 </resources>

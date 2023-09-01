@@ -38,7 +38,7 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
         val textColor = Color.parseColor(item.HEX)
         holder.getView<TextView>(R.id.colorPinyin).apply {
             text = item.pinyin
-            setTextColor(Color.parseColor(item.HEX).brightness(
+            setTextColor(textColor.brightness(
                 if (textColor.isLight()) -0.3F
                 else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F)
                 .setAlpha(0.6F)
@@ -46,7 +46,7 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
         }
         holder.getView<TextView>(R.id.colorName).apply {
             text = item.NAME
-            setTextColor(Color.parseColor(item.HEX).brightness(
+            setTextColor(textColor.brightness(
                 if (textColor.isLight()) -0.3F
                 else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F)
             )

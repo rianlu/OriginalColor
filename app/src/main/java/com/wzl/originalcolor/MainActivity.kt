@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
                 if (adapter.itemCount == 0)
                     return@setNavigationOnClickListener
                 VibratorUtils.vibrate(this@MainActivity)
-                val randomPosition = Random.nextInt(0, adapter.itemCount - 1)
+                val randomPosition = Random.nextInt(0, adapter.itemCount)
                 binding.recyclerView.scrollToPositionWithOffset(
                     randomPosition, 16.dp(this@MainActivity)
                 )

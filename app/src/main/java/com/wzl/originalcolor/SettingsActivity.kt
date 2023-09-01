@@ -1,5 +1,7 @@
 package com.wzl.originalcolor
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -69,6 +71,14 @@ class SettingsActivity : AppCompatActivity() {
                 putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_content))
                 type = "text/plain"
             }, getString(R.string.share_to)))
+        }
+
+        binding.addAppWidgetItem.setOnClickListener {
+            val serviceComponent = ComponentName(this, ColorWidgetProvider::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                AppWidgetManager.getInstance(this)
+                    .requestPinAppWidget(serviceComponent, null, null)
+            }
         }
 
         val cachePath = File(externalCacheDir, "share_cards/")
