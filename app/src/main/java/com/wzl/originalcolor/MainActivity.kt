@@ -1,20 +1,15 @@
 package com.wzl.originalcolor
 
-import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -25,7 +20,6 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.search.SearchView
 import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
-import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.ColorItemDecoration
 import com.wzl.originalcolor.utils.PHONE_GRID_COUNT
@@ -34,13 +28,8 @@ import com.wzl.originalcolor.utils.ScreenUtils
 import com.wzl.originalcolor.utils.TABLET_GRID_COUNT
 import com.wzl.originalcolor.utils.VibratorUtils
 import com.wzl.originalcolor.viewmodel.ColorViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
@@ -61,9 +50,8 @@ class MainActivity : AppCompatActivity() {
 
         val themeSp = getSharedPreferences(
             Config.SP_GLOBAL_THEME_COLOR, Context.MODE_PRIVATE)
-        themeSp.getString(Config.SP_PARAM_THEME_COLOR, null)?.let { hex ->
-            updateGlobalThemeColor(hex)
-        }
+        val hex = themeSp.getString(Config.SP_PARAM_THEME_COLOR, null)
+        hex?.let { updateGlobalThemeColor(it) }
 
         if (ScreenUtils.isPad(this@MainActivity)) {
             gridCount = TABLET_GRID_COUNT
@@ -84,6 +72,7 @@ class MainActivity : AppCompatActivity() {
                         putString(Config.SP_PARAM_THEME_COLOR, themeColor)
                         apply()
                     }
+                    VibratorUtils.vibrate(this)
                     updateGlobalThemeColor(themeColor)
                 }
                 true
@@ -153,12 +142,17 @@ class MainActivity : AppCompatActivity() {
                 searchView.hide()
                 false
             }
-            // TODO
-//            searchView.addTransitionListener { view, previousState, newState ->
-//                if (binding.searchInnerView.colorChipGroup.checkedChipId == R.id.chipFull) {
-//                    return@addTransitionListener
-//                }
-//            }
+            searchView.addTransitionListener { view, previousState, newState ->
+                if (newState == SearchView.TransitionState.SHOWING) {
+                    binding.fabSearch
+                        .animate().scaleX(0F).scaleY(0F)
+                        .setDuration(200)
+                } else if (newState == SearchView.TransitionState.HIDING) {
+                    binding.fabSearch
+                        .animate().scaleX(1F).scaleY(1F)
+                        .setDuration(500)
+                }
+            }
         }
 
         binding.fabSearch.setOnClickListener {
@@ -240,15 +234,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateGlobalThemeColor(hex: String) {
-        val themeColor = Color.parseColor(hex)
 
+        val themeColor = Color.parseColor(hex)
         // 标题
         binding.collapsingToolbarLayout.apply {
+            // 折叠后的CollapsingToolbarLayout
+            setContentScrimColor(themeColor.setAlpha(0.1F))
             setExpandedTitleColor(themeColor)
             setCollapsedTitleTextColor(themeColor)
         }
         binding.topAppBar.apply {
-//            setBackgroundColor(themeColor)
             // Toolbar NavigationIcon
             setNavigationIconTint(themeColor)
             // 菜单——设置
@@ -257,6 +252,7 @@ class MainActivity : AppCompatActivity() {
         // FAB
         binding.fabSearch.backgroundTintList = ColorStateList.valueOf(themeColor)
 
+        // Search Chips
         binding.searchInnerView.colorChipGroup.apply {
             val states = arrayOf(
                 intArrayOf(android.R.attr.state_selected),
@@ -273,6 +269,16 @@ class MainActivity : AppCompatActivity() {
                 (it as Chip).chipBackgroundColor =
                     ColorStateList(states, colors)
             }
+        }
+
+        binding.colorSearchView.apply {
+            backgroundTintList =
+                ColorStateList.valueOf(themeColor)
+        }
+
+        // List Scrollbar
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            binding.recyclerView.verticalScrollbarThumbDrawable?.setTint(themeColor)
         }
     }
 }

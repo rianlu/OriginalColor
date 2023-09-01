@@ -26,7 +26,6 @@ object VibratorUtils {
         } else {
             context.getSystemService(VIBRATOR_SERVICE) as Vibrator
         }
-//        vibrator.vibrate(VibrationEffect.createOneShot(milliseconds, 100))
         val vibrationWaveFormDurationPattern =
             longArrayOf(0, milliseconds)
         vibrator.vibrate(VibrationEffect.createWaveform(vibrationWaveFormDurationPattern, -1))
