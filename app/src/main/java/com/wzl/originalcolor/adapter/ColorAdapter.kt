@@ -54,9 +54,12 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
         holder.getView<LinearLayout>(R.id.colorBackground).apply {
             val gradientDrawable = GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
-                intArrayOf(item.getRGBColor().setAlpha(
-                    if (UiModeUtils.isLightMode(context)) 0.7F else 1F
-                ), item.getRGBColor(), item.getRGBColor())
+                intArrayOf(
+                    if (UiModeUtils.isLightMode(context))
+                        item.getRGBColor().setAlpha(0.7F)
+                    else {
+                        item.getRGBColor().brightness(0.2F)
+                }, item.getRGBColor(), item.getRGBColor())
             )
             gradientDrawable.cornerRadius = 16.dp(context).toFloat()
             background = gradientDrawable

@@ -12,9 +12,12 @@ import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import androidx.appcompat.app.AppCompatActivity
 import com.wzl.originalcolor.databinding.ActivitySettingsBinding
+import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
+import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.VibratorUtils
 import java.io.File
+
 
 /**
  * @Author lu
@@ -76,8 +79,12 @@ class SettingsActivity : AppCompatActivity() {
         binding.addAppWidgetItem.setOnClickListener {
             val serviceComponent = ComponentName(this, ColorWidgetProvider::class.java)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val extras = Bundle()
+                val originalColor = ColorData.getThemeColor(this)
+                val remoteViews = RemoteViewsUtil.getWideWidgetView(this, originalColor)
+                extras.putParcelable(AppWidgetManager.EXTRA_APPWIDGET_PREVIEW, remoteViews)
                 AppWidgetManager.getInstance(this)
-                    .requestPinAppWidget(serviceComponent, null, null)
+                    .requestPinAppWidget(serviceComponent, extras, null)
             }
         }
 

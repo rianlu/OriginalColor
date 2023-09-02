@@ -3,6 +3,7 @@ package com.wzl.originalcolor.model
 import android.graphics.Color
 import androidx.annotation.ColorInt
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  * @Author lu
@@ -22,7 +23,7 @@ data class OriginalColor(
     val NAME: String = "",
     // 中文拼音
     val pinyin: String = ""
-) {
+): Serializable {
 
    @ColorInt
     fun getRGBColor(): Int {

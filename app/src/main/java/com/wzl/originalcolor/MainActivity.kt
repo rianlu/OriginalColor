@@ -190,7 +190,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
         colorViewModel.initData(this)
     }
 
@@ -199,6 +198,17 @@ class MainActivity : AppCompatActivity() {
             binding.colorSearchView.hide()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        intent?.getSerializableExtra("widgetColor")?.let { widgetColor ->
+            val position = colorViewModel.flowList.value.indexOf(widgetColor)
+            binding.recyclerView.scrollToPositionWithOffset(
+                position, 16.dp(this@MainActivity)
+            )
         }
     }
 

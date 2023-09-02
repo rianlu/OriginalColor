@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.wzl.originalcolor.Config
 import com.wzl.originalcolor.model.OriginalColor
 import org.json.JSONException
 import java.io.BufferedReader
@@ -51,6 +52,30 @@ object ColorData {
         }
         val randomPosition = Random.nextInt(0, colorList.size)
         return colorList[randomPosition]
+    }
+
+    fun getThemeColor(context: Context): OriginalColor {
+        val themeSp = context.getSharedPreferences(
+            Config.SP_GLOBAL_THEME_COLOR, Context.MODE_PRIVATE)
+        val hex = themeSp.getString(Config.SP_PARAM_THEME_COLOR, null)
+        var originalColor: OriginalColor
+        if (hex != null) {
+            originalColor = findColor(context, hex)
+        } else {
+            originalColor = getRandomColor(context)
+            themeSp.edit().also {
+                it.putString(Config.SP_PARAM_THEME_COLOR, originalColor.HEX)
+                it.apply()
+            }
+        }
+        return originalColor
+    }
+
+    private fun findColor(context: Context, hex: String): OriginalColor {
+        if (colorList.isNotEmpty()) {
+            initData(context)
+        }
+        return colorList.find { it.HEX.equals(hex) } ?: getRandomColor(context)
     }
 
     fun rgbToHsv(color: Int): FloatArray {
