@@ -1,5 +1,7 @@
 package com.wzl.originalcolor
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -31,6 +33,7 @@ import com.wzl.originalcolor.viewmodel.ColorViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlin.random.Random
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -191,6 +194,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
         colorViewModel.initData(this)
+        // 刷新 Widget
+        sendBroadcast(Intent(this, ColorWidgetProvider::class.java).apply {
+            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            val ids = AppWidgetManager.getInstance(application)
+                .getAppWidgetIds(ComponentName(application, ColorWidgetProvider::class.java))
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+        })
     }
 
     override fun onBackPressed() {
