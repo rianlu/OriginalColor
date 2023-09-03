@@ -1,21 +1,11 @@
 package com.wzl.originalcolor.viewmodel
 
 import android.content.Context
-import android.graphics.Color
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.wzl.originalcolor.R
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorData
-import com.wzl.originalcolor.utils.ColorData.initData
-import com.wzl.originalcolor.utils.ColorData.rgbToHsv
 import kotlinx.coroutines.flow.MutableStateFlow
-import org.json.JSONException
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
-import kotlin.math.floor
 
 /**
  * @Author lu

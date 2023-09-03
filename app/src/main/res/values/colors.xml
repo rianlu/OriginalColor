@@ -12,6 +12,7 @@
     <color name="purple">#8B00FF</color>
     <color name="grey">#808080</color>
 
+    // Deprecated
     <color name="primary_color">#EE6C4D</color>
 
     <color name="transparent">#00000000</color>

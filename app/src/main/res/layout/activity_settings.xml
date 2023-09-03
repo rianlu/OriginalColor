@@ -76,7 +76,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/shareAppItem"
+            android:id="@+id/periodRefreshSwitchItem"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="?android:attr/selectableItemBackground"
@@ -89,7 +89,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/share_app" />
+                android:text="@string/period_refresh_widget" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/periodRefreshSwitch"
+                style="@style/Widget.App.Switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:background="@null"
+                android:checked="true"
+                android:clickable="false"
+                android:focusable="false" />
         </FrameLayout>
 
         <FrameLayout
@@ -100,13 +111,30 @@
             android:paddingHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shareAppItem">
+            app:layout_constraintTop_toBottomOf="@+id/periodRefreshSwitchItem">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/add_app_widget" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/shareAppItem"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addAppWidgetItem">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/share_app" />
         </FrameLayout>
 
         <FrameLayout
@@ -117,7 +145,7 @@
             android:paddingHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addAppWidgetItem">
+            app:layout_constraintTop_toBottomOf="@+id/shareAppItem">
 
             <TextView
                 android:layout_width="wrap_content"

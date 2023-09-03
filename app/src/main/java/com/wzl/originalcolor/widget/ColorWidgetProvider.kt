@@ -1,14 +1,14 @@
-package com.wzl.originalcolor
+package com.wzl.originalcolor.widget
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import com.wzl.originalcolor.Config
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.RemoteViewsUtil
+import com.wzl.originalcolor.utils.SpUtil
 
 class ColorWidgetProvider : AppWidgetProvider() {
 
@@ -17,7 +17,18 @@ class ColorWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        val originalColor = ColorData.getRandomColor(context)
+        val periodRefresh = SpUtil.getWidgetRefreshState(context)
+        val widgetColor = SpUtil.getWidgetColor(context)
+        val originalColor: OriginalColor
+        // 定时刷新，生成新颜色
+        if (periodRefresh &&
+            widgetColor == Config.EMPTY_WIDGET_COLOR_BY_WORKER) {
+            originalColor = ColorData.getRandomColor(context)
+            SpUtil.saveWidgetColor(context, originalColor.HEX)
+        } else {
+            originalColor = ColorData.getWidgetColor(context)
+        }
+
         appWidgetIds.forEach { appWidgetId ->
             val remoteViews = RemoteViewsUtil.getWideWidgetView(context, originalColor)
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
@@ -33,7 +44,7 @@ class ColorWidgetProvider : AppWidgetProvider() {
         val minWidth = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) ?: 0
         val minHeight = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) ?: 0
         if (context != null && minHeight >= 0) {
-            val originalColor = ColorData.getThemeColor(context)
+            val originalColor = ColorData.getWidgetColor(context)
             val remoteViews = if (minHeight < 200) {
                 RemoteViewsUtil.getSmallWidgetView(context,  originalColor)
             } else if (minWidth <= 350) {

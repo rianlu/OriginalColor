@@ -27,14 +27,18 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.search.SearchView
 import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
+import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.ColorItemDecoration
 import com.wzl.originalcolor.utils.PHONE_GRID_COUNT
 import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.ScreenUtils
+import com.wzl.originalcolor.utils.SpUtil
 import com.wzl.originalcolor.utils.TABLET_GRID_COUNT
 import com.wzl.originalcolor.utils.VibratorUtils
+import com.wzl.originalcolor.utils.WorkManagerUtil
 import com.wzl.originalcolor.viewmodel.ColorViewModel
+import com.wzl.originalcolor.widget.ColorWidgetProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -57,15 +61,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val themeSp = getSharedPreferences(
-            Config.SP_GLOBAL_THEME_COLOR, Context.MODE_PRIVATE)
-        val hex = themeSp.getString(Config.SP_PARAM_THEME_COLOR, null)
-        hex?.let { updateGlobalThemeColor(it) }
-
+        updateGlobalThemeColor(SpUtil.getLocalThemeColor(this))
         if (ScreenUtils.isPad(this@MainActivity)) {
             gridCount = TABLET_GRID_COUNT
         }
-        initVibration()
+
+        VibratorUtils.updateVibration(SpUtil.getVibrationState(this))
+
         adapter = ColorAdapter().also {
             it.setItemAnimation(BaseQuickAdapter.AnimationType.AlphaIn)
             it.addOnItemChildClickListener(R.id.colorBackground) { adapter, view, position ->
@@ -77,10 +79,7 @@ class MainActivity : AppCompatActivity() {
                     adapter, view, position ->
                 adapter.getItem(position)?.let { originColor ->
                     val themeColor = originColor.HEX
-                    themeSp.edit().apply {
-                        putString(Config.SP_PARAM_THEME_COLOR, themeColor)
-                        apply()
-                    }
+                    SpUtil.saveLocalThemeColor(this, themeColor)
                     VibratorUtils.vibrate(this)
                     updateGlobalThemeColor(themeColor)
                 }
@@ -200,13 +199,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
         colorViewModel.initData(this)
-        // 刷新 Widget
-        val widgetWorkRequest = PeriodicWorkRequestBuilder<WidgetWorker>(
-            15L, TimeUnit.SECONDS
-        ).build()
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            WIDGET_WORKER_TAG, ExistingPeriodicWorkPolicy.KEEP, widgetWorkRequest
-        )
+
+        // 每次打开刷新 Widget
+        refreshWidget()
+
+        // 开启定时刷新
+        if (SpUtil.getWidgetRefreshState(this)) {
+            WorkManagerUtil.startWork(this)
+        }
+    }
+
+    private fun refreshWidget() {
+        sendBroadcast(Intent(this, ColorWidgetProvider::class.java).apply {
+            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            val ids = AppWidgetManager.getInstance(this@MainActivity)
+                .getAppWidgetIds(ComponentName(this@MainActivity, ColorWidgetProvider::class.java))
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+        })
     }
 
     override fun onBackPressed() {
@@ -229,8 +238,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initVibration() {
-        val sp = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        VibratorUtils.updateVibration(sp.getBoolean("vibration", true))
+        val sp = getSharedPreferences(Config.SP_SETTINGS, Context.MODE_PRIVATE)
     }
 
     private fun IntArray.arrayToString(): String {
@@ -308,5 +316,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
-const val WIDGET_WORKER_TAG = "widget_worker_tag"

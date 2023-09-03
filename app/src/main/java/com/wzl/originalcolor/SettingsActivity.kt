@@ -2,7 +2,6 @@ package com.wzl.originalcolor
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
@@ -10,14 +9,18 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.wzl.originalcolor.databinding.ActivitySettingsBinding
 import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.RemoteViewsUtil
+import com.wzl.originalcolor.utils.SpUtil
 import com.wzl.originalcolor.utils.VibratorUtils
+import com.wzl.originalcolor.utils.WorkManagerUtil
+import com.wzl.originalcolor.widget.ColorWidgetProvider
 import java.io.File
-
 
 /**
  * @Author lu
@@ -37,11 +40,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // 文本包含链接挑传
         binding.copyrightText.movementMethod = LinkMovementMethod.getInstance()
-        val themeSp = getSharedPreferences(
-            Config.SP_GLOBAL_THEME_COLOR, Context.MODE_PRIVATE)
-        themeSp.getString(Config.SP_PARAM_THEME_COLOR, null)?.let { hex ->
-            initCustomThemeColor(hex)
-        }
+        initCustomThemeColor(SpUtil.getLocalThemeColor(this))
         binding.settingsTopAppBar
             .setNavigationOnClickListener { finish() }
 
@@ -54,18 +53,26 @@ class SettingsActivity : AppCompatActivity() {
             packageManager.getPackageInfo(packageName, 0).versionName
         }
 
-        val settingsSp = getSharedPreferences(Config.SP_SETTINGS, Context.MODE_PRIVATE)
-        binding.vibrationSwitch.isChecked = settingsSp.getBoolean(
-            Config.SP_PARAM_VIBRATION, true)
+        binding.vibrationSwitch.isChecked = SpUtil.getVibrationState(this)
         binding.vibrationSwitchItem.setOnClickListener {
             binding.vibrationSwitch.isChecked = !binding.vibrationSwitch.isChecked
         }
         binding.vibrationSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            settingsSp.edit().apply {
-                putBoolean(Config.SP_PARAM_VIBRATION, isChecked)
-                apply()
-            }
+            SpUtil.saveVibrationState(this, isChecked)
             VibratorUtils.updateVibration(isChecked)
+        }
+
+        binding.periodRefreshSwitch.isChecked = SpUtil.getWidgetRefreshState(this)
+        binding.periodRefreshSwitchItem.setOnClickListener {
+            binding.periodRefreshSwitch.isChecked = !binding.periodRefreshSwitch.isChecked
+        }
+        binding.periodRefreshSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            SpUtil.saveWidgetRefreshState(this, isChecked)
+            if (isChecked) {
+                WorkManagerUtil.startWork(this)
+            } else {
+                WorkManagerUtil.cancelWork(this)
+            }
         }
 
         binding.shareAppItem.setOnClickListener {
@@ -80,7 +87,11 @@ class SettingsActivity : AppCompatActivity() {
             val serviceComponent = ComponentName(this, ColorWidgetProvider::class.java)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val extras = Bundle()
-                val originalColor = ColorData.getThemeColor(this)
+                // 恢复为主题色
+                if (!SpUtil.getWidgetRefreshState(this)) {
+                    SpUtil.saveWidgetColor(this, SpUtil.getLocalThemeColor(this))
+                }
+                val originalColor = ColorData.getWidgetColor(this)
                 val remoteViews = RemoteViewsUtil.getWideWidgetView(this, originalColor)
                 extras.putParcelable(AppWidgetManager.EXTRA_APPWIDGET_PREVIEW, remoteViews)
                 AppWidgetManager.getInstance(this)
@@ -125,24 +136,27 @@ class SettingsActivity : AppCompatActivity() {
         binding.copyrightText.setLinkTextColor(themeColor)
         // Author
         binding.authorText.setTextColor(themeColor)
-        binding.vibrationSwitch.apply {
-            val trackStates = arrayOf(
-                intArrayOf(android.R.attr.state_checked),
-                intArrayOf(-android.R.attr.state_checked)
-            )
-            val trackColors = intArrayOf(
-                themeColor, themeColor.setAlpha(0.1F)
-            )
-            trackTintList = ColorStateList(trackStates, trackColors)
-            trackDecorationTintList = ColorStateList.valueOf(themeColor)
-            val thumbStates = arrayOf(
-                intArrayOf(android.R.attr.state_checked),
-                intArrayOf(-android.R.attr.state_checked)
-            )
-            val thumbColors = intArrayOf(
-                Color.WHITE, themeColor
-            )
-            thumbTintList = ColorStateList(thumbStates, thumbColors)
-        }
+        binding.vibrationSwitch.updateTheme(themeColor)
+        binding.periodRefreshSwitch.updateTheme(themeColor)
+    }
+
+    private fun MaterialSwitch.updateTheme(@ColorInt themeColor: Int) {
+        val trackStates = arrayOf(
+            intArrayOf(android.R.attr.state_checked),
+            intArrayOf(-android.R.attr.state_checked)
+        )
+        val trackColors = intArrayOf(
+            themeColor, themeColor.setAlpha(0.1F)
+        )
+        trackTintList = ColorStateList(trackStates, trackColors)
+        trackDecorationTintList = ColorStateList.valueOf(themeColor)
+        val thumbStates = arrayOf(
+            intArrayOf(android.R.attr.state_checked),
+            intArrayOf(-android.R.attr.state_checked)
+        )
+        val thumbColors = intArrayOf(
+            Color.WHITE, themeColor
+        )
+        thumbTintList = ColorStateList(thumbStates, thumbColors)
     }
 }

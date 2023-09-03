@@ -46,6 +46,7 @@
 
     <string name="app_version">版本</string>
     <string name="vibration">震动</string>
+    <string name="period_refresh_widget">定时刷新小组件</string>
     <string name="share_app">分享APP</string>
     <string name="add_app_widget">添加小组件</string>
     <string name="clear_cache">清除缓存</string>

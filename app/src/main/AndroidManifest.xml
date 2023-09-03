@@ -34,7 +34,7 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <receiver android:name="ColorWidgetProvider"
+        <receiver android:name=".widget.ColorWidgetProvider"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

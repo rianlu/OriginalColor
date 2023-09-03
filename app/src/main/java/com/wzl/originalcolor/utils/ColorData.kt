@@ -36,7 +36,7 @@ object ColorData {
         val jsonString = stringBuilder.toString()
         val tempColorList: List<OriginalColor> =
             Gson().fromJson(jsonString, object : TypeToken<ArrayList<OriginalColor>>() {}.type)
-        colorList = tempColorList.sortedWith <OriginalColor> { o1, o2 ->
+        colorList = tempColorList.sortedWith<OriginalColor> { o1, o2 ->
             if (rgbToHsv(o1.getRGBColor())[0] == rgbToHsv(o2.getRGBColor())[0]) {
                 floor(rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1]).toInt()
             } else {
@@ -54,31 +54,19 @@ object ColorData {
         return colorList[randomPosition]
     }
 
-    fun getThemeColor(context: Context): OriginalColor {
-        val themeSp = context.getSharedPreferences(
-            Config.SP_GLOBAL_THEME_COLOR, Context.MODE_PRIVATE)
-        val hex = themeSp.getString(Config.SP_PARAM_THEME_COLOR, null)
-        var originalColor: OriginalColor
-        if (hex != null) {
-            originalColor = findColor(context, hex)
-        } else {
-            originalColor = getRandomColor(context)
-            themeSp.edit().also {
-                it.putString(Config.SP_PARAM_THEME_COLOR, originalColor.HEX)
-                it.apply()
-            }
-        }
-        return originalColor
+    fun getWidgetColor(context: Context): OriginalColor {
+        val hex = SpUtil.getWidgetColor(context)
+        return findColor(context, hex)
     }
 
     private fun findColor(context: Context, hex: String): OriginalColor {
         if (colorList.isNotEmpty()) {
             initData(context)
         }
-        return colorList.find { it.HEX.equals(hex) } ?: getRandomColor(context)
+        return colorList.find { it.HEX == hex } ?: getRandomColor(context)
     }
 
-    fun rgbToHsv(color: Int): FloatArray {
+    private fun rgbToHsv(color: Int): FloatArray {
         val hsv = FloatArray(3)
         Color.colorToHSV(color, hsv)
         return hsv
