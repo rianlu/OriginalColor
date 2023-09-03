@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.OvershootInterpolator
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +18,10 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.chip.Chip
 import com.google.android.material.search.SearchView
@@ -32,6 +37,7 @@ import com.wzl.originalcolor.utils.VibratorUtils
 import com.wzl.originalcolor.viewmodel.ColorViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 
@@ -195,12 +201,12 @@ class MainActivity : AppCompatActivity() {
         }
         colorViewModel.initData(this)
         // 刷新 Widget
-        sendBroadcast(Intent(this, ColorWidgetProvider::class.java).apply {
-            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-            val ids = AppWidgetManager.getInstance(application)
-                .getAppWidgetIds(ComponentName(application, ColorWidgetProvider::class.java))
-            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-        })
+        val widgetWorkRequest = PeriodicWorkRequestBuilder<WidgetWorker>(
+            15L, TimeUnit.SECONDS
+        ).build()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            WIDGET_WORKER_TAG, ExistingPeriodicWorkPolicy.KEEP, widgetWorkRequest
+        )
     }
 
     override fun onBackPressed() {
@@ -302,3 +308,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+const val WIDGET_WORKER_TAG = "widget_worker_tag"

@@ -17,7 +17,7 @@ class ColorWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        val originalColor = ColorData.getThemeColor(context)
+        val originalColor = ColorData.getRandomColor(context)
         appWidgetIds.forEach { appWidgetId ->
             val remoteViews = RemoteViewsUtil.getWideWidgetView(context, originalColor)
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
