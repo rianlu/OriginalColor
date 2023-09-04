@@ -55,6 +55,9 @@ object RemoteViewsUtil {
             if (color.isLight()) -0.3F
             else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F)
         return RemoteViews(context.packageName, layoutId).also {
+            // 小部件点击打开app平滑过渡
+            // https://developer.android.com/develop/ui/views/appwidgets/enhance#enable-smoother-transitions
+            it.setInt(R.id.widgetBackground, "setBackgroundColor", color)
             it.setTextViewText(R.id.colorPinyin, randomColor.pinyin)
             it.setTextColor(R.id.colorPinyin, pinyinColor)
             it.setTextViewText(R.id.colorName, randomColor.NAME)
