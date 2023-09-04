@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/widgetBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/widgetBackground"
     android:background="@color/white">
 
     <ImageView
         android:id="@+id/colorBackground"
         android:layout_width="match_parent"
-        android:scaleType="fitXY"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="fitXY" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -22,21 +22,21 @@
             android:id="@+id/colorPinyin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="4dp"
+            android:gravity="end"
             android:text="@string/text_color_pinyin"
             android:textAllCaps="true"
-            android:gravity="end"
-            android:visibility="gone"
-            android:layout_marginBottom="4dp"
-            android:layout_gravity="bottom|end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/colorName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/text_color_name"
-            android:gravity="center"
             android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/text_color_name"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
             android:textStyle="bold" />
     </FrameLayout>

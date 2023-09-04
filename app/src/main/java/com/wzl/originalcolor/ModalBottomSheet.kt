@@ -64,7 +64,8 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         // 设置虚拟键同色
         dialog?.window?.run {
             navigationBarColor = sheetBackground
-            WindowCompat.getInsetsController(this, this.decorView).isAppearanceLightNavigationBars = true
+            WindowCompat.getInsetsController(this, this.decorView).isAppearanceLightNavigationBars =
+                true
         }
 
         binding.colorCardView.apply {
@@ -72,16 +73,18 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         }
         binding.colorPinyin.apply {
             text = originalColor.pinyin.uppercase()
-            setTextColor(originalColor.getRGBColor()
+            setTextColor(
+                originalColor.getRGBColor()
                     .brightness(if (UiModeUtils.isLightMode(requireContext())) -0.1F else 0.3F)
                     .setAlpha(0.3F)
             )
         }
         binding.colorName.apply {
             text = originalColor.NAME
-            setTextColor(originalColor.getRGBColor()
-                .brightness(if (UiModeUtils.isLightMode(requireContext())) -0.1F else 0.3F)
-                .setAlpha(0.9F)
+            setTextColor(
+                originalColor.getRGBColor()
+                    .brightness(if (UiModeUtils.isLightMode(requireContext())) -0.1F else 0.3F)
+                    .setAlpha(0.9F)
             )
         }
 
@@ -140,7 +143,11 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun copyToClipboard(view: TextView, content: String, clipboardManager: ClipboardManager) {
+    private fun copyToClipboard(
+        view: TextView,
+        content: String,
+        clipboardManager: ClipboardManager
+    ) {
         val clipData = ClipData.newPlainText("color", content)
         clipboardManager.setPrimaryClip(clipData)
         CoroutineScope(Dispatchers.Main).launch {
@@ -161,27 +168,38 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
 
     private fun View.setCornerBackground(radius: Int, @ColorInt color: Int) {
         val cornerRadius = radius.toFloat()
-        val shape = ShapeDrawable(RoundRectShape(
-            floatArrayOf(cornerRadius, cornerRadius, cornerRadius, cornerRadius,
-                cornerRadius, cornerRadius, cornerRadius, cornerRadius
-            ), null, null)
+        val shape = ShapeDrawable(
+            RoundRectShape(
+                floatArrayOf(
+                    cornerRadius, cornerRadius, cornerRadius, cornerRadius,
+                    cornerRadius, cornerRadius, cornerRadius, cornerRadius
+                ), null, null
+            )
         )
         shape.paint.color = color
         this.background = shape
     }
 
-    private fun View.setCornerBackground(leftRadius: Int, topRadius: Int, rightRadius: Int, bottomRadius: Int, @ColorInt color: Int) {
-        val shape = ShapeDrawable(RoundRectShape(
-            floatArrayOf(
-                leftRadius.dp(requireContext()).toFloat(),
-                leftRadius.dp(requireContext()).toFloat(),
-                topRadius.dp(requireContext()).toFloat(),
-                topRadius.dp(requireContext()).toFloat(),
-                rightRadius.dp(requireContext()).toFloat(),
-                rightRadius.dp(requireContext()).toFloat(),
-                bottomRadius.dp(requireContext()).toFloat(),
-                bottomRadius.dp(requireContext()).toFloat(),
-            ), null, null)
+    private fun View.setCornerBackground(
+        leftRadius: Int,
+        topRadius: Int,
+        rightRadius: Int,
+        bottomRadius: Int,
+        @ColorInt color: Int
+    ) {
+        val shape = ShapeDrawable(
+            RoundRectShape(
+                floatArrayOf(
+                    leftRadius.dp(requireContext()).toFloat(),
+                    leftRadius.dp(requireContext()).toFloat(),
+                    topRadius.dp(requireContext()).toFloat(),
+                    topRadius.dp(requireContext()).toFloat(),
+                    rightRadius.dp(requireContext()).toFloat(),
+                    rightRadius.dp(requireContext()).toFloat(),
+                    bottomRadius.dp(requireContext()).toFloat(),
+                    bottomRadius.dp(requireContext()).toFloat(),
+                ), null, null
+            )
         )
         shape.paint.color = color
         this.background = shape

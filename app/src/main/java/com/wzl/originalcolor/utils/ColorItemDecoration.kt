@@ -12,7 +12,10 @@ import com.wzl.originalcolor.utils.PxExtensions.dp
  * @ClassName: ColorItemDecoration
  * @Description:
  */
-class ColorItemDecoration(private val context: Context, private val gridCount: Int = PHONE_GRID_COUNT): RecyclerView.ItemDecoration() {
+class ColorItemDecoration(
+    private val context: Context,
+    private val gridCount: Int = PHONE_GRID_COUNT
+) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(
         outRect: Rect,

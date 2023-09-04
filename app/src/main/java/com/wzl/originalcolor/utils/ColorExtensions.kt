@@ -3,10 +3,6 @@ package com.wzl.originalcolor.utils
 import android.graphics.Color
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
-import androidx.core.graphics.blue
-import androidx.core.graphics.green
-import androidx.core.graphics.red
-import kotlin.math.floor
 import kotlin.math.roundToInt
 
 /**
@@ -16,14 +12,6 @@ import kotlin.math.roundToInt
  * @Description:
  */
 object ColorExtensions {
-
-    // 获取适应背景色的文本颜色
-    @ColorInt
-    fun getAdaptiveColor(@ColorInt color: Int): Int {
-        val whiteContrast = ColorUtils.calculateContrast(Color.WHITE, color)
-        val blackContrast = ColorUtils.calculateContrast(Color.BLACK, color)
-        return if (whiteContrast > blackContrast) color.brightness(0.3F) else color.brightness(-0.1F)
-    }
 
     fun @receiver:ColorInt Int.isLight(): Boolean {
         val red = Color.valueOf(this).red()
@@ -45,7 +33,7 @@ object ColorExtensions {
         if (changeBrightness <= 0) {
             outHsl[2] = outHsl[2] * (1 + changeBrightness)
         } else {
-            outHsl[2] =  outHsl[2] + (1 - outHsl[2]) / 10 * changeBrightness * 10
+            outHsl[2] = outHsl[2] + (1 - outHsl[2]) / 10 * changeBrightness * 10
         }
 //        outHsl[2] = (outHsl[2] * (1 + changeBrightness))
         return ColorUtils.HSLToColor(outHsl)

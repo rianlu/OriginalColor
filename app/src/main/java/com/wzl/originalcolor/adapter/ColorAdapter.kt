@@ -9,12 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import com.chad.library.adapter.base.BaseDifferAdapter
 import com.chad.library.adapter.base.viewholder.QuickViewHolder
-import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.R
+import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
-import com.wzl.originalcolor.utils.PxExtensions
 import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.UiModeUtils
 
@@ -27,7 +26,11 @@ import com.wzl.originalcolor.utils.UiModeUtils
  */
 class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiffCallback()) {
 
-    override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): QuickViewHolder {
+    override fun onCreateViewHolder(
+        context: Context,
+        parent: ViewGroup,
+        viewType: Int
+    ): QuickViewHolder {
         return QuickViewHolder(R.layout.item_color, parent)
     }
 
@@ -38,17 +41,21 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
         val textColor = Color.parseColor(item.HEX)
         holder.getView<TextView>(R.id.colorPinyin).apply {
             text = item.pinyin
-            setTextColor(textColor.brightness(
-                if (textColor.isLight()) -0.3F
-                else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F)
-                .setAlpha(0.6F)
+            setTextColor(
+                textColor.brightness(
+                    if (textColor.isLight()) -0.3F
+                    else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F
+                )
+                    .setAlpha(0.6F)
             )
         }
         holder.getView<TextView>(R.id.colorName).apply {
             text = item.NAME
-            setTextColor(textColor.brightness(
-                if (textColor.isLight()) -0.3F
-                else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F)
+            setTextColor(
+                textColor.brightness(
+                    if (textColor.isLight()) -0.3F
+                    else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F
+                )
             )
         }
         holder.getView<LinearLayout>(R.id.colorBackground).apply {
@@ -59,7 +66,8 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
                         item.getRGBColor().setAlpha(0.7F)
                     else {
                         item.getRGBColor().brightness(0.2F)
-                }, item.getRGBColor(), item.getRGBColor())
+                    }, item.getRGBColor(), item.getRGBColor()
+                )
             )
             gradientDrawable.cornerRadius = 16.dp(context).toFloat()
             background = gradientDrawable
@@ -67,7 +75,7 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
     }
 }
 
-class ColorDiffCallback: DiffUtil.ItemCallback<OriginalColor>() {
+class ColorDiffCallback : DiffUtil.ItemCallback<OriginalColor>() {
     override fun areItemsTheSame(oldItem: OriginalColor, newItem: OriginalColor): Boolean {
         return oldItem.HEX == newItem.HEX
     }

@@ -13,6 +13,7 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="chipStyle">@style/Widget.App.Chip</item>
     </style>
+
     <style name="ColorInfoText">
         <item name="android:textSize">@dimen/copy_text_size</item>
         <item name="drawableEndCompat">@drawable/ic_copy</item>

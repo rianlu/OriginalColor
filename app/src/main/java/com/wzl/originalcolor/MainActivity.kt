@@ -9,7 +9,6 @@ import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.OvershootInterpolator
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -18,16 +17,11 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.chip.Chip
 import com.google.android.material.search.SearchView
 import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
-import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.ColorItemDecoration
 import com.wzl.originalcolor.utils.PHONE_GRID_COUNT
@@ -41,9 +35,7 @@ import com.wzl.originalcolor.viewmodel.ColorViewModel
 import com.wzl.originalcolor.widget.ColorWidgetProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import kotlin.random.Random
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -75,8 +67,7 @@ class MainActivity : AppCompatActivity() {
                 val modalBottomSheet = ModalBottomSheet(originalColor)
                 modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
             }
-            it.addOnItemChildLongClickListener(R.id.colorBackground) {
-                    adapter, view, position ->
+            it.addOnItemChildLongClickListener(R.id.colorBackground) { adapter, view, position ->
                 adapter.getItem(position)?.let { originColor ->
                     val themeColor = originColor.HEX
                     SpUtil.saveLocalThemeColor(this, themeColor)
@@ -102,8 +93,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             })
+            adapter = this@MainActivity.adapter
         }
-        binding.recyclerView.adapter = adapter
         lifecycleScope.launch {
             launch {
                 colorViewModel.flowList.collect { list ->
@@ -118,12 +109,15 @@ class MainActivity : AppCompatActivity() {
             launch {
                 fabSearchStateFlow.collect { state ->
                     binding.fabSearch.setImageIcon(
-                        Icon.createWithResource(this@MainActivity,
+                        Icon.createWithResource(
+                            this@MainActivity,
                             if (state) {
                                 R.drawable.ic_search
                             } else {
                                 R.drawable.ic_top
-                            }))
+                            }
+                        )
+                    )
                 }
             }
         }
@@ -186,7 +180,7 @@ class MainActivity : AppCompatActivity() {
                     return@setNavigationOnClickListener
                 fabSearchStateFlow.value = false
             }
-            setOnMenuItemClickListener {menuItem ->
+            setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.settings -> {
                         startActivity(
@@ -194,6 +188,7 @@ class MainActivity : AppCompatActivity() {
                         )
                         true
                     }
+
                     else -> false
                 }
             }
@@ -293,7 +288,7 @@ class MainActivity : AppCompatActivity() {
                 intArrayOf(android.R.attr.state_checked),
                 intArrayOf(-android.R.attr.state_selected),
                 intArrayOf(-android.R.attr.state_checked)
-                )
+            )
             val colors = intArrayOf(
                 themeColor, themeColor,
                 themeColor.setAlpha(0.1F),

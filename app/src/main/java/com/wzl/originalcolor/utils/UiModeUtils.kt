@@ -1,10 +1,7 @@
 package com.wzl.originalcolor.utils
 
-import android.app.UiModeManager
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Build
-import androidx.appcompat.app.AppCompatDelegate
 
 /**
  * @Author lu
@@ -17,6 +14,7 @@ enum class UiMode() {
     DARK_MODE(),
     FOLLOW_SYSTEM()
 }
+
 object UiModeUtils {
 
     fun isDarkMode(context: Context): Boolean {

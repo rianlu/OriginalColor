@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.wzl.originalcolor.Config
 import com.wzl.originalcolor.model.OriginalColor
 import org.json.JSONException
 import java.io.BufferedReader

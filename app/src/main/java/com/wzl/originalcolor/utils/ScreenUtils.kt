@@ -9,8 +9,7 @@ import kotlin.math.sqrt
 object ScreenUtils {
 
     fun isPad(context: Context): Boolean {
-        val wm: WindowManager = context.
-        getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val wm: WindowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val outMetrics = DisplayMetrics()
         wm.defaultDisplay.getMetrics(outMetrics)
         val x = (outMetrics.widthPixels / outMetrics.xdpi).pow(2)

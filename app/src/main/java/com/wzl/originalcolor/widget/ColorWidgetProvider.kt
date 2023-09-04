@@ -7,7 +7,6 @@ import android.os.Bundle
 import com.wzl.originalcolor.Config
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorData
-import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.SpUtil
 
@@ -23,7 +22,8 @@ class ColorWidgetProvider : AppWidgetProvider() {
         val originalColor: OriginalColor
         // 定时刷新，生成新颜色
         if (periodRefresh &&
-            widgetColor == Config.EMPTY_WIDGET_COLOR_BY_WORKER) {
+            widgetColor == Config.EMPTY_WIDGET_COLOR_BY_WORKER
+        ) {
             originalColor = ColorData.getRandomColor(context)
             SpUtil.saveWidgetColor(context, originalColor.HEX)
         } else {
@@ -47,8 +47,9 @@ class ColorWidgetProvider : AppWidgetProvider() {
         if (context != null && minHeight >= 0) {
             val originalColor = ColorData.getWidgetColor(context)
             val remoteViews = if (minHeight < 100 ||
-                minHeight < 200 && minWidth <= 350) {
-                RemoteViewsUtil.getSmallWidgetView(context,  originalColor)
+                minHeight < 200 && minWidth <= 350
+            ) {
+                RemoteViewsUtil.getSmallWidgetView(context, originalColor)
             } else {
                 RemoteViewsUtil.getWideWidgetView(context, originalColor)
             }

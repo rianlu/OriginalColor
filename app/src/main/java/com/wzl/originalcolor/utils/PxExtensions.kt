@@ -1,7 +1,6 @@
 package com.wzl.originalcolor.utils
 
 import android.content.Context
-import android.util.TypedValue
 
 /**
  * @Author lu
