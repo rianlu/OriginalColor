@@ -21,4 +21,12 @@ object SystemBarUtil {
             windowInsetController.isAppearanceLightNavigationBars = isAppearanceLightNavigationBars
         }
     }
+
+    fun setStatusBarColor(activity: Activity, statusBarColor: Int = Color.WHITE) {
+        activity.window.statusBarColor = statusBarColor
+    }
+
+    fun setNavigationBarColor(activity: Activity, navigationBarColor: Int = Color.WHITE) {
+        activity.window.navigationBarColor = navigationBarColor
+    }
 }

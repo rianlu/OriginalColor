@@ -90,7 +90,7 @@ import java.util.Set;
  * Layout that provides a full screen search view and can be used with {@link SearchBar}.
  *
  *
- * <p>The example below shows how to use the {@link SearchBar} and {@link SearchView} together:
+ * <p>The example below shows how to use the {@link SearchBar} and {@link CustomSearchView} together:
  *
  * <pre>
  * &lt;androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -126,7 +126,7 @@ import java.util.Set;
  * </pre>
  */
 @SuppressWarnings("RestrictTo")
-public class SearchView extends FrameLayout implements CoordinatorLayout.AttachedBehavior {
+public class CustomSearchView extends FrameLayout implements CoordinatorLayout.AttachedBehavior {
 
     private static final long TALKBACK_FOCUS_CHANGE_DELAY_MS = 100;
     private static final int DEF_STYLE_RES = R.style.Widget_Material3_SearchView;
@@ -146,7 +146,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     final TouchObserverFrameLayout contentContainer;
 
     private final boolean layoutInflated;
-    private final SearchViewAnimationHelper searchViewAnimationHelper;
+    private final CustomSearchViewAnimationHelper searchViewAnimationHelper;
     private final ElevationOverlayProvider elevationOverlayProvider;
     private final Set<TransitionListener> transitionListeners = new LinkedHashSet<>();
 
@@ -162,15 +162,15 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     private TransitionState currentTransitionState = TransitionState.HIDDEN;
     private Map<View, Integer> childImportantForAccessibilityMap;
 
-    public SearchView(@NonNull Context context) {
+    public CustomSearchView(@NonNull Context context) {
         this(context, null);
     }
 
-    public SearchView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public CustomSearchView(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, R.attr.materialSearchViewStyle);
     }
 
-    public SearchView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CustomSearchView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(wrap(context, attrs, defStyleAttr, DEF_STYLE_RES), attrs, defStyleAttr);
         // Ensure we are using the correctly themed context rather than the context that was passed in.
         context = getContext();
@@ -210,7 +210,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         divider = findViewById(R.id.search_view_divider);
         contentContainer = findViewById(R.id.search_view_content_container);
 
-        searchViewAnimationHelper = new SearchViewAnimationHelper(this);
+        searchViewAnimationHelper = new CustomSearchViewAnimationHelper(this);
         elevationOverlayProvider = new ElevationOverlayProvider(context);
 
         setUpRootView();
@@ -256,8 +256,8 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
 
     @Override
     @NonNull
-    public CoordinatorLayout.Behavior<SearchView> getBehavior() {
-        return new SearchView.Behavior();
+    public CoordinatorLayout.Behavior<CustomSearchView> getBehavior() {
+        return new CustomSearchView.Behavior();
     }
 
     @Nullable
@@ -504,17 +504,17 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Returns whether or not this {@link SearchView} is set up with an {@link SearchBar}.
+     * Returns whether or not this {@link CustomSearchView} is set up with an {@link SearchBar}.
      */
     public boolean isSetupWithSearchBar() {
         return this.searchBar != null;
     }
 
     /**
-     * Sets up this {@link SearchView} with an {@link SearchBar}, which will result in the {@link
-     * SearchView} being shown when the {@link SearchBar} is clicked. This behavior will be set up
-     * automatically if the {@link SearchBar} and {@link SearchView} are in a {@link
-     * CoordinatorLayout} and the {@link SearchView} is anchored to the {@link SearchBar}.
+     * Sets up this {@link CustomSearchView} with an {@link SearchBar}, which will result in the {@link
+     * CustomSearchView} being shown when the {@link SearchBar} is clicked. This behavior will be set up
+     * automatically if the {@link SearchBar} and {@link CustomSearchView} are in a {@link
+     * CoordinatorLayout} and the {@link CustomSearchView} is anchored to the {@link SearchBar}.
      */
     public void setupWithSearchBar(@Nullable SearchBar searchBar) {
         this.searchBar = searchBar;
@@ -527,10 +527,10 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Add a header view to this {@link SearchView}, which will be placed above the search text area.
+     * Add a header view to this {@link CustomSearchView}, which will be placed above the search text area.
      *
      * <p>Note: due to complications with the expand/collapse animation, a header view is intended to
-     * be used with a standalone {@link SearchView} which slides up/down instead of morphing from an
+     * be used with a standalone {@link CustomSearchView} which slides up/down instead of morphing from an
      * {@link SearchBar}.
      */
     public void addHeaderView(@NonNull View headerView) {
@@ -558,7 +558,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
 
     /**
      * Sets whether the navigation icon should be animated from the {@link SearchBar} to {@link
-     * SearchView}.
+     * CustomSearchView}.
      */
     public void setAnimatedNavigationIcon(boolean animatedNavigationIcon) {
         this.animatedNavigationIcon = animatedNavigationIcon;
@@ -566,7 +566,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
 
     /**
      * Returns whether the navigation icon should be animated from the {@link SearchBar} to {@link
-     * SearchView}.
+     * CustomSearchView}.
      */
     public boolean isAnimatedNavigationIcon() {
         return animatedNavigationIcon;
@@ -574,7 +574,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
 
     /**
      * Sets whether the menu items should be animated from the {@link SearchBar} to {@link
-     * SearchView}.
+     * CustomSearchView}.
      */
     public void setMenuItemsAnimated(boolean menuItemsAnimated) {
         this.animatedMenuItems = menuItemsAnimated;
@@ -582,21 +582,21 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
 
     /**
      * Returns whether the menu items should be animated from the {@link SearchBar} to {@link
-     * SearchView}.
+     * CustomSearchView}.
      */
     public boolean isMenuItemsAnimated() {
         return animatedMenuItems;
     }
 
     /**
-     * Sets whether the soft keyboard should be shown when the {@link SearchView} is shown.
+     * Sets whether the soft keyboard should be shown when the {@link CustomSearchView} is shown.
      */
     public void setAutoShowKeyboard(boolean autoShowKeyboard) {
         this.autoShowKeyboard = autoShowKeyboard;
     }
 
     /**
-     * Returns whether the soft keyboard should be shown when the {@link SearchView} is shown.
+     * Returns whether the soft keyboard should be shown when the {@link CustomSearchView} is shown.
      */
     public boolean isAutoShowKeyboard() {
         return autoShowKeyboard;
@@ -623,14 +623,14 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Adds a listener to handle {@link SearchView} transitions such as showing and closing.
+     * Adds a listener to handle {@link CustomSearchView} transitions such as showing and closing.
      */
     public void addTransitionListener(@NonNull TransitionListener transitionListener) {
         transitionListeners.add(transitionListener);
     }
 
     /**
-     * Removes a listener to handle {@link SearchView} transitions such as showing and closing.
+     * Removes a listener to handle {@link CustomSearchView} transitions such as showing and closing.
      */
     public void removeTransitionListener(@NonNull TransitionListener transitionListener) {
         transitionListeners.remove(transitionListener);
@@ -676,7 +676,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Returns the {@link Toolbar} used by the {@link SearchView}.
+     * Returns the {@link Toolbar} used by the {@link CustomSearchView}.
      */
     @NonNull
     public Toolbar getToolbar() {
@@ -745,7 +745,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Returns the current value of this {@link SearchView}'s soft input mode.
+     * Returns the current value of this {@link CustomSearchView}'s soft input mode.
      */
     @SuppressLint("KotlinPropertyAccess") // This is a not property.
     public int getSoftInputMode() {
@@ -753,11 +753,11 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Sets the soft input mode for this {@link SearchView}. This is important because the {@link
-     * SearchView} will use this to determine whether the keyboard should be shown/hidden at the same
+     * Sets the soft input mode for this {@link CustomSearchView}. This is important because the {@link
+     * CustomSearchView} will use this to determine whether the keyboard should be shown/hidden at the same
      * time as the expand/collapse animation, or if the keyboard should be staggered with the
      * animation to avoid glitchiness due to a resize of the screen. This will be set automatically by
-     * the {@link SearchView} during initial render but make sure to invoke this if you are changing
+     * the {@link CustomSearchView} during initial render but make sure to invoke this if you are changing
      * the soft input mode at runtime.
      */
     public void updateSoftInputMode() {
@@ -769,8 +769,8 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
 
     /**
      * Enables/disables the status bar spacer, which can be used in cases where the status bar is
-     * translucent and the {@link SearchView} should not overlap the status bar area. This will be set
-     * automatically by the {@link SearchView} during initial render, but make sure to invoke this if
+     * translucent and the {@link CustomSearchView} should not overlap the status bar area. This will be set
+     * automatically by the {@link CustomSearchView} during initial render, but make sure to invoke this if
      * you would like to override the default behavior.
      *
      * @hide
@@ -786,7 +786,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Returns the current {@link TransitionState} for this {@link SearchView}.
+     * Returns the current {@link TransitionState} for this {@link CustomSearchView}.
      */
     @NonNull
     public TransitionState getCurrentTransitionState() {
@@ -807,7 +807,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Returns whether the {@link SearchView}'s main content view is shown or showing.
+     * Returns whether the {@link CustomSearchView}'s main content view is shown or showing.
      */
     public boolean isShowing() {
         return currentTransitionState.equals(TransitionState.SHOWN)
@@ -815,9 +815,9 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Shows the {@link SearchView} with an animation.
+     * Shows the {@link CustomSearchView} with an animation.
      *
-     * <p>Note: the show animation will not be started if the {@link SearchView} is currently shown or
+     * <p>Note: the show animation will not be started if the {@link CustomSearchView} is currently shown or
      * showing.
      */
     public void show() {
@@ -830,9 +830,9 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Hides the {@link SearchView} with an animation.
+     * Hides the {@link CustomSearchView} with an animation.
      *
-     * <p>Note: the hide animation will not be started if the {@link SearchView} is currently hidden
+     * <p>Note: the hide animation will not be started if the {@link CustomSearchView} is currently hidden
      * or hiding.
      */
     public void hide() {
@@ -845,7 +845,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Updates the visibility of the {@link SearchView} without an animation.
+     * Updates the visibility of the {@link CustomSearchView} without an animation.
      */
     public void setVisible(boolean visible) {
         boolean wasVisible = rootView.getVisibility() == VISIBLE;
@@ -918,8 +918,8 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Sets whether the {@link SearchView} is modal for accessibility, i.e., whether views that are
-     * not nested within the {@link SearchView} are important for accessibility.
+     * Sets whether the {@link CustomSearchView} is modal for accessibility, i.e., whether views that are
+     * not nested within the {@link CustomSearchView} are important for accessibility.
      */
     public void setModalForAccessibility(boolean isSearchViewModal) {
         ViewGroup rootView = (ViewGroup) this.getRootView();
@@ -980,9 +980,9 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Behavior that sets up an {@link SearchView} with an {@link SearchBar}.
+     * Behavior that sets up an {@link CustomSearchView} with an {@link SearchBar}.
      */
-    public static class Behavior extends CoordinatorLayout.Behavior<SearchView> {
+    public static class Behavior extends CoordinatorLayout.Behavior<CustomSearchView> {
 
         public Behavior() {
         }
@@ -993,7 +993,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
 
         @Override
         public boolean onDependentViewChanged(
-                @NonNull CoordinatorLayout parent, @NonNull SearchView child, @NonNull View dependency) {
+                @NonNull CoordinatorLayout parent, @NonNull CustomSearchView child, @NonNull View dependency) {
             if (!child.isSetupWithSearchBar() && dependency instanceof SearchBar) {
                 child.setupWithSearchBar((SearchBar) dependency);
             }
@@ -1002,21 +1002,21 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     }
 
     /**
-     * Callback interface that provides important transition events for a {@link SearchView}.
+     * Callback interface that provides important transition events for a {@link CustomSearchView}.
      */
     public interface TransitionListener {
 
         /**
-         * Called when the given {@link SearchView SearchView's} transition state has changed.
+         * Called when the given {@link CustomSearchView SearchView's} transition state has changed.
          */
         void onStateChanged(
-                @NonNull SearchView searchView,
+                @NonNull CustomSearchView searchView,
                 @NonNull TransitionState previousState,
                 @NonNull TransitionState newState);
     }
 
     /**
-     * Enum that defines the possible transition states of an {@link SearchView}.
+     * Enum that defines the possible transition states of an {@link CustomSearchView}.
      */
     public enum TransitionState {
         HIDING,

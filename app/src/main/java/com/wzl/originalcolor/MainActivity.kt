@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.material.chip.Chip
-import com.google.android.material.search.SearchView
+import com.google.android.material.search.CustomSearchView
 import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
@@ -146,29 +146,31 @@ class MainActivity : AppCompatActivity() {
                 false
             }
             searchView.addTransitionListener { view, previousState, newState ->
+                val searchBackgroundViewColor =
+                    searchView.generateBackgroundViewColor(
+                        Color.parseColor(SpUtil.getLocalThemeColor(this))
+                    )
                 when (newState) {
-                    SearchView.TransitionState.SHOWN -> {
-                        val searchBackgroundViewColor =
-                            searchView.generateBackgroundViewColor(
-                                Color.parseColor(SpUtil.getLocalThemeColor(this))
-                            )
+                    CustomSearchView.TransitionState.SHOWN -> {
                         // 修改状态栏颜色
-                        SystemBarUtil.setSystemBarAppearance(this, searchBackgroundViewColor)
+                        SystemBarUtil
+                            .setStatusBarColor(this, searchBackgroundViewColor)
                     }
-                    SearchView.TransitionState.HIDDEN -> {}
-                    SearchView.TransitionState.SHOWING -> {
+                    CustomSearchView.TransitionState.HIDDEN -> {
+                    }
+                    CustomSearchView.TransitionState.SHOWING -> {
                         binding.fabSearch
                             .animate().scaleX(0F).scaleY(0F)
                             .setDuration(200)
                             .start()
                     }
-                    SearchView.TransitionState.HIDING -> {
+                    CustomSearchView.TransitionState.HIDING -> {
                         binding.fabSearch
                             .animate().scaleX(1F).scaleY(1F)
                             .setDuration(500)
                             .start()
                         // 恢复状态栏颜色
-                        SystemBarUtil.setSystemBarAppearance(this, Color.TRANSPARENT)
+                        SystemBarUtil.setStatusBarColor(this, Color.TRANSPARENT)
                     }
                 }
             }
@@ -231,7 +233,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (binding.colorSearchView.currentTransitionState == SearchView.TransitionState.SHOWN) {
+        if (binding.colorSearchView.currentTransitionState == CustomSearchView.TransitionState.SHOWN) {
             binding.colorSearchView.hide()
         } else {
             super.onBackPressed()
