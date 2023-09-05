@@ -28,6 +28,7 @@ import com.wzl.originalcolor.utils.PHONE_GRID_COUNT
 import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.ScreenUtils
 import com.wzl.originalcolor.utils.SpUtil
+import com.wzl.originalcolor.utils.SystemBarUtil
 import com.wzl.originalcolor.utils.TABLET_GRID_COUNT
 import com.wzl.originalcolor.utils.VibratorUtils
 import com.wzl.originalcolor.utils.WorkManagerUtil
@@ -145,14 +146,30 @@ class MainActivity : AppCompatActivity() {
                 false
             }
             searchView.addTransitionListener { view, previousState, newState ->
-                if (newState == SearchView.TransitionState.SHOWING) {
-                    binding.fabSearch
-                        .animate().scaleX(0F).scaleY(0F)
-                        .setDuration(200)
-                } else if (newState == SearchView.TransitionState.HIDING) {
-                    binding.fabSearch
-                        .animate().scaleX(1F).scaleY(1F)
-                        .setDuration(500)
+                when (newState) {
+                    SearchView.TransitionState.SHOWN -> {
+                        val searchBackgroundViewColor =
+                            searchView.generateBackgroundViewColor(
+                                Color.parseColor(SpUtil.getLocalThemeColor(this))
+                            )
+                        // 修改状态栏颜色
+                        SystemBarUtil.setSystemBarAppearance(this, searchBackgroundViewColor)
+                    }
+                    SearchView.TransitionState.HIDDEN -> {}
+                    SearchView.TransitionState.SHOWING -> {
+                        binding.fabSearch
+                            .animate().scaleX(0F).scaleY(0F)
+                            .setDuration(200)
+                            .start()
+                    }
+                    SearchView.TransitionState.HIDING -> {
+                        binding.fabSearch
+                            .animate().scaleX(1F).scaleY(1F)
+                            .setDuration(500)
+                            .start()
+                        // 恢复状态栏颜色
+                        SystemBarUtil.setSystemBarAppearance(this, Color.TRANSPARENT)
+                    }
                 }
             }
         }
@@ -265,6 +282,9 @@ class MainActivity : AppCompatActivity() {
     private fun updateGlobalThemeColor(hex: String) {
 
         val themeColor = Color.parseColor(hex)
+
+        // 搜索背景色
+        binding.colorSearchView.setBackgroundViewColor(themeColor)
         // 标题
         binding.collapsingToolbarLayout.apply {
             // 折叠后的CollapsingToolbarLayout
@@ -298,11 +318,6 @@ class MainActivity : AppCompatActivity() {
                 (it as Chip).chipBackgroundColor =
                     ColorStateList(states, colors)
             }
-        }
-
-        binding.colorSearchView.apply {
-            backgroundTintList =
-                ColorStateList.valueOf(themeColor)
         }
 
         // List Scrollbar
