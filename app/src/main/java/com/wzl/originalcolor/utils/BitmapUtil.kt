@@ -22,7 +22,7 @@ import java.io.IOException
  * @ClassName: BitmapUtils
  * @Description:
  */
-object BitmapUtils {
+object BitmapUtil {
 
     fun viewToBitmap(view: View, width: Int, height: Int, roundPx: Float = 0f): Bitmap {
         val measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY)

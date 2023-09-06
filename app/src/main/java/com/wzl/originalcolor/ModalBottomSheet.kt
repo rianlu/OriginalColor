@@ -21,11 +21,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
 import com.wzl.originalcolor.model.OriginalColor
-import com.wzl.originalcolor.utils.BitmapUtils
+import com.wzl.originalcolor.utils.BitmapUtil
 import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxExtensions.dp
-import com.wzl.originalcolor.utils.ScreenUtils
+import com.wzl.originalcolor.utils.ScreenUtil
 import com.wzl.originalcolor.utils.UiModeUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -124,13 +124,13 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             shareView.findViewById<CardView>(R.id.shareCardView)
                 .setCardBackgroundColor(brighterColor)
 
-            val bitmap = BitmapUtils.viewToBitmap(
+            val bitmap = BitmapUtil.viewToBitmap(
                 shareView,
                 400.dp(requireContext()),
                 250.dp(requireContext()),
                 16.dp(requireContext()).toFloat()
             )
-            BitmapUtils.shareBitmap(requireContext(), bitmap, originalColor.NAME)
+            BitmapUtil.shareBitmap(requireContext(), bitmap, originalColor.NAME)
             dismiss()
         }
 
@@ -224,7 +224,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         binding.colorName.animationPrepare()
         binding.colorCardView.animationPrepare()
         binding.copyColorLayout.animationPrepare()
-        val isPad = ScreenUtils.isPad(requireContext())
+        val isPad = ScreenUtil.isPad(requireContext())
         CoroutineScope(Dispatchers.Main).launch {
             if (isPad) {
                 binding.colorPinyin.animationPrepare()

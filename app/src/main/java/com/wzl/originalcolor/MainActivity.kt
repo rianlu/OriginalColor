@@ -26,11 +26,11 @@ import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.ColorItemDecoration
 import com.wzl.originalcolor.utils.PHONE_GRID_COUNT
 import com.wzl.originalcolor.utils.PxExtensions.dp
-import com.wzl.originalcolor.utils.ScreenUtils
+import com.wzl.originalcolor.utils.ScreenUtil
 import com.wzl.originalcolor.utils.SpUtil
 import com.wzl.originalcolor.utils.SystemBarUtil
 import com.wzl.originalcolor.utils.TABLET_GRID_COUNT
-import com.wzl.originalcolor.utils.VibratorUtils
+import com.wzl.originalcolor.utils.VibratorUtil
 import com.wzl.originalcolor.utils.WorkManagerUtil
 import com.wzl.originalcolor.viewmodel.ColorViewModel
 import com.wzl.originalcolor.widget.ColorWidgetProvider
@@ -55,11 +55,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         updateGlobalThemeColor(SpUtil.getLocalThemeColor(this))
-        if (ScreenUtils.isPad(this@MainActivity)) {
+        if (ScreenUtil.isPad(this@MainActivity)) {
             gridCount = TABLET_GRID_COUNT
         }
 
-        VibratorUtils.updateVibration(SpUtil.getVibrationState(this))
+        VibratorUtil.updateVibration(SpUtil.getVibrationState(this))
 
         adapter = ColorAdapter().also {
             it.setItemAnimation(BaseQuickAdapter.AnimationType.AlphaIn)
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                 adapter.getItem(position)?.let { originColor ->
                     val themeColor = originColor.HEX
                     SpUtil.saveLocalThemeColor(this, themeColor)
-                    VibratorUtils.vibrate(this)
+                    VibratorUtil.vibrate(this)
                     updateGlobalThemeColor(themeColor)
                 }
                 true
@@ -189,13 +189,13 @@ class MainActivity : AppCompatActivity() {
             setNavigationOnClickListener {
                 if (adapter.itemCount == 0)
                     return@setNavigationOnClickListener
-                VibratorUtils.vibrate(this@MainActivity)
+                VibratorUtil.vibrate(this@MainActivity)
                 val randomPosition = Random.nextInt(0, adapter.itemCount)
                 binding.recyclerView.scrollToPositionWithOffset(
                     randomPosition, 16.dp(this@MainActivity)
                 )
                 if (randomPosition == 0) return@setNavigationOnClickListener
-                if (randomPosition == 1 && ScreenUtils.isPad(this@MainActivity))
+                if (randomPosition == 1 && ScreenUtil.isPad(this@MainActivity))
                     return@setNavigationOnClickListener
                 fabSearchStateFlow.value = false
             }

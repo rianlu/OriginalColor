@@ -13,7 +13,7 @@ import android.os.VibratorManager
  * @ClassName: VibratorUtils
  * @Description:
  */
-object VibratorUtils {
+object VibratorUtil {
 
     private var vibrationState = true
 

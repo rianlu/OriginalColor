@@ -17,7 +17,7 @@ import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.SpUtil
-import com.wzl.originalcolor.utils.VibratorUtils
+import com.wzl.originalcolor.utils.VibratorUtil
 import com.wzl.originalcolor.utils.WorkManagerUtil
 import com.wzl.originalcolor.widget.ColorWidgetProvider
 import java.io.File
@@ -59,7 +59,7 @@ class SettingsActivity : AppCompatActivity() {
         }
         binding.vibrationSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             SpUtil.saveVibrationState(this, isChecked)
-            VibratorUtils.updateVibration(isChecked)
+            VibratorUtil.updateVibration(isChecked)
         }
 
         binding.periodRefreshSwitch.isChecked = SpUtil.getWidgetRefreshState(this)
@@ -106,7 +106,7 @@ class SettingsActivity : AppCompatActivity() {
         }
         binding.cacheSize.text = calculateFileSize(size)
         binding.clearCacheItem.setOnClickListener {
-            VibratorUtils.vibrate(this)
+            VibratorUtil.vibrate(this)
             clearShareCaches(cachePath)
             binding.cacheSize.text = calculateFileSize(0)
         }

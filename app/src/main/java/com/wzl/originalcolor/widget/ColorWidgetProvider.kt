@@ -7,6 +7,7 @@ import android.os.Bundle
 import com.wzl.originalcolor.Config
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorData
+import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.SpUtil
 
@@ -42,13 +43,13 @@ class ColorWidgetProvider : AppWidgetProvider() {
         appWidgetId: Int,
         newOptions: Bundle?
     ) {
-        val minWidth = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) ?: 0
-        val minHeight = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) ?: 0
-        if (context != null && minHeight >= 0) {
+        val minWidth: Int = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) ?: 0
+        val minHeight: Int = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) ?: 0
+        if (context != null) {
+            val cellWidth = 57.dp(context)
+            val cellHeight = 100
             val originalColor = ColorData.getWidgetColor(context)
-            val remoteViews = if (minHeight < 100 ||
-                minHeight < 200 && minWidth <= 350
-            ) {
+            val remoteViews = if (minWidth <= cellWidth || minHeight <= cellHeight) {
                 RemoteViewsUtil.getSmallWidgetView(context, originalColor)
             } else {
                 RemoteViewsUtil.getWideWidgetView(context, originalColor)
