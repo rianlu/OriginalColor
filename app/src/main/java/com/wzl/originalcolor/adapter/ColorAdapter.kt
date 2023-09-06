@@ -15,7 +15,7 @@ import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxExtensions.dp
-import com.wzl.originalcolor.utils.UiModeUtils
+import com.wzl.originalcolor.utils.UiModeUtil
 
 
 /**
@@ -44,7 +44,7 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
             setTextColor(
                 textColor.brightness(
                     if (textColor.isLight()) -0.3F
-                    else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F
+                    else if (UiModeUtil.isLightMode(context)) -0.1F else 0.3F
                 )
                     .setAlpha(0.6F)
             )
@@ -54,7 +54,7 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
             setTextColor(
                 textColor.brightness(
                     if (textColor.isLight()) -0.3F
-                    else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F
+                    else if (UiModeUtil.isLightMode(context)) -0.1F else 0.3F
                 )
             )
         }
@@ -62,7 +62,7 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
             val gradientDrawable = GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
                 intArrayOf(
-                    if (UiModeUtils.isLightMode(context))
+                    if (UiModeUtil.isLightMode(context))
                         item.getRGBColor().setAlpha(0.7F)
                     else {
                         item.getRGBColor().brightness(0.2F)

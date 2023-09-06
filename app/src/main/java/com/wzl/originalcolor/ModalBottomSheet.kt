@@ -26,7 +26,7 @@ import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.ScreenUtil
-import com.wzl.originalcolor.utils.UiModeUtils
+import com.wzl.originalcolor.utils.UiModeUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -75,7 +75,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             text = originalColor.pinyin.uppercase()
             setTextColor(
                 originalColor.getRGBColor()
-                    .brightness(if (UiModeUtils.isLightMode(requireContext())) -0.1F else 0.3F)
+                    .brightness(if (UiModeUtil.isLightMode(requireContext())) -0.1F else 0.3F)
                     .setAlpha(0.3F)
             )
         }
@@ -83,7 +83,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             text = originalColor.NAME
             setTextColor(
                 originalColor.getRGBColor()
-                    .brightness(if (UiModeUtils.isLightMode(requireContext())) -0.1F else 0.3F)
+                    .brightness(if (UiModeUtil.isLightMode(requireContext())) -0.1F else 0.3F)
                     .setAlpha(0.9F)
             )
         }

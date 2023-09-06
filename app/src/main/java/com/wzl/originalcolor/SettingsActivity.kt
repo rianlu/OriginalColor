@@ -132,6 +132,12 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun initCustomThemeColor(hex: String) {
         val themeColor = Color.parseColor(hex)
+        // Toolbar
+        binding.settingsTopAppBar.apply {
+            setTitleTextColor(themeColor)
+            setNavigationIconTint(themeColor)
+        }
+
         // Copyright
         binding.copyrightText.setLinkTextColor(themeColor)
         // Author

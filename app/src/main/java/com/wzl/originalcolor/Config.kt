@@ -5,7 +5,8 @@ object Config {
     // WorkManager周期任务设置
     const val EMPTY_WIDGET_COLOR_BY_WORKER = ""
 
-    const val DEFAULT_THEME_COLOR = "#92b3a5"
+    // 金莲花橙
+    const val DEFAULT_THEME_COLOR = "#f86b1d"
 
     const val SP_APP_COLOR = "sp_app_color"
     const val SP_PARAM_THEME_COLOR = "theme_color"

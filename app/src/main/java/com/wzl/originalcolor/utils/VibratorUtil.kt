@@ -10,7 +10,7 @@ import android.os.VibratorManager
 /**
  * @Author lu
  * @Date 2023/5/10 00:21
- * @ClassName: VibratorUtils
+ * @ClassName: VibratorUtil
  * @Description:
  */
 object VibratorUtil {

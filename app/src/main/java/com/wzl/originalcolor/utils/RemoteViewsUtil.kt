@@ -57,12 +57,12 @@ object RemoteViewsUtil {
         val color = Color.parseColor(randomColor.HEX)
         val pinyinColor = color.brightness(
             if (color.isLight()) -0.3F
-            else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F
+            else if (UiModeUtil.isLightMode(context)) -0.1F else 0.3F
         )
             .setAlpha(0.6F)
         val nameColor = color.brightness(
             if (color.isLight()) -0.3F
-            else if (UiModeUtils.isLightMode(context)) -0.1F else 0.3F
+            else if (UiModeUtil.isLightMode(context)) -0.1F else 0.3F
         )
         return RemoteViews(context.packageName, layoutId).also {
             // 小部件点击打开app平滑过渡

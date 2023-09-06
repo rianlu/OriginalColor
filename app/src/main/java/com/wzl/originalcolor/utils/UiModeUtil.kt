@@ -6,7 +6,7 @@ import android.content.res.Configuration
 /**
  * @Author lu
  * @Date 2023/5/6 08:47
- * @ClassName: UiModeUtils
+ * @ClassName: UiModeUtil
  * @Description:
  */
 enum class UiMode() {
@@ -15,7 +15,7 @@ enum class UiMode() {
     FOLLOW_SYSTEM()
 }
 
-object UiModeUtils {
+object UiModeUtil {
 
     fun isDarkMode(context: Context): Boolean {
         val flag = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK

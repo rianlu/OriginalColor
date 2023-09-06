@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
+import android.view.animation.CycleInterpolator
 import android.view.animation.OvershootInterpolator
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,8 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.search.CustomSearchView
 import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
+import com.wzl.originalcolor.utils.ColorExtensions.brightness
+import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.ColorItemDecoration
 import com.wzl.originalcolor.utils.PHONE_GRID_COUNT
@@ -30,6 +33,7 @@ import com.wzl.originalcolor.utils.ScreenUtil
 import com.wzl.originalcolor.utils.SpUtil
 import com.wzl.originalcolor.utils.SystemBarUtil
 import com.wzl.originalcolor.utils.TABLET_GRID_COUNT
+import com.wzl.originalcolor.utils.UiModeUtil
 import com.wzl.originalcolor.utils.VibratorUtil
 import com.wzl.originalcolor.utils.WorkManagerUtil
 import com.wzl.originalcolor.viewmodel.ColorViewModel
@@ -156,14 +160,17 @@ class MainActivity : AppCompatActivity() {
                         SystemBarUtil
                             .setStatusBarColor(this, searchBackgroundViewColor)
                     }
+
                     CustomSearchView.TransitionState.HIDDEN -> {
                     }
+
                     CustomSearchView.TransitionState.SHOWING -> {
                         binding.fabSearch
                             .animate().scaleX(0F).scaleY(0F)
                             .setDuration(200)
                             .start()
                     }
+
                     CustomSearchView.TransitionState.HIDING -> {
                         binding.fabSearch
                             .animate().scaleX(1F).scaleY(1F)
@@ -189,6 +196,10 @@ class MainActivity : AppCompatActivity() {
             setNavigationOnClickListener {
                 if (adapter.itemCount == 0)
                     return@setNavigationOnClickListener
+                it.animate().rotationBy(360F)
+                    .setDuration(500)
+                    .setInterpolator(CycleInterpolator(1F))
+                    .start()
                 VibratorUtil.vibrate(this@MainActivity)
                 val randomPosition = Random.nextInt(0, adapter.itemCount)
                 binding.recyclerView.scrollToPositionWithOffset(
@@ -290,7 +301,7 @@ class MainActivity : AppCompatActivity() {
         // 标题
         binding.collapsingToolbarLayout.apply {
             // 折叠后的CollapsingToolbarLayout
-            setContentScrimColor(themeColor.setAlpha(0.1F))
+            setContentScrimColor(themeColor.setAlpha(0.2F))
             setExpandedTitleColor(themeColor)
             setCollapsedTitleTextColor(themeColor)
         }
@@ -301,7 +312,14 @@ class MainActivity : AppCompatActivity() {
             menu.getItem(0).icon?.setTint(themeColor)
         }
         // FAB
-        binding.fabSearch.backgroundTintList = ColorStateList.valueOf(themeColor)
+        binding.fabSearch.apply {
+            backgroundTintList = ColorStateList.valueOf(themeColor)
+            imageTintList = ColorStateList.valueOf(if (themeColor.isLight()) {
+                themeColor.brightness(-0.5F)
+            } else {
+                themeColor.brightness(0.5F)
+            })
+        }
 
         // Search Chips
         binding.searchInnerView.colorChipGroup.apply {
@@ -313,12 +331,11 @@ class MainActivity : AppCompatActivity() {
             )
             val colors = intArrayOf(
                 themeColor, themeColor,
-                themeColor.setAlpha(0.1F),
-                themeColor.setAlpha(0.1F)
+                themeColor.setAlpha(0.2F),
+                themeColor.setAlpha(0.2F)
             )
             forEach {
-                (it as Chip).chipBackgroundColor =
-                    ColorStateList(states, colors)
+                (it as Chip).updateThemeColor(themeColor)
             }
         }
 
@@ -326,5 +343,37 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             binding.recyclerView.verticalScrollbarThumbDrawable?.setTint(themeColor)
         }
+    }
+
+    private fun Chip.updateThemeColor(themeColor: Int) {
+        val states = arrayOf(
+            intArrayOf(android.R.attr.state_selected),
+            intArrayOf(android.R.attr.state_checked),
+            intArrayOf(-android.R.attr.state_selected),
+            intArrayOf(-android.R.attr.state_checked)
+        )
+        val colors = intArrayOf(
+            themeColor, themeColor,
+            themeColor.setAlpha(0.2F),
+            themeColor.setAlpha(0.2F)
+        )
+        chipBackgroundColor =
+            ColorStateList(states, colors)
+        val dynamicCheckedColor = if (themeColor.isLight()) {
+            Color.BLACK
+        } else {
+            Color.WHITE
+        }
+        val dynamicDefaultColors = if (UiModeUtil.isLightMode(context)) {
+            Color.BLACK
+        } else {
+            Color.WHITE
+        }
+        val dynamicColors = intArrayOf(
+            dynamicCheckedColor, dynamicCheckedColor,
+            dynamicDefaultColors, dynamicDefaultColors
+        )
+        checkedIconTint = ColorStateList(states, dynamicColors)
+        setTextColor(ColorStateList(states, dynamicColors))
     }
 }
