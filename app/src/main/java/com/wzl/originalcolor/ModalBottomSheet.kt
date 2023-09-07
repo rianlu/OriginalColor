@@ -16,6 +16,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.WindowCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -55,6 +57,9 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val isLightMode = UiModeUtil.isLightMode(requireContext())
+        val cardColor = Color.parseColor(originalColor.HEX)
+
         val clipboardManager =
             requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
@@ -69,13 +74,13 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         }
 
         binding.colorCardView.apply {
-            setCardBackgroundColor(Color.parseColor(originalColor.HEX))
+            setCardBackgroundColor(cardColor)
         }
         binding.colorPinyin.apply {
             text = originalColor.pinyin.uppercase()
             setTextColor(
                 originalColor.getRGBColor()
-                    .brightness(if (UiModeUtil.isLightMode(requireContext())) -0.1F else 0.3F)
+                    .brightness(if (isLightMode) -0.1F else 0.3F)
                     .setAlpha(0.3F)
             )
         }
@@ -83,12 +88,13 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             text = originalColor.NAME
             setTextColor(
                 originalColor.getRGBColor()
-                    .brightness(if (UiModeUtil.isLightMode(requireContext())) -0.1F else 0.3F)
+                    .brightness(if (isLightMode) -0.1F else 0.3F)
                     .setAlpha(0.9F)
             )
         }
 
-        binding.copyColorLayout.setCornerBackground(24, originalColor.getRGBColor().setAlpha(0.1F))
+        binding.copyColorLayout
+            .setCornerBackground(24, originalColor.getRGBColor().setAlpha(0.1F))
         binding.colorHEX.apply {
             text = originalColor.HEX
             setOnClickListener {
@@ -112,17 +118,19 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
 
         binding.shareColor.setOnClickListener {
             val shareView = layoutInflater.inflate(R.layout.layout_share_color_card, null, false)
-            shareView.findViewById<TextView>(R.id.colorName).text = originalColor.NAME
+            shareView.findViewById<TextView>(R.id.colorName).apply {
+                text = originalColor.NAME
+                setTextColor(cardColor.brightness(-0.1f))
+            }
             shareView.findViewById<TextView>(R.id.colorHEX).text = originalColor.HEX
             shareView.findViewById<TextView>(R.id.colorRGB).text = originalColor.RGB.arrayToString()
             shareView.findViewById<TextView>(R.id.colorCMYK).text =
                 originalColor.CMYK.arrayToString()
             shareView.findViewById<View>(R.id.colorDisplayView)
-                .setCornerBackground(16.dp(requireContext()), Color.parseColor(originalColor.HEX))
-            val brighterColor =
-                Color.parseColor(originalColor.HEX).brightness(0.3F)
-            shareView.findViewById<CardView>(R.id.shareCardView)
-                .setCardBackgroundColor(brighterColor)
+                .setCornerBackground(16, cardColor)
+            val backgroundColor = ColorUtils.blendARGB(cardColor, Color.WHITE, 0.5F)
+            shareView.findViewById<ConstraintLayout>(R.id.shareCardView)
+                .setCornerBackground(16, backgroundColor)
 
             val bitmap = BitmapUtil.viewToBitmap(
                 shareView,
@@ -133,7 +141,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             BitmapUtil.shareBitmap(requireContext(), bitmap, originalColor.NAME)
             dismiss()
         }
-
+        // 显示动画
         startOrderedAnimation()
     }
 
@@ -167,17 +175,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
     }
 
     private fun View.setCornerBackground(radius: Int, @ColorInt color: Int) {
-        val cornerRadius = radius.toFloat()
-        val shape = ShapeDrawable(
-            RoundRectShape(
-                floatArrayOf(
-                    cornerRadius, cornerRadius, cornerRadius, cornerRadius,
-                    cornerRadius, cornerRadius, cornerRadius, cornerRadius
-                ), null, null
-            )
-        )
-        shape.paint.color = color
-        this.background = shape
+        setCornerBackground(radius, radius, radius, radius, color)
     }
 
     private fun View.setCornerBackground(

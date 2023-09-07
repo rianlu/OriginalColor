@@ -105,7 +105,6 @@ class MainActivity : AppCompatActivity() {
                 colorViewModel.flowList.collect { list ->
                     binding.emptyListPlaceholder.isVisible = list.isEmpty()
                     adapter.submitList(list)
-                    binding.recyclerView.isVisible = list.isNotEmpty()
                     binding.recyclerView.scrollToPositionWithOffset(
                         0, 16.dp(this@MainActivity)
                     )
@@ -234,15 +233,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun refreshWidget() {
-        sendBroadcast(Intent(this, ColorWidgetProvider::class.java).apply {
-            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-            val ids = AppWidgetManager.getInstance(this@MainActivity)
-                .getAppWidgetIds(ComponentName(this@MainActivity, ColorWidgetProvider::class.java))
-            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-        })
-    }
-
     override fun onBackPressed() {
         if (binding.colorSearchView.currentTransitionState == CustomSearchView.TransitionState.SHOWN) {
             binding.colorSearchView.hide()
@@ -262,19 +252,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initVibration() {
-        val sp = getSharedPreferences(Config.SP_SETTINGS, Context.MODE_PRIVATE)
-    }
-
-    private fun IntArray.arrayToString(): String {
-        val builder = StringBuilder()
-        this.forEachIndexed { index, i ->
-            builder.append(i)
-            if (index != this.size - 1) {
-                builder.append(", ")
-            }
-        }
-        return builder.toString()
+    private fun refreshWidget() {
+        sendBroadcast(Intent(this, ColorWidgetProvider::class.java).apply {
+            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            val ids = AppWidgetManager.getInstance(this@MainActivity)
+                .getAppWidgetIds(ComponentName(this@MainActivity, ColorWidgetProvider::class.java))
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+        })
     }
 
     private fun RecyclerView.scrollToPositionWithOffset(position: Int, offset: Int = 0) {
@@ -290,12 +274,12 @@ class MainActivity : AppCompatActivity() {
             .translationY(0F)
             .setDuration(500)
             .setInterpolator(OvershootInterpolator(3F))
+            .start()
     }
 
     private fun updateGlobalThemeColor(hex: String) {
 
         val themeColor = Color.parseColor(hex)
-
         // 搜索背景色
         binding.colorSearchView.setBackgroundViewColor(themeColor)
         // 标题
@@ -359,16 +343,12 @@ class MainActivity : AppCompatActivity() {
         )
         chipBackgroundColor =
             ColorStateList(states, colors)
-        val dynamicCheckedColor = if (themeColor.isLight()) {
-            Color.BLACK
-        } else {
-            Color.WHITE
-        }
-        val dynamicDefaultColors = if (UiModeUtil.isLightMode(context)) {
-            Color.BLACK
-        } else {
-            Color.WHITE
-        }
+        val dynamicCheckedColor =
+            if (themeColor.isLight()) Color.BLACK
+            else Color.WHITE
+        val dynamicDefaultColors =
+            if (UiModeUtil.isLightMode(context)) Color.BLACK
+            else Color.WHITE
         val dynamicColors = intArrayOf(
             dynamicCheckedColor, dynamicCheckedColor,
             dynamicDefaultColors, dynamicDefaultColors

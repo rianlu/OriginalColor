@@ -39,22 +39,22 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
             return
         }
         val textColor = Color.parseColor(item.HEX)
+        val isLightMode = UiModeUtil.isLightMode(context)
+        val isLightColor = textColor.isLight()
         holder.getView<TextView>(R.id.colorPinyin).apply {
             text = item.pinyin
             setTextColor(
                 textColor.brightness(
-                    if (textColor.isLight()) -0.3F
-                    else if (UiModeUtil.isLightMode(context)) -0.1F else 0.3F
-                )
-                    .setAlpha(0.6F)
+                    if (isLightColor) -0.3F
+                    else if (isLightMode) -0.1F else 0.3F).setAlpha(0.6F)
             )
         }
         holder.getView<TextView>(R.id.colorName).apply {
             text = item.NAME
             setTextColor(
                 textColor.brightness(
-                    if (textColor.isLight()) -0.3F
-                    else if (UiModeUtil.isLightMode(context)) -0.1F else 0.3F
+                    if (isLightColor) -0.3F
+                    else if (isLightMode) -0.1F else 0.3F
                 )
             )
         }
@@ -62,11 +62,9 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
             val gradientDrawable = GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
                 intArrayOf(
-                    if (UiModeUtil.isLightMode(context))
-                        item.getRGBColor().setAlpha(0.7F)
-                    else {
-                        item.getRGBColor().brightness(0.2F)
-                    }, item.getRGBColor(), item.getRGBColor()
+                    if (isLightMode) item.getRGBColor().setAlpha(0.7F)
+                    else item.getRGBColor().brightness(0.2F),
+                    item.getRGBColor(), item.getRGBColor()
                 )
             )
             gradientDrawable.cornerRadius = 16.dp(context).toFloat()
