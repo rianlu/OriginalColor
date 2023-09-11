@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
+import android.view.animation.AnimationUtils
 import android.view.animation.OvershootInterpolator
 import android.widget.TextView
 import android.widget.Toast
@@ -142,7 +143,10 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             dismiss()
         }
         // 显示动画
-        startOrderedAnimation()
+        val layoutAnimation = AnimationUtils.loadLayoutAnimation(
+            context, R.anim.layout_bottom_to_top
+        )
+        binding.bottomSheetLayout.layoutAnimation = layoutAnimation
     }
 
     override fun onStart() {
@@ -216,39 +220,5 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             }
         }
         return builder.toString()
-    }
-
-    private fun startOrderedAnimation() {
-        binding.colorName.animationPrepare()
-        binding.colorCardView.animationPrepare()
-        binding.copyColorLayout.animationPrepare()
-        val isPad = ScreenUtil.isPad(requireContext())
-        CoroutineScope(Dispatchers.Main).launch {
-            if (isPad) {
-                binding.colorPinyin.animationPrepare()
-                binding.colorPinyin.translationAnimation().start()
-                delay(100)
-            }
-            binding.colorName.translationAnimation().start()
-            delay(100)
-            binding.colorCardView.translationAnimation().start()
-            if (isPad) {
-                delay(100)
-            }
-            binding.copyColorLayout.translationAnimation().start()
-        }
-    }
-
-    private fun View.animationPrepare() {
-        this.alpha = 0F
-        this.translationY = 100F
-    }
-
-    private fun View.translationAnimation(): ViewPropertyAnimator {
-        return animate()
-            .alpha(1F)
-            .translationY(0F)
-            .setDuration(500)
-            .setInterpolator(OvershootInterpolator(3F))
     }
 }
