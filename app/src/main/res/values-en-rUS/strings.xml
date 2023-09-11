@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OriginalColor</string>
+    <string name="chip_full">All</string>
+    <string name="chip_white">White</string>
+    <string name="chip_grey">Grey</string>
+    <string name="chip_red">Red</string>
+    <string name="chip_orange">Orange</string>
+    <string name="chip_yellow">Yellow</string>
+    <string name="chip_green">Green</string>
+    <string name="chip_cyan">Cyan</string>
+    <string name="chip_blue">Blue</string>
+    <string name="chip_purple">Purple</string>
+    <string name="chip_other">Others</string>
+    <string name="fab_search_hint">Search Colors</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="menu_info">About</string>
+    <string name="menu_settings">Settings</string>
+    <string name="quick_filter">Quick filter</string>
+    <string name="btn_back">Back</string>
+    <string name="btn_share">Share</string>
+    <string name="share_app_content">Simple color query tool, based on traditional Chinese colors</string>
+    <string name="share_to">Share to</string>
+    <string name="empty_data">No data</string>
+    <string name="app_version">Version</string>
+    <string name="vibration">Vibration</string>
+    <string name="period_refresh_widget">Regular refresh widget</string>
+    <string name="share_app">Share App</string>
+    <string name="add_app_widget">Add Widget</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="empty_list_hint">Sorry not found~</string>
+</resources>

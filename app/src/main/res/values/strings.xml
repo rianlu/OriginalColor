@@ -12,36 +12,35 @@
     <string name="chip_purple">紫</string>
     <string name="chip_other">其他</string>
     <string name="fab_search_hint">搜索颜色</string>
-    <string name="text_color_pinyin">COLOR PINYIN</string>
-    <string name="text_color_name">COLOR NAME</string>
-    <string name="text_color_hex">COLOR HEX</string>
-    <string name="text_color_rgb">COLOR RGB</string>
-    <string name="text_color_cmyk">COLOR CMYK</string>
+    <string name="text_color_pinyin" translatable="false">COLOR PINYIN</string>
+    <string name="text_color_name" translatable="false">COLOR NAME</string>
+    <string name="text_color_hex" translatable="false">COLOR HEX</string>
+    <string name="text_color_rgb" translatable="false">COLOR RGB</string>
+    <string name="text_color_cmyk" translatable="false">COLOR CMYK</string>
     
     <string name="copied_to_clipboard">已复制到剪切板</string>
     <string name="menu_info">关于</string>
     <string name="menu_settings">设置</string>
-    <string name="menu_favorite_list">喜欢列表</string>
+    <string name="menu_favorite_list" translatable="false">喜欢列表</string>
     <string name="quick_filter">快速筛选</string>
-    <string name="color_data_copyright"><p>Copyright © 2013 by <a href="http://dmyz.org/">Perchouli</a> Shanzhai to <a href="http://nipponcolors.com/">Nipponcolors</a>\n参看: 色谱 中科院科技情报编委会名词室.科学出版社,1957. Adobe RGB / CMYK FOGRA39, Dot Gain 15% <img src="http://zhongguose.com/img/share.jpg" width="1" alt="Screenshot" /><a href="https://beian.miit.gov.cn/">沪ICP备17025116号-2</a></p></string>
-    <string name="author_info">Designed by 禄眠</string>
+    <string name="color_data_copyright" translatable="false"><p>Copyright © 2013 by <a href="http://dmyz.org/">Perchouli</a> Shanzhai to <a href="http://nipponcolors.com/">Nipponcolors</a>\n参看: 色谱 中科院科技情报编委会名词室.科学出版社,1957. Adobe RGB / CMYK FOGRA39, Dot Gain 15% <img src="http://zhongguose.com/img/share.jpg" width="1" alt="Screenshot" /><a href="https://beian.miit.gov.cn/">沪ICP备17025116号-2</a></p></string>
+    <string name="author_info" translatable="false">Designed by 禄眠</string>
 
-    <string name="greet_morning">早上好</string>
-    <string name="greet_afternoon">下午好</string>
-    <string name="greet_evening">晚上好</string>
-    <string name="greet_deep_night">深夜了，早点休息~</string>
-    <string name="btn_close">关闭</string>
-    <string name="btn_next">换一个</string>
+<!--    <string name="greet_morning">早上好</string>-->
+<!--    <string name="greet_afternoon">下午好</string>-->
+<!--    <string name="greet_evening">晚上好</string>-->
+<!--    <string name="greet_deep_night">深夜了，早点休息~</string>-->
+<!--    <string name="btn_close">关闭</string>-->
+<!--    <string name="btn_next">换一个</string>-->
     <string name="btn_back">返回</string>
     <string name="btn_share">分享</string>
-    <string name="card_color_description">卡片颜色</string>
 
-    <string name="share_app_content">一款配色APP——轻量简洁的配色工具：\nhttps://www.pgyer.com/X7PCzp</string>
+    <string name="share_app_content">简洁的颜色查询工具，基于中国传统色：\nhttps://www.pgyer.com/X7PCzp</string>
     <string name="share_to">分享到</string>
-    <string name="donate_first_hint">作者很懒的~</string>
-    <string name="donate_second_hint">你还要继续吗？</string>
-    <string name="donate_third_hint">那我可就不客气了~</string>
-    <string name="donate_last_hint">(￣▽￣)～■干杯□～(￣▽￣)</string>
+<!--    <string name="donate_first_hint">作者很懒的~</string>-->
+<!--    <string name="donate_second_hint">你还要继续吗？</string>-->
+<!--    <string name="donate_third_hint">那我可就不客气了~</string>-->
+<!--    <string name="donate_last_hint">(￣▽￣)～■干杯□～(￣▽￣)</string>-->
     <string name="empty_data">无数据</string>
 
     <string name="app_version">版本</string>
