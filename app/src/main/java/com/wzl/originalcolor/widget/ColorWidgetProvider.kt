@@ -30,7 +30,6 @@ class ColorWidgetProvider : AppWidgetProvider() {
         } else {
             originalColor = ColorData.getWidgetColor(context)
         }
-
         appWidgetIds.forEach { appWidgetId ->
             val remoteViews = RemoteViewsUtil.getWideWidgetView(context, originalColor)
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
@@ -43,19 +42,26 @@ class ColorWidgetProvider : AppWidgetProvider() {
         appWidgetId: Int,
         newOptions: Bundle?
     ) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        if (context == null) return
         val minWidth: Int = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) ?: 0
         val minHeight: Int = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) ?: 0
-        if (context != null) {
-            val cellWidth = 57.dp(context)
-            val cellHeight = 100
-            val originalColor = ColorData.getWidgetColor(context)
-            val remoteViews = if (minWidth <= cellWidth || minHeight <= cellHeight) {
-                RemoteViewsUtil.getSmallWidgetView(context, originalColor)
-            } else {
-                RemoteViewsUtil.getWideWidgetView(context, originalColor)
-            }
-            appWidgetManager?.updateAppWidget(appWidgetId, remoteViews)
+        val rows = getCellSize(minWidth)
+        val columns = getCellSize(minHeight)
+        val originalColor = ColorData.getWidgetColor(context)
+        val remoteViews = if (rows <= 2 || columns == 1) {
+            RemoteViewsUtil.getSmallWidgetView(context, originalColor)
+        } else {
+            RemoteViewsUtil.getWideWidgetView(context, originalColor)
         }
-        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        appWidgetManager?.updateAppWidget(appWidgetId, remoteViews)
+    }
+
+    private fun getCellSize(size: Int): Int {
+        var n = 2
+        while (70 * n - 30 < size) {
+            n++
+        }
+        return n - 1
     }
 }
