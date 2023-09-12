@@ -3,6 +3,7 @@ package com.wzl.originalcolor.adapter
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -59,14 +60,23 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
             )
         }
         holder.getView<LinearLayout>(R.id.colorBackground).apply {
-            val gradientDrawable = GradientDrawable(
-                GradientDrawable.Orientation.TOP_BOTTOM,
-                intArrayOf(
+            val gradientDrawable = GradientDrawable()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                gradientDrawable.setColors(
+                    intArrayOf(
+                        if (isLightMode) item.getRGBColor().setAlpha(0.7F)
+                        else item.getRGBColor().brightness(0.2F),
+                        item.getRGBColor().setAlpha(0.7F), item.getRGBColor()
+                    ),
+                    floatArrayOf(0F, 0.3F, 1F)
+                )
+            } else {
+                gradientDrawable.colors = intArrayOf(
                     if (isLightMode) item.getRGBColor().setAlpha(0.7F)
                     else item.getRGBColor().brightness(0.2F),
-                    item.getRGBColor(), item.getRGBColor()
+                    item.getRGBColor()
                 )
-            )
+            }
             gradientDrawable.cornerRadius = 16.dp(context).toFloat()
             background = gradientDrawable
         }
