@@ -22,31 +22,11 @@ import com.wzl.originalcolor.utils.PxExtensions.dp
 object RemoteViewsUtil {
 
     fun getWideWidgetView(context: Context, randomColor: OriginalColor): RemoteViews {
-        val color = Color.parseColor(randomColor.HEX)
         return generateWidgetView(context, randomColor, R.layout.layout_wide_widget)
-            .also {
-                // 渐变背景
-                val gradientBitmap = generateGradientBitmap(
-                    context,
-                    intArrayOf(color.brightness(0.2F), color, color),
-                    floatArrayOf(0F, 0.6F, 1F)
-                )
-                it.setImageViewBitmap(R.id.colorBackground, gradientBitmap)
-            }
     }
 
     fun getSmallWidgetView(context: Context, randomColor: OriginalColor): RemoteViews {
-        val color = Color.parseColor(randomColor.HEX)
         return generateWidgetView(context, randomColor, R.layout.layout_small_widget)
-            .also {
-                // 渐变背景
-                val gradientBitmap = generateGradientBitmap(
-                    context,
-                    intArrayOf(color.brightness(0.2F), color, color),
-                    floatArrayOf(0F, 0.6F, 1F)
-                )
-                it.setImageViewBitmap(R.id.colorBackground, gradientBitmap)
-            }
     }
 
     private fun generateWidgetView(
@@ -54,12 +34,12 @@ object RemoteViewsUtil {
         randomColor: OriginalColor,
         @LayoutRes layoutId: Int
     ): RemoteViews {
+        val isLightMode = UiModeUtil.isLightMode(context)
         val color = Color.parseColor(randomColor.HEX)
         val pinyinColor = color.brightness(
             if (color.isLight()) -0.3F
             else if (UiModeUtil.isLightMode(context)) -0.1F else 0.3F
-        )
-            .setAlpha(0.6F)
+        ).setAlpha(0.6F)
         val nameColor = color.brightness(
             if (color.isLight()) -0.3F
             else if (UiModeUtil.isLightMode(context)) -0.1F else 0.3F
@@ -80,6 +60,15 @@ object RemoteViewsUtil {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             it.setOnClickPendingIntent(R.id.colorBackground, pendingIntent)
+        }.also {
+            // 渐变背景
+            val gradientBitmap = generateGradientBitmap(
+                context,
+                intArrayOf(if (isLightMode) color.setAlpha(0.7F)
+                else color.brightness(0.2F), color, color),
+                floatArrayOf(0F, 0.6F, 1F)
+            )
+            it.setImageViewBitmap(R.id.colorBackground, gradientBitmap)
         }
     }
 

@@ -26,6 +26,7 @@ import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.BitmapUtil
 import com.wzl.originalcolor.utils.ColorExtensions.brightness
+import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.ScreenUtil
@@ -58,9 +59,10 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val isLightMode = UiModeUtil.isLightMode(requireContext())
         val cardColor = Color.parseColor(originalColor.HEX)
-
+        val isLightColor = cardColor.isLight()
+        val textColor = originalColor.getRGBColor()
+            .brightness(if (isLightColor) -0.1F else 0.1F)
         val clipboardManager =
             requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
@@ -70,8 +72,8 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         // 设置虚拟键同色
         dialog?.window?.run {
             navigationBarColor = sheetBackground
-            WindowCompat.getInsetsController(this, this.decorView).isAppearanceLightNavigationBars =
-                true
+            WindowCompat.getInsetsController(this, this.decorView)
+                .isAppearanceLightNavigationBars = true
         }
 
         binding.colorCardView.apply {
@@ -79,18 +81,12 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         }
         binding.colorPinyin.apply {
             text = originalColor.pinyin.uppercase()
-            setTextColor(
-                originalColor.getRGBColor()
-                    .brightness(if (isLightMode) -0.1F else 0.3F)
-                    .setAlpha(0.3F)
+            setTextColor(textColor.setAlpha(0.3F)
             )
         }
         binding.colorName.apply {
             text = originalColor.NAME
-            setTextColor(
-                originalColor.getRGBColor()
-                    .brightness(if (isLightMode) -0.1F else 0.3F)
-                    .setAlpha(0.9F)
+            setTextColor(textColor.setAlpha(0.9F)
             )
         }
 

@@ -39,42 +39,35 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
         if (item == null) {
             return
         }
-        val textColor = Color.parseColor(item.HEX)
+        val cardColor = Color.parseColor(item.HEX)
         val isLightMode = UiModeUtil.isLightMode(context)
-        val isLightColor = textColor.isLight()
+        val isLightColor = cardColor.isLight()
+        val textColor = cardColor.brightness(
+            if (isLightColor) -0.3F
+            else -0.1F
+        )
         holder.getView<TextView>(R.id.colorPinyin).apply {
             text = item.pinyin
-            setTextColor(
-                textColor.brightness(
-                    if (isLightColor) -0.3F
-                    else if (isLightMode) -0.1F else 0.3F).setAlpha(0.6F)
-            )
+            setTextColor(textColor.setAlpha(0.6F))
         }
         holder.getView<TextView>(R.id.colorName).apply {
             text = item.NAME
-            setTextColor(
-                textColor.brightness(
-                    if (isLightColor) -0.3F
-                    else if (isLightMode) -0.1F else 0.3F
-                )
-            )
+            setTextColor(textColor)
         }
         holder.getView<LinearLayout>(R.id.colorBackground).apply {
             val gradientDrawable = GradientDrawable()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val startColor = if (isLightMode) cardColor.setAlpha(0.7F)
+                else cardColor.brightness(0.2F)
                 gradientDrawable.setColors(
-                    intArrayOf(
-                        if (isLightMode) item.getRGBColor().setAlpha(0.7F)
-                        else item.getRGBColor().brightness(0.2F),
-                        item.getRGBColor().setAlpha(0.7F), item.getRGBColor()
-                    ),
+                    intArrayOf(startColor, startColor, cardColor),
                     floatArrayOf(0F, 0.3F, 1F)
                 )
             } else {
                 gradientDrawable.colors = intArrayOf(
-                    if (isLightMode) item.getRGBColor().setAlpha(0.7F)
+                    if (isLightMode) cardColor.setAlpha(0.7F)
                     else item.getRGBColor().brightness(0.2F),
-                    item.getRGBColor()
+                    cardColor
                 )
             }
             gradientDrawable.cornerRadius = 16.dp(context).toFloat()
