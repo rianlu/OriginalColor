@@ -58,11 +58,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val isPad = ScreenUtil.isPad(this@MainActivity)
         updateGlobalThemeColor(SpUtil.getLocalThemeColor(this))
-        if (ScreenUtil.isPad(this@MainActivity)) {
+        if (isPad) {
             gridCount = TABLET_GRID_COUNT
         }
-
         VibratorUtil.updateVibration(SpUtil.getVibrationState(this))
 
         adapter = ColorAdapter().also {
@@ -204,10 +204,8 @@ class MainActivity : AppCompatActivity() {
                 binding.recyclerView.scrollToPositionWithOffset(
                     randomPosition, 16.dp(this@MainActivity)
                 )
-                if (randomPosition == 0) return@setNavigationOnClickListener
-                if (randomPosition == 1 && ScreenUtil.isPad(this@MainActivity))
-                    return@setNavigationOnClickListener
-                fabSearchStateFlow.value = false
+                fabSearchStateFlow.value = randomPosition == 0 ||
+                    (randomPosition == 1 && isPad)
             }
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {

@@ -26,34 +26,32 @@ object RemoteViewsUtil {
     }
 
     fun getSmallWidgetView(context: Context, randomColor: OriginalColor): RemoteViews {
-        return generateWidgetView(context, randomColor, R.layout.layout_small_widget)
+        return generateWidgetView(context, randomColor, R.layout.layout_small_widget, true)
     }
 
     private fun generateWidgetView(
         context: Context,
-        randomColor: OriginalColor,
-        @LayoutRes layoutId: Int
+        originalColor: OriginalColor,
+        @LayoutRes layoutId: Int,
+        isSmallWidget: Boolean = false
     ): RemoteViews {
         val isLightMode = UiModeUtil.isLightMode(context)
-        val color = Color.parseColor(randomColor.HEX)
-        val pinyinColor = color.brightness(
-            if (color.isLight()) -0.3F
-            else if (UiModeUtil.isLightMode(context)) -0.1F else 0.3F
-        ).setAlpha(0.6F)
-        val nameColor = color.brightness(
-            if (color.isLight()) -0.3F
-            else if (UiModeUtil.isLightMode(context)) -0.1F else 0.3F
+        val cardColor = Color.parseColor(originalColor.HEX)
+        val isLightColor = cardColor.isLight()
+        val textColor = cardColor.brightness(
+            if (isLightColor) -0.3F
+            else -0.1F
         )
         return RemoteViews(context.packageName, layoutId).also {
             // 小部件点击打开app平滑过渡
             // https://developer.android.com/develop/ui/views/appwidgets/enhance#enable-smoother-transitions
-            it.setInt(R.id.widgetBackground, "setBackgroundColor", color)
-            it.setTextViewText(R.id.colorPinyin, randomColor.pinyin)
-            it.setTextColor(R.id.colorPinyin, pinyinColor)
-            it.setTextViewText(R.id.colorName, randomColor.NAME)
-            it.setTextColor(R.id.colorName, nameColor)
+            it.setInt(R.id.widgetBackground, "setBackgroundColor", cardColor)
+            it.setTextViewText(R.id.colorPinyin, originalColor.pinyin)
+            it.setTextColor(R.id.colorPinyin, textColor.setAlpha(0.6F))
+            it.setTextViewText(R.id.colorName, originalColor.NAME)
+            it.setTextColor(R.id.colorName, textColor)
             val intent = Intent(context, MainActivity::class.java).also { intent ->
-                intent.putExtra("widgetColor", randomColor)
+                intent.putExtra("widgetColor", originalColor)
             }
             val pendingIntent = PendingIntent.getActivity(
                 context, 0, intent,
@@ -62,11 +60,12 @@ object RemoteViewsUtil {
             it.setOnClickPendingIntent(R.id.colorBackground, pendingIntent)
         }.also {
             // 渐变背景
+            val startColor = if (isLightMode) cardColor.setAlpha(0.7F)
+            else cardColor.brightness(0.2F)
             val gradientBitmap = generateGradientBitmap(
                 context,
-                intArrayOf(if (isLightMode) color.setAlpha(0.7F)
-                else color.brightness(0.2F), color, color),
-                floatArrayOf(0F, 0.6F, 1F)
+                intArrayOf(startColor, startColor, cardColor),
+                floatArrayOf(0F, if (isSmallWidget) 0.6F else 0.4F, 1F)
             )
             it.setImageViewBitmap(R.id.colorBackground, gradientBitmap)
         }

@@ -56,19 +56,15 @@ class ColorAdapter : BaseDifferAdapter<OriginalColor, QuickViewHolder>(ColorDiff
         }
         holder.getView<LinearLayout>(R.id.colorBackground).apply {
             val gradientDrawable = GradientDrawable()
+            val startColor = if (isLightMode) cardColor.setAlpha(0.7F)
+            else cardColor.brightness(0.2F)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val startColor = if (isLightMode) cardColor.setAlpha(0.7F)
-                else cardColor.brightness(0.2F)
                 gradientDrawable.setColors(
                     intArrayOf(startColor, startColor, cardColor),
                     floatArrayOf(0F, 0.3F, 1F)
                 )
             } else {
-                gradientDrawable.colors = intArrayOf(
-                    if (isLightMode) cardColor.setAlpha(0.7F)
-                    else item.getRGBColor().brightness(0.2F),
-                    cardColor
-                )
+                gradientDrawable.colors = intArrayOf(startColor, cardColor)
             }
             gradientDrawable.cornerRadius = 16.dp(context).toFloat()
             background = gradientDrawable
