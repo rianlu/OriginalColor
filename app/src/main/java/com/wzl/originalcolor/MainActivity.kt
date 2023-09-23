@@ -2,17 +2,27 @@ package com.wzl.originalcolor
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
-import android.content.Context
+import android.content.DialogInterface
+import android.content.DialogInterface.OnClickListener
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
+import android.text.method.LinkMovementMethod
+import android.text.method.ScrollingMovementMethod
+import android.view.ViewGroup
 import android.view.animation.CycleInterpolator
 import android.view.animation.OvershootInterpolator
+import android.webkit.WebView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -57,6 +67,28 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 是否显示隐私弹窗
+        if (!SpUtil.getPrivacyPolicyState(this) &&
+            BuildConfig.FLAVOR == BuildConfig.var_tencent) {
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.privacy_policy))
+                .setView(TextView(this).apply {
+                    text = getString(R.string.privacy_policy_content)
+                    movementMethod = LinkMovementMethod.getInstance()
+                    maxLines = 10
+
+                    textSize = 6.dp(this@MainActivity).toFloat()
+                    val textPadding = 16.dp(this@MainActivity)
+                    setPadding(textPadding, textPadding, textPadding, textPadding)
+                })
+                .setNegativeButton("不同意") {
+                        p0, p1 -> finish() }
+                .setPositiveButton("同意") {
+                        p0, p1 -> SpUtil.savePrivacyPolicyState(this@MainActivity, true) }
+                .setCancelable(false)
+                .show()
+        }
 
         val isPad = ScreenUtil.isPad(this@MainActivity)
         updateGlobalThemeColor(SpUtil.getLocalThemeColor(this))

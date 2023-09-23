@@ -82,4 +82,24 @@ object SpUtil {
             apply()
         }
     }
+
+    fun getPrivacyPolicyState(context: Context): Boolean {
+        val settingsSp = context.getSharedPreferences(
+            Config.SP_SETTINGS, Context.MODE_PRIVATE
+        )
+        return settingsSp.getBoolean(
+            Config.SP_PARAM_PRIVACY_POLICY,
+            Config.DEFAULT_PARAM_PRIVACY_POLICY
+        )
+    }
+
+    fun savePrivacyPolicyState(context: Context, isAgreed: Boolean) {
+        val settingsSp = context.getSharedPreferences(
+            Config.SP_SETTINGS, Context.MODE_PRIVATE
+        )
+        settingsSp.edit().apply {
+            putBoolean(Config.SP_PARAM_PRIVACY_POLICY, isAgreed)
+            apply()
+        }
+    }
 }

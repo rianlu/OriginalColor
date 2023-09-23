@@ -14,10 +14,13 @@ object Config {
 
     const val DEFAULT_VIBRATION = true
     const val DEFAULT_PERIOD_REFRESH_WIDGET = false
+    const val DEFAULT_PARAM_PRIVACY_POLICY = false
 
     const val SP_SETTINGS = "settings"
     const val SP_PARAM_VIBRATION = "vibration"
     const val SP_PARAM_PERIOD_REFRESH_WIDGET = "period_refresh_widget"
+
+    const val SP_PARAM_PRIVACY_POLICY = "privacy_policy"
 
     const val WIDGET_WORKER_TAG = "widget_worker_tag"
 }

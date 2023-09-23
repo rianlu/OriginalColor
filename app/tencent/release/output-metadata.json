@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.wzl.originalcolor",
+  "variantName": "tencentRelease",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 4,
+      "versionName": "2.0.1",
+      "outputFile": "app-tencent-release.apk"
+    }
+  ],
+  "elementType": "File"
+}
