@@ -1,22 +1,27 @@
 package com.wzl.originalcolor
 
+import android.animation.ObjectAnimator
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RoundRectShape
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewPropertyAnimator
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.view.animation.OvershootInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
-import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.WindowCompat
@@ -29,8 +34,6 @@ import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxExtensions.dp
-import com.wzl.originalcolor.utils.ScreenUtil
-import com.wzl.originalcolor.utils.UiModeUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -43,9 +46,11 @@ import kotlinx.coroutines.launch
  * @ClassName: ModalBottomSheet
  * @Description:
  */
-class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDialogFragment() {
+class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDialogFragment(), SensorEventListener {
 
     private lateinit var binding: ModalBottomSheetContentBinding
+    private lateinit var sensorManager: SensorManager
+    private var flowingAnimator: ObjectAnimator? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +64,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initSensorManager()
         val cardColor = Color.parseColor(originalColor.HEX)
         val isLightColor = cardColor.isLight()
         val textColor = originalColor.getRGBColor()
@@ -143,6 +149,22 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             context, R.anim.layout_bottom_to_top
         )
         binding.bottomSheetLayout.layoutAnimation = layoutAnimation
+
+        flowingAnimator = ObjectAnimator
+            .ofFloat(binding.colorCardView, "translationY", 0F, -15F, 0F, 15F, 0F)
+            .setDuration(2000)
+            .apply {
+                repeatCount = ObjectAnimator.INFINITE
+                interpolator = LinearInterpolator()
+            }
+        flowingAnimator?.start()
+    }
+
+    private fun initSensorManager() {
+        Log.i("log start", "")
+        sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+            SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     override fun onStart() {
@@ -151,6 +173,27 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
+    private var initDegree = -1F
+    override fun onSensorChanged(p0: SensorEvent?) {
+        val values = p0?.values ?: return
+        if (initDegree == -1F) initDegree = values[1] * 9F
+//        Log.i("sensor: ", values.contentToString())
+        val degreeX = values[1] * 9F
+        val degreeY = values[0] * 9F
+        binding.colorCardView.animate()
+            .rotationX(degreeX - initDegree)
+            .rotationY(degreeY)
+            .setDuration(200)
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sensorManager.unregisterListener(this)
+        flowingAnimator?.cancel()
+    }
     private fun copyToClipboard(
         view: TextView,
         content: String,
