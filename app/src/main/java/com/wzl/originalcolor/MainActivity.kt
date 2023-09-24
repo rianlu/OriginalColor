@@ -102,6 +102,10 @@ class MainActivity : AppCompatActivity() {
             it.addOnItemChildClickListener(R.id.colorBackground) { adapter, view, position ->
                 val originalColor = adapter.getItem(position) ?: return@addOnItemChildClickListener
                 val modalBottomSheet = ModalBottomSheet(originalColor)
+                val existedBottomSheet = supportFragmentManager.findFragmentByTag(ModalBottomSheet.TAG)
+                if (existedBottomSheet != null && existedBottomSheet is ModalBottomSheet) {
+                    existedBottomSheet.dismiss()
+                }
                 modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
             }
             it.addOnItemChildLongClickListener(R.id.colorBackground) { adapter, view, position ->

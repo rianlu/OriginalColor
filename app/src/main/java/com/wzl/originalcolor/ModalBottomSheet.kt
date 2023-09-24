@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RoundRectShape
@@ -16,7 +17,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
@@ -25,6 +25,7 @@ import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.WindowCompat
+import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wzl.originalcolor.databinding.ModalBottomSheetContentBinding
@@ -38,6 +39,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 
 /**
@@ -63,6 +65,12 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+        // 设置相机高度
+        val distance = if (isPortrait) 2000 else 5000
+        val scale = resources.displayMetrics.density
+        binding.colorCardView.cameraDistance = distance * scale
 
         initSensorManager()
         val cardColor = Color.parseColor(originalColor.HEX)
@@ -161,7 +169,6 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
     }
 
     private fun initSensorManager() {
-        Log.i("log start", "")
         sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
             SensorManager.SENSOR_DELAY_NORMAL)
@@ -176,14 +183,16 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
     private var initDegree = -1F
     override fun onSensorChanged(p0: SensorEvent?) {
         val values = p0?.values ?: return
-        if (initDegree == -1F) initDegree = values[1] * 9F
 //        Log.i("sensor: ", values.contentToString())
-        val degreeX = values[1] * 9F
-        val degreeY = values[0] * 9F
+        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+        val degreeX = if (isPortrait) values[1] * 9F else values[0] * 9F
+        val degreeY = if (isPortrait) values[0] * 9F else values[1] * 9F
+        if (initDegree == -1F) initDegree = degreeX
         binding.colorCardView.animate()
             .rotationX(degreeX - initDegree)
             .rotationY(degreeY)
             .setDuration(200)
+            .start()
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
