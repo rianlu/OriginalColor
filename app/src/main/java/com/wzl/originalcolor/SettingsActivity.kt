@@ -9,12 +9,16 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.wzl.originalcolor.databinding.ActivitySettingsBinding
 import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
+import com.wzl.originalcolor.utils.ProtocolDialogUtil
+import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.SpUtil
 import com.wzl.originalcolor.utils.VibratorUtil
@@ -38,7 +42,7 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 文本包含链接挑传
+        // 文本包含链接跳转
         binding.copyrightText.movementMethod = LinkMovementMethod.getInstance()
         initCustomThemeColor(SpUtil.getLocalThemeColor(this))
         binding.settingsTopAppBar
@@ -109,6 +113,14 @@ class SettingsActivity : AppCompatActivity() {
             VibratorUtil.vibrate(this)
             clearShareCaches(cachePath)
             binding.cacheSize.text = calculateFileSize(0)
+        }
+
+        binding.userAgreementItem.setOnClickListener {
+            ProtocolDialogUtil.showUserAgreement(this)
+        }
+
+        binding.privacyPolicyItem.setOnClickListener {
+            ProtocolDialogUtil.showPrivacyPolicy(this)
         }
     }
 

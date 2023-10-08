@@ -29,5 +29,6 @@
     <string name="add_app_widget">Add Widget</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="empty_list_hint">Sorry not found~</string>
+    <string name="user_agreement">User Agreement</string>
     <string name="privacy_policy">Privacy Policy</string>
 </resources>
