@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // 是否显示隐私弹窗
-        ProtocolDialogUtil.show(this, true)
+        ProtocolDialogUtil.show(this)
 
         val isPad = ScreenUtil.isPad(this@MainActivity)
         updateGlobalThemeColor(SpUtil.getLocalThemeColor(this))
