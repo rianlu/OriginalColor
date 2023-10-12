@@ -7,18 +7,17 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
-import com.wzl.originalcolor.BuildConfig
 import com.wzl.originalcolor.R
 import com.wzl.originalcolor.utils.PxExtensions.dp
 import kotlin.system.exitProcess
 
 object ProtocolDialogUtil {
 
-    fun show(context: Context, isDebug: Boolean = false) {
-        if ((!isDebug) || ((SpUtil.getPrivacyPolicyState(context)) &&
-                    (BuildConfig.FLAVOR != BuildConfig.var_tencent))
-        )
-            return
+    fun show(context: Context) {
+//        if ((SpUtil.getPrivacyPolicyState(context)) &&
+//                    (BuildConfig.FLAVOR == BuildConfig.var_base)
+//        )
+        if (SpUtil.getPrivacyPolicyState(context)) return
         val hexColor = SpUtil.getLocalThemeColor(context)
         val rootView =
             LayoutInflater.from(context)

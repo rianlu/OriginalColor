@@ -31,27 +31,28 @@ android {
         }
     }
 
-    flavorDimensions "app"
-    productFlavors {
-        base {
-            applicationId "com.wzl.originalcolor"
-            dimension "app"
-            versionCode 4
-            versionName "2.0.1"
-            signingConfig signingConfigs.release
-        }
-        tencent {
-            applicationId "com.wzl.originalcolor"
-            dimension "app"
-            versionCode 4
-            versionName "2.0.1"
-            signingConfig signingConfigs.release
-        }
-    }
-    productFlavors.all {
-        flavor ->
-            defaultConfig.buildConfigField 'String', 'var_'+flavor.name, '\"'+flavor.name+'\"'
-    }
+    // Multi Channels
+//    flavorDimensions "app"
+//    productFlavors {
+//        base {
+//            applicationId "com.wzl.originalcolor"
+//            dimension "app"
+//            versionCode 4
+//            versionName "2.0.1"
+//            signingConfig signingConfigs.release
+//        }
+//        tencent {
+//            applicationId "com.wzl.originalcolor"
+//            dimension "app"
+//            versionCode 4
+//            versionName "2.0.1"
+//            signingConfig signingConfigs.release
+//        }
+//    }
+//    productFlavors.all {
+//        flavor ->
+//            defaultConfig.buildConfigField 'String', 'var_'+flavor.name, '\"'+flavor.name+'\"'
+//    }
 
     buildTypes {
         debug {
