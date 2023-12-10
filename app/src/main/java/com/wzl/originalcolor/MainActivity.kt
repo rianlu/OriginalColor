@@ -4,17 +4,16 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.view.animation.CycleInterpolator
 import android.view.animation.OvershootInterpolator
-import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
@@ -65,6 +64,9 @@ class MainActivity : AppCompatActivity() {
         // 是否显示隐私弹窗
         ProtocolDialogUtil.show(this)
 
+        // 初始化 ShortcutManager
+        initShortcutManager()
+
         val isPad = ScreenUtil.isPad(this@MainActivity)
         updateGlobalThemeColor(SpUtil.getLocalThemeColor(this), this)
         if (isPad) {
@@ -83,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
             }
-            it.addOnItemChildLongClickListener(R.id.colorBackground) { adapter, view, position ->
+            it.addOnItemChildLongClickListener(R.id.originalColorCard) { adapter, view, position ->
                 adapter.getItem(position)?.let { originColor ->
                     val themeColor = originColor.HEX
                     SpUtil.saveLocalThemeColor(this, themeColor)
@@ -254,11 +256,19 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
+        // Widget 点击跳转
         intent?.getSerializableExtra("widgetColor")?.let { widgetColor ->
             val position = colorViewModel.flowList.value.indexOf(widgetColor)
             binding.recyclerView.scrollToPositionWithOffset(
                 position, 16.dp(this@MainActivity)
             )
+        }
+
+        // 搜索 Shortcut
+        intent?.getBooleanExtra("shortcut_search", false)?.let {
+            if (it) {
+                binding.colorSearchView.show()
+            }
         }
     }
 
@@ -328,6 +338,20 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             binding.recyclerView.verticalScrollbarThumbDrawable?.setTint(themeColor)
         }
+    }
+
+    private fun initShortcutManager() {
+        val shortcutManager = getSystemService(ShortcutManager::class.java)
+        val intent = Intent(this, MainActivity::class.java).apply {
+            action = Intent.ACTION_VIEW
+            putExtra("shortcut_search", true)
+        }
+        val searchShortcutInfo = ShortcutInfo.Builder(this, "shortcut_search")
+            .setShortLabel("搜索")
+            .setIcon(Icon.createWithResource(this, R.drawable.ic_search))
+            .setIntent(intent)
+            .build()
+        shortcutManager.dynamicShortcuts = listOf(searchShortcutInfo)
     }
 
     private fun Chip.updateThemeColor(themeColor: Int) {
