@@ -19,6 +19,7 @@
 
     <style name="Widget.App.Chip" parent="Widget.Material3.Chip.Filter">
         <item name="chipBackgroundColor">@color/background_tint</item>
+        <item name="chipCornerRadius">14dp</item>
     </style>
 
     <style name="ColorInfoText">

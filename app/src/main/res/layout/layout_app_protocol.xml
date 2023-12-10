@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        android:text="欢迎使用原色，使用钱请充分阅读并理解："/>
+        android:text="欢迎使用原色，使用前请充分阅读并理解："/>
 
     <TextView
         android:id="@+id/userAgreement"

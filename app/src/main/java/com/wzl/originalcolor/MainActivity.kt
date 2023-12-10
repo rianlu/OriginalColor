@@ -2,6 +2,7 @@ package com.wzl.originalcolor
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         ProtocolDialogUtil.show(this)
 
         val isPad = ScreenUtil.isPad(this@MainActivity)
-        updateGlobalThemeColor(SpUtil.getLocalThemeColor(this))
+        updateGlobalThemeColor(SpUtil.getLocalThemeColor(this), this)
         if (isPad) {
             gridCount = TABLET_GRID_COUNT
         }
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
 
         adapter = ColorAdapter().also {
             it.setItemAnimation(BaseQuickAdapter.AnimationType.AlphaIn)
-            it.addOnItemChildClickListener(R.id.colorBackground) { adapter, view, position ->
+            it.addOnItemChildClickListener(R.id.originalColorCard) { adapter, view, position ->
                 val originalColor = adapter.getItem(position) ?: return@addOnItemChildClickListener
                 val modalBottomSheet = ModalBottomSheet(originalColor)
                 val existedBottomSheet = supportFragmentManager.findFragmentByTag(ModalBottomSheet.TAG)
@@ -87,7 +88,8 @@ class MainActivity : AppCompatActivity() {
                     val themeColor = originColor.HEX
                     SpUtil.saveLocalThemeColor(this, themeColor)
                     VibratorUtil.vibrate(this)
-                    updateGlobalThemeColor(themeColor)
+                    updateGlobalThemeColor(themeColor, this)
+                    refreshWidget()
                 }
                 true
             }
@@ -285,11 +287,13 @@ class MainActivity : AppCompatActivity() {
             .start()
     }
 
-    private fun updateGlobalThemeColor(hex: String) {
+    private fun updateGlobalThemeColor(hex: String, context: Context) {
 
         val themeColor = Color.parseColor(hex)
         // 搜索背景色
         binding.colorSearchView.setBackgroundViewColor(themeColor)
+        binding.colorSearchView.setDividerMargin(16.dp(context))
+        binding.colorSearchView.setDividerBackgroundColor(themeColor)
         // 标题
         binding.collapsingToolbarLayout.apply {
             // 折叠后的CollapsingToolbarLayout
@@ -315,17 +319,6 @@ class MainActivity : AppCompatActivity() {
 
         // Search Chips
         binding.searchInnerView.colorChipGroup.apply {
-            val states = arrayOf(
-                intArrayOf(android.R.attr.state_selected),
-                intArrayOf(android.R.attr.state_checked),
-                intArrayOf(-android.R.attr.state_selected),
-                intArrayOf(-android.R.attr.state_checked)
-            )
-            val colors = intArrayOf(
-                themeColor, themeColor,
-                themeColor.setAlpha(0.2F),
-                themeColor.setAlpha(0.2F)
-            )
             forEach {
                 (it as Chip).updateThemeColor(themeColor)
             }
@@ -346,8 +339,8 @@ class MainActivity : AppCompatActivity() {
         )
         val colors = intArrayOf(
             themeColor, themeColor,
-            themeColor.setAlpha(0.2F),
-            themeColor.setAlpha(0.2F)
+            themeColor.setAlpha(0.3F),
+            themeColor.setAlpha(0.3F)
         )
         chipBackgroundColor =
             ColorStateList(states, colors)

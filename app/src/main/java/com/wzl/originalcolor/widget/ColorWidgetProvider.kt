@@ -18,17 +18,12 @@ class ColorWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
+        // 获取当前小组件颜色
         val periodRefresh = SpUtil.getWidgetRefreshState(context)
-        val widgetColor = SpUtil.getWidgetColor(context)
-        val originalColor: OriginalColor
-        // 定时刷新，生成新颜色
-        if (periodRefresh &&
-            widgetColor == Config.EMPTY_WIDGET_COLOR_BY_WORKER
-        ) {
-            originalColor = ColorData.getRandomColor(context)
-            SpUtil.saveWidgetColor(context, originalColor.HEX)
+        val originalColor: OriginalColor = if (periodRefresh) {
+            ColorData.getWidgetColor(context)
         } else {
-            originalColor = ColorData.getWidgetColor(context)
+            ColorData.getThemeColor(context)
         }
         appWidgetIds.forEach { appWidgetId ->
             val remoteViews = RemoteViewsUtil.getWideWidgetView(context, originalColor)
@@ -48,7 +43,12 @@ class ColorWidgetProvider : AppWidgetProvider() {
         val minHeight: Int = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) ?: 0
         val rows = getCellSize(minWidth)
         val columns = getCellSize(minHeight)
-        val originalColor = ColorData.getWidgetColor(context)
+        val periodRefresh = SpUtil.getWidgetRefreshState(context)
+        val originalColor: OriginalColor = if (periodRefresh) {
+            ColorData.getWidgetColor(context)
+        } else {
+            ColorData.getThemeColor(context)
+        }
         val remoteViews = if (rows <= 2 || columns == 1) {
             RemoteViewsUtil.getSmallWidgetView(context, originalColor)
         } else {

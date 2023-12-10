@@ -2,9 +2,6 @@ package com.wzl.originalcolor
 
 object Config {
 
-    // WorkManager周期任务设置
-    const val EMPTY_WIDGET_COLOR_BY_WORKER = ""
-
     // 金莲花橙
     const val DEFAULT_THEME_COLOR = "#f86b1d"
 

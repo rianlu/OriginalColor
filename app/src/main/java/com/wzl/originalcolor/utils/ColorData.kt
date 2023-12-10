@@ -53,6 +53,11 @@ object ColorData {
         return colorList[randomPosition]
     }
 
+    fun getThemeColor(context: Context): OriginalColor {
+        val hex = SpUtil.getLocalThemeColor(context)
+        return findColor(context, hex)
+    }
+
     fun getWidgetColor(context: Context): OriginalColor {
         val hex = SpUtil.getWidgetColor(context)
         return findColor(context, hex)

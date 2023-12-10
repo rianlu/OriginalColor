@@ -24,7 +24,7 @@
         app:layout_constraintTop_toBottomOf="@+id/settingsTopAppBar">
 
         <FrameLayout
-            android:id="@+id/frameLayout"
+            android:id="@+id/appVersionItem"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="?android:attr/selectableItemBackground"
@@ -55,7 +55,7 @@
             android:paddingHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout">
+            app:layout_constraintTop_toBottomOf="@+id/appVersionItem">
 
             <TextView
                 android:layout_width="wrap_content"

@@ -13,7 +13,7 @@
     <color name="grey">#808080</color>
 
     // Deprecated
-    <color name="primary_color">#EE6C4D</color>
-
+<!--    <color name="primary_color">#EE6C4D</color>-->
+    <color name="primary_color">#F86B1D</color>
     <color name="transparent">#00000000</color>
 </resources>

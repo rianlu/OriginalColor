@@ -6,7 +6,7 @@ import com.wzl.originalcolor.Config
 object SpUtil {
 
     fun getLocalThemeColor(context: Context): String {
-        val appColorSp = context.getSharedPreferences(
+        val appColorSp = context.applicationContext.getSharedPreferences(
             Config.SP_APP_COLOR, Context.MODE_PRIVATE
         )
         return appColorSp.getString(
@@ -15,7 +15,7 @@ object SpUtil {
     }
 
     fun saveLocalThemeColor(context: Context, themeColor: String) {
-        val appColorSp = context.getSharedPreferences(
+        val appColorSp = context.applicationContext.getSharedPreferences(
             Config.SP_APP_COLOR, Context.MODE_PRIVATE
         )
         appColorSp.edit().apply {
@@ -25,7 +25,7 @@ object SpUtil {
     }
 
     fun getWidgetColor(context: Context): String {
-        val appColorSp = context.getSharedPreferences(
+        val appColorSp = context.applicationContext.getSharedPreferences(
             Config.SP_APP_COLOR, Context.MODE_PRIVATE
         )
         val themeColor = getLocalThemeColor(context)
@@ -35,7 +35,7 @@ object SpUtil {
     }
 
     fun saveWidgetColor(context: Context, widgetColor: String) {
-        val appColorSp = context.getSharedPreferences(
+        val appColorSp = context.applicationContext.getSharedPreferences(
             Config.SP_APP_COLOR, Context.MODE_PRIVATE
         )
         appColorSp.edit().apply {
@@ -45,7 +45,7 @@ object SpUtil {
     }
 
     fun getVibrationState(context: Context): Boolean {
-        val settingsSp = context.getSharedPreferences(
+        val settingsSp = context.applicationContext.getSharedPreferences(
             Config.SP_SETTINGS, Context.MODE_PRIVATE
         )
         return settingsSp.getBoolean(
@@ -54,7 +54,7 @@ object SpUtil {
     }
 
     fun saveVibrationState(context: Context, isChecked: Boolean) {
-        val settingsSp = context.getSharedPreferences(
+        val settingsSp = context.applicationContext.getSharedPreferences(
             Config.SP_SETTINGS, Context.MODE_PRIVATE
         )
         settingsSp.edit().apply {
@@ -64,7 +64,7 @@ object SpUtil {
     }
 
     fun getWidgetRefreshState(context: Context): Boolean {
-        val settingsSp = context.getSharedPreferences(
+        val settingsSp = context.applicationContext.getSharedPreferences(
             Config.SP_SETTINGS, Context.MODE_PRIVATE
         )
         return settingsSp.getBoolean(
@@ -74,7 +74,7 @@ object SpUtil {
     }
 
     fun saveWidgetRefreshState(context: Context, isChecked: Boolean) {
-        val settingsSp = context.getSharedPreferences(
+        val settingsSp = context.applicationContext.getSharedPreferences(
             Config.SP_SETTINGS, Context.MODE_PRIVATE
         )
         settingsSp.edit().apply {
@@ -84,7 +84,7 @@ object SpUtil {
     }
 
     fun getPrivacyPolicyState(context: Context): Boolean {
-        val settingsSp = context.getSharedPreferences(
+        val settingsSp = context.applicationContext.getSharedPreferences(
             Config.SP_SETTINGS, Context.MODE_PRIVATE
         )
         return settingsSp.getBoolean(
@@ -94,7 +94,7 @@ object SpUtil {
     }
 
     fun savePrivacyPolicyState(context: Context, isAgreed: Boolean) {
-        val settingsSp = context.getSharedPreferences(
+        val settingsSp = context.applicationContext.getSharedPreferences(
             Config.SP_SETTINGS, Context.MODE_PRIVATE
         )
         settingsSp.edit().apply {

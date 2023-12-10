@@ -122,6 +122,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.privacyPolicyItem.setOnClickListener {
             ProtocolDialogUtil.showPrivacyPolicy(this)
         }
+        binding.appVersionItem.setOnClickListener {  }
     }
 
     private fun clearShareCaches(folder: File) {

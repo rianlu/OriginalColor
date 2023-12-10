@@ -314,6 +314,32 @@ public class CustomSearchView extends FrameLayout implements CoordinatorLayout.A
         backgroundView.setBackgroundColor(overlayColor);
     }
 
+    /**
+     * 设置divider 边距
+     *
+     * @return
+     */
+    public void setDividerMargin(int margin) {
+        MarginLayoutParams layoutParams = (MarginLayoutParams) divider.getLayoutParams();
+        int leftMargin = layoutParams.leftMargin;
+        int rightMargin = layoutParams.rightMargin;
+        ViewCompat.setOnApplyWindowInsetsListener(
+                divider,
+                (v, insets) -> {
+                    layoutParams.leftMargin = leftMargin + insets.getSystemWindowInsetLeft() + margin;
+                    layoutParams.rightMargin = rightMargin + insets.getSystemWindowInsetRight() + margin;
+                    return insets;
+                });
+    }
+
+    /**
+     * 修改divider背景色
+     * @param color
+     */
+    public void setDividerBackgroundColor(@ColorInt int color) {
+        divider.setBackgroundColor(color);
+    }
+
     private float getOverlayElevation() {
         if (searchBar != null) {
             return searchBar.getCompatElevation();

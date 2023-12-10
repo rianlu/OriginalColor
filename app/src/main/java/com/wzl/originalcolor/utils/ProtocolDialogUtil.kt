@@ -19,17 +19,18 @@ object ProtocolDialogUtil {
 //        )
         if (SpUtil.getPrivacyPolicyState(context)) return
         val hexColor = SpUtil.getLocalThemeColor(context)
+        val themeColor = Color.parseColor(hexColor)
         val rootView =
             LayoutInflater.from(context)
                 .inflate(R.layout.layout_app_protocol, null, false)
         rootView.findViewById<TextView>(R.id.userAgreement).apply {
-            setTextColor(Color.parseColor(hexColor))
+            setTextColor(themeColor)
             setOnClickListener {
                 showUserAgreement(context)
             }
         }
         rootView.findViewById<TextView>(R.id.privacyPolicy).apply {
-            setTextColor(Color.parseColor(hexColor))
+            setTextColor(themeColor)
             setOnClickListener {
                 showPrivacyPolicy(context)
             }
@@ -45,10 +46,17 @@ object ProtocolDialogUtil {
                 )
             }
             .setCancelable(false)
-            .show()
+            .show().also { dialog ->
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    .setTextColor(themeColor)
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(themeColor)
+            }
     }
 
     fun showUserAgreement(context: Context) {
+        val hexColor = SpUtil.getLocalThemeColor(context)
+        val themeColor = Color.parseColor(hexColor)
         AlertDialog.Builder(context)
             .setTitle(context.getString(R.string.user_agreement))
             .setView(TextView(context).apply {
@@ -65,10 +73,17 @@ object ProtocolDialogUtil {
             })
             .setPositiveButton("我已知晓", null)
             .setCancelable(false)
-            .show()
+            .show().also {
+                it.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    .setTextColor(themeColor)
+                it.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(themeColor)
+            }
     }
 
     fun showPrivacyPolicy(context: Context) {
+        val hexColor = SpUtil.getLocalThemeColor(context)
+        val themeColor = Color.parseColor(hexColor)
         AlertDialog.Builder(context)
             .setTitle(context.getString(R.string.privacy_policy))
             .setView(TextView(context).apply {
@@ -85,6 +100,11 @@ object ProtocolDialogUtil {
             })
             .setPositiveButton("我已知晓", null)
             .setCancelable(false)
-            .show()
+            .show().also {
+                it.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    .setTextColor(themeColor)
+                it.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(themeColor)
+            }
     }
 }

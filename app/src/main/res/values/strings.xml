@@ -17,6 +17,9 @@
     <string name="text_color_hex" translatable="false">COLOR HEX</string>
     <string name="text_color_rgb" translatable="false">COLOR RGB</string>
     <string name="text_color_cmyk" translatable="false">COLOR CMYK</string>
+    <string name="text_load_failed" translatable="false">加载失败</string>
+    <string name="text_app_widget_preview_pinyin" translatable="false">JIN LIAN HUA CHENG</string>
+    <string name="text_app_widget_preview_name" translatable="false">金莲花橙</string>
 
     <string name="copied_to_clipboard">已复制到剪切板</string>
     <string name="menu_info">关于</string>

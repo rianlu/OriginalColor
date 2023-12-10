@@ -11,16 +11,20 @@ import java.util.concurrent.TimeUnit
 object WorkManagerUtil {
 
     fun startWork(context: Context) {
-        // 最低 15min
+        // 每小时刷新一次
         val widgetWorkRequest = PeriodicWorkRequestBuilder<WidgetWorker>(
             1L, TimeUnit.HOURS
         ).build()
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            Config.WIDGET_WORKER_TAG, ExistingPeriodicWorkPolicy.KEEP, widgetWorkRequest
-        )
+        WorkManager.getInstance(context.applicationContext)
+            .enqueueUniquePeriodicWork(
+                Config.WIDGET_WORKER_TAG,
+                ExistingPeriodicWorkPolicy.KEEP,
+                widgetWorkRequest
+            )
     }
 
     fun cancelWork(context: Context) {
-        WorkManager.getInstance(context).cancelAllWorkByTag(Config.WIDGET_WORKER_TAG)
+        WorkManager.getInstance(context.applicationContext)
+            .cancelUniqueWork(Config.WIDGET_WORKER_TAG)
     }
 }
