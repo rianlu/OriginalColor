@@ -1,5 +1,6 @@
 package com.wzl.originalcolor
 
+import android.Manifest
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
@@ -9,16 +10,16 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
-import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ColorInt
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.wzl.originalcolor.databinding.ActivitySettingsBinding
 import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.ProtocolDialogUtil
-import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.SpUtil
 import com.wzl.originalcolor.utils.VibratorUtil
@@ -88,19 +89,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.addAppWidgetItem.setOnClickListener {
-            val serviceComponent = ComponentName(this, ColorWidgetProvider::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val extras = Bundle()
-                // 恢复为主题色
-                if (!SpUtil.getWidgetRefreshState(this)) {
-                    SpUtil.saveWidgetColor(this, SpUtil.getLocalThemeColor(this))
-                }
-                val originalColor = ColorData.getWidgetColor(this)
-                val remoteViews = RemoteViewsUtil.getWideWidgetView(this, originalColor)
-                extras.putParcelable(AppWidgetManager.EXTRA_APPWIDGET_PREVIEW, remoteViews)
-                AppWidgetManager.getInstance(this)
-                    .requestPinAppWidget(serviceComponent, extras, null)
-            }
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return@setOnClickListener
+            showAddWidgetDialog()
         }
 
         val cachePath = File(externalCacheDir, "share_cards/")
@@ -123,6 +113,37 @@ class SettingsActivity : AppCompatActivity() {
             ProtocolDialogUtil.showPrivacyPolicy(this)
         }
         binding.appVersionItem.setOnClickListener {  }
+    }
+
+    private fun showAddWidgetDialog() {
+        val system = Build.MANUFACTURER
+        // TODO 目前暂时无法获取MIUI系统中创建快捷方式的权限情况
+        if (system == "Xiaomi" && !SpUtil.getMIUIShortcutState(this)) {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.dialog_shortcut_permission_title))
+                .setMessage(getString(R.string.dialog_shortcut_permission_message))
+                .setPositiveButton(getString(R.string.dialog_shortcut_permission_position_button)) { dialog, which ->
+                    val intent = Intent("miui.intent.action.APP_PERM_EDITOR")
+                    intent.putExtra("extra_pkgname", packageName)
+                    val componentName = ComponentName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity")
+                    intent.component = componentName
+                    startActivity(intent)
+                    SpUtil.saveMIUIShortcutState(this, true)
+                }
+                .show()
+            return
+        }
+        val serviceComponent = ComponentName(this, ColorWidgetProvider::class.java)
+        val extras = Bundle()
+        // 恢复为主题色
+        if (!SpUtil.getWidgetRefreshState(this)) {
+            SpUtil.saveWidgetColor(this, SpUtil.getLocalThemeColor(this))
+        }
+        val originalColor = ColorData.getWidgetColor(this)
+        val remoteViews = RemoteViewsUtil.getWideWidgetView(this, originalColor)
+        extras.putParcelable(AppWidgetManager.EXTRA_APPWIDGET_PREVIEW, remoteViews)
+        AppWidgetManager.getInstance(this)
+            .requestPinAppWidget(serviceComponent, extras, null)
     }
 
     private fun clearShareCaches(folder: File) {

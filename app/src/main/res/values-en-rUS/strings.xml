@@ -29,6 +29,9 @@
     <string name="add_app_widget">Add Widget</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="empty_list_hint">Sorry not found~</string>
+    <string name="dialog_shortcut_permission_title">Shortcut permission</string>
     <string name="user_agreement">User Agreement</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="dialog_shortcut_permission_message">Due to limitations in the MIUI, it is necessary to manually grant desktop shortcut permissions. Only then can we add widgets to the home screen</string>
+    <string name="dialog_shortcut_permission_position_button">OK</string>
 </resources>

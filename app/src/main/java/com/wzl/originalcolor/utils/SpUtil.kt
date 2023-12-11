@@ -102,4 +102,24 @@ object SpUtil {
             apply()
         }
     }
+
+    fun getMIUIShortcutState(context: Context): Boolean {
+        val settingsSp = context.applicationContext.getSharedPreferences(
+            Config.SP_SETTINGS, Context.MODE_PRIVATE
+        )
+        return settingsSp.getBoolean(
+            Config.SP_PARAM_MIUI_SHORTCUT,
+            Config.DEFAULT_MIUI_SHORTCUT
+        )
+    }
+
+    fun saveMIUIShortcutState(context: Context, isAgreed: Boolean) {
+        val settingsSp = context.applicationContext.getSharedPreferences(
+            Config.SP_SETTINGS, Context.MODE_PRIVATE
+        )
+        settingsSp.edit().apply {
+            putBoolean(Config.SP_PARAM_MIUI_SHORTCUT, isAgreed)
+            apply()
+        }
+    }
 }

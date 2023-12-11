@@ -86,7 +86,9 @@ object RemoteViewsUtil {
         )
         val paint = Paint()
         paint.shader = gradient
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+//        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat(),
+            16.dp(context).toFloat(), 16.dp(context).toFloat(), paint)
         return bitmap
     }
 }
