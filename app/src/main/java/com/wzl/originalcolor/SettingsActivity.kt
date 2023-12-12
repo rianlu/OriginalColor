@@ -8,6 +8,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Build
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
@@ -20,6 +22,7 @@ import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.MaterialDialogThemeUtil
 import com.wzl.originalcolor.utils.ProtocolDialogUtil
+import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.SpUtil
 import com.wzl.originalcolor.utils.VibratorUtil
@@ -185,7 +188,17 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Copyright
-        binding.copyrightText.setLinkTextColor(themeColor)
+        binding.copyrightText.apply {
+            setLinkTextColor(themeColor)
+            val radius = 16.dp(this@SettingsActivity).toFloat()
+            background = ShapeDrawable(RoundRectShape(
+                floatArrayOf(radius, radius, radius, radius, radius, radius, radius, radius), null, null
+            )).apply {
+                paint.color = MaterialDialogThemeUtil.generateBackgroundViewColor(this@SettingsActivity, themeColor)
+            }
+            setOnClickListener {  }
+        }
+
         // Author
         binding.authorText.setTextColor(themeColor)
         binding.vibrationSwitch.updateTheme(themeColor)

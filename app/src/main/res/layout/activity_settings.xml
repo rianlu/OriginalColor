@@ -199,10 +199,11 @@
             android:id="@+id/copyrightText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="top|center"
+            android:gravity="center"
             android:padding="16dp"
+            android:layout_margin="16dp"
             android:text="@string/color_data_copyright"
-            android:textSize="12sp"
+            android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/privacyPolicyItem" />
@@ -218,6 +219,7 @@
             android:textColor="@color/primary_color"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:fontFamily="monospace"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
