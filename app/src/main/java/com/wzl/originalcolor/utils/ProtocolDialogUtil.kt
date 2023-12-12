@@ -35,7 +35,7 @@ object ProtocolDialogUtil {
                 showPrivacyPolicy(context)
             }
         }
-        AlertDialog.Builder(context)
+        MaterialDialogThemeUtil.dynamicMaterialDialogBuilder(context, themeColor)
             .setTitle("使用须知")
             .setView(rootView)
             .setNegativeButton("不同意") { p0, p1 -> exitProcess(0) }
@@ -57,7 +57,7 @@ object ProtocolDialogUtil {
     fun showUserAgreement(context: Context) {
         val hexColor = SpUtil.getLocalThemeColor(context)
         val themeColor = Color.parseColor(hexColor)
-        AlertDialog.Builder(context)
+        MaterialDialogThemeUtil.dynamicMaterialDialogBuilder(context, themeColor)
             .setTitle(context.getString(R.string.user_agreement))
             .setView(TextView(context).apply {
                 text = HtmlCompat.fromHtml(
@@ -84,7 +84,7 @@ object ProtocolDialogUtil {
     fun showPrivacyPolicy(context: Context) {
         val hexColor = SpUtil.getLocalThemeColor(context)
         val themeColor = Color.parseColor(hexColor)
-        AlertDialog.Builder(context)
+        MaterialDialogThemeUtil.dynamicMaterialDialogBuilder(context, themeColor)
             .setTitle(context.getString(R.string.privacy_policy))
             .setView(TextView(context).apply {
                 text = HtmlCompat.fromHtml(

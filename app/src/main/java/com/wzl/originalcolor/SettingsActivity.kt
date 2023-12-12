@@ -1,8 +1,9 @@
 package com.wzl.originalcolor
 
-import android.Manifest
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
@@ -10,8 +11,6 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,6 +18,7 @@ import com.google.android.material.materialswitch.MaterialSwitch
 import com.wzl.originalcolor.databinding.ActivitySettingsBinding
 import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
+import com.wzl.originalcolor.utils.MaterialDialogThemeUtil
 import com.wzl.originalcolor.utils.ProtocolDialogUtil
 import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.SpUtil
@@ -45,7 +45,9 @@ class SettingsActivity : AppCompatActivity() {
 
         // 文本包含链接跳转
         binding.copyrightText.movementMethod = LinkMovementMethod.getInstance()
-        initCustomThemeColor(SpUtil.getLocalThemeColor(this))
+        val themeColorHex = SpUtil.getLocalThemeColor(this)
+        val themeColor = Color.parseColor(themeColorHex)
+        initCustomThemeColor(themeColor)
         binding.settingsTopAppBar
             .setNavigationOnClickListener { finish() }
 
@@ -90,7 +92,7 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.addAppWidgetItem.setOnClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return@setOnClickListener
-            showAddWidgetDialog()
+            showAddWidgetDialog(this, themeColorHex)
         }
 
         val cachePath = File(externalCacheDir, "share_cards/")
@@ -112,32 +114,43 @@ class SettingsActivity : AppCompatActivity() {
         binding.privacyPolicyItem.setOnClickListener {
             ProtocolDialogUtil.showPrivacyPolicy(this)
         }
-        binding.appVersionItem.setOnClickListener {  }
+        binding.appVersionItem.setOnClickListener { }
     }
 
-    private fun showAddWidgetDialog() {
+    private fun showAddWidgetDialog(context: Context, themeColorHex: String) {
+        val themeColor = Color.parseColor(themeColorHex)
         val system = Build.MANUFACTURER
         // TODO 目前暂时无法获取MIUI系统中创建快捷方式的权限情况
-        if (system == "Xiaomi" && !SpUtil.getMIUIShortcutState(this)) {
-            MaterialAlertDialogBuilder(this)
+        if (system == "Xiaomi" && !SpUtil.getMIUIShortcutState(context)) {
+            val builder = MaterialAlertDialogBuilder(context)
+            val dialog = builder
+                .setBackground(
+                    MaterialDialogThemeUtil.generateMaterialShapeDrawable(
+                        builder.context, themeColor))
                 .setTitle(getString(R.string.dialog_shortcut_permission_title))
                 .setMessage(getString(R.string.dialog_shortcut_permission_message))
                 .setPositiveButton(getString(R.string.dialog_shortcut_permission_position_button)) { dialog, which ->
                     val intent = Intent("miui.intent.action.APP_PERM_EDITOR")
                     intent.putExtra("extra_pkgname", packageName)
-                    val componentName = ComponentName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity")
+                    val componentName = ComponentName(
+                        "com.miui.securitycenter",
+                        "com.miui.permcenter.permissions.PermissionsEditorActivity"
+                    )
                     intent.component = componentName
                     startActivity(intent)
                     SpUtil.saveMIUIShortcutState(this, true)
-                }
-                .show()
+                }.create()
+            dialog.show()
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).apply {
+                setTextColor(themeColor)
+            }
             return
         }
         val serviceComponent = ComponentName(this, ColorWidgetProvider::class.java)
         val extras = Bundle()
         // 恢复为主题色
         if (!SpUtil.getWidgetRefreshState(this)) {
-            SpUtil.saveWidgetColor(this, SpUtil.getLocalThemeColor(this))
+            SpUtil.saveWidgetColor(this, themeColorHex)
         }
         val originalColor = ColorData.getWidgetColor(this)
         val remoteViews = RemoteViewsUtil.getWideWidgetView(this, originalColor)
@@ -164,8 +177,7 @@ class SettingsActivity : AppCompatActivity() {
         } else "$size B"
     }
 
-    private fun initCustomThemeColor(hex: String) {
-        val themeColor = Color.parseColor(hex)
+    private fun initCustomThemeColor(@ColorInt themeColor: Int) {
         // Toolbar
         binding.settingsTopAppBar.apply {
             setTitleTextColor(themeColor)
