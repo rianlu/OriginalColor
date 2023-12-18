@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.animation.CycleInterpolator
 import android.view.animation.OvershootInterpolator
+import android.widget.ImageButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
@@ -149,6 +150,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.colorSearchView.let { searchView ->
+            // Search 轻触按钮
+            searchView.toolbar.findViewById<ImageButton>(com.google.android.material.R.id.search_view_clear_button)
+                .setOnClickListener {
+                    searchView.editText.setText("")
+                    binding.searchInnerView.colorChipGroup.let { group ->
+                        val chipTag = group.findViewById<Chip>(group.checkedChipId).text.toString()
+                        colorViewModel.filterByTag(this, chipTag)
+                    }
+                }
             searchView.editText.setOnEditorActionListener { v, actionId, event ->
                 val keyword = searchView.text.toString()
                 if (keyword.isNotEmpty()) {

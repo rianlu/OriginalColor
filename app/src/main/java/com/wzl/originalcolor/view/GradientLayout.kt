@@ -17,8 +17,8 @@ open class GradientLayout @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    val isLightMode = UiModeUtil.isLightMode(context)
-    @ColorInt var cardColor = resources.getColor(R.color.primary_color)
+    private val isLightMode = UiModeUtil.isLightMode(context)
+    @ColorInt var cardColor = resources.getColor(R.color.primary_color, null)
     private var gradientDrawable = GradientDrawable()
     private var radius = 16.dp(context).toFloat()
     private var offsets = floatArrayOf(0F, 0.3F, 1F)
