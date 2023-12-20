@@ -48,7 +48,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/vibrationSwitchItem"
+            android:id="@+id/themeColorItem"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="?android:attr/selectableItemBackground"
@@ -56,6 +56,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appVersionItem">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/current_theme_color" />
+
+            <TextView
+                android:id="@+id/themeColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/vibrationSwitchItem"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/themeColorItem">
 
             <TextView
                 android:layout_width="wrap_content"

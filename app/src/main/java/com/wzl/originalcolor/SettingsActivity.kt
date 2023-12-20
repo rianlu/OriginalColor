@@ -48,7 +48,8 @@ class SettingsActivity : AppCompatActivity() {
 
         // 文本包含链接跳转
         binding.copyrightText.movementMethod = LinkMovementMethod.getInstance()
-        val themeColorHex = SpUtil.getLocalThemeColor(this)
+        val originalColor = ColorData.getThemeColor(this)
+        val themeColorHex = originalColor.HEX
         val themeColor = Color.parseColor(themeColorHex)
         initCustomThemeColor(themeColor)
         binding.settingsTopAppBar
@@ -61,6 +62,19 @@ class SettingsActivity : AppCompatActivity() {
             ).versionName
         } else {
             packageManager.getPackageInfo(packageName, 0).versionName
+        }
+
+        binding.themeColor.apply {
+            text = originalColor.NAME
+            setTextColor(originalColor.getRGBColor())
+        }
+        binding.themeColorItem.setOnClickListener {
+            val modalBottomSheet = ModalBottomSheet(originalColor)
+            val existedBottomSheet = supportFragmentManager.findFragmentByTag(ModalBottomSheet.TAG)
+            if (existedBottomSheet != null && existedBottomSheet is ModalBottomSheet) {
+                existedBottomSheet.dismiss()
+            }
+            modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
         }
 
         binding.vibrationSwitch.isChecked = SpUtil.getVibrationState(this)
