@@ -26,7 +26,11 @@
     <string name="menu_settings">设置</string>
     <string name="menu_favorite_list" translatable="false">喜欢列表</string>
     <string name="quick_filter">快速筛选</string>
-    <string name="color_data_copyright" translatable="false"><p>Copyright © 2013 by <a href="http://dmyz.org/">Perchouli</a> Shanzhai to <a href="http://nipponcolors.com/">Nipponcolors</a>\n参看: 色谱 中科院科技情报编委会名词室.科学出版社,1957. Adobe RGB / CMYK FOGRA39, Dot Gain 15% <img alt="Screenshot" src="http://zhongguose.com/img/share.jpg" width="1" /><a href="https://beian.miit.gov.cn/">沪ICP备17025116号-2</a></p></string>
+    <string name="color_data_copyright" translatable="false">
+        <p>Copyright © 2013 by <a href="http://dmyz.org/">Perchouli</a> Shanzhai to <a href="http://nipponcolors.com/">Nipponcolors</a>\n
+            参看: 色谱 中科院科技情报编委会名词室.科学出版社,1957. Adobe RGB / CMYK FOGRA39, Dot Gain 15% <img alt="Screenshot" src="http://zhongguose.com/img/share.jpg" width="1" /><a href="https://beian.miit.gov.cn/">沪ICP备17025116号-2</a>
+        </p>
+    </string>
     <string name="author_info" translatable="false">Designed by 禄眠</string>
 
     <!--    <string name="greet_morning">早上好</string>-->
@@ -38,7 +42,10 @@
     <string name="btn_back">返回</string>
     <string name="btn_share">分享</string>
 
-    <string name="share_app_content">简洁的颜色查询工具，基于中国传统色：\nhttps://sj.qq.com/appdetail/com.wzl.originalcolor</string>
+    <string name="share_app_content">
+        简洁的颜色查询工具，基于中国传统色：\n
+        https://sj.qq.com/appdetail/com.wzl.originalcolor
+    </string>
     <string name="share_to">分享到</string>
     <!--    <string name="donate_first_hint">作者很懒的~</string>-->
     <!--    <string name="donate_second_hint">你还要继续吗？</string>-->

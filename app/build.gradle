@@ -9,14 +9,14 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     namespace 'com.wzl.originalcolor'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.wzl.originalcolor"
         minSdk 26
-        targetSdk 33
-        versionCode 5
-        versionName "2.0.2"
+        targetSdk 34
+        versionCode 6
+        versionName "2.0.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

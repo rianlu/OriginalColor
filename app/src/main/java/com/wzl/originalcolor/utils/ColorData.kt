@@ -5,6 +5,11 @@ import android.graphics.Color
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.wzl.originalcolor.model.OriginalColor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONException
 import java.io.BufferedReader
 import java.io.IOException
@@ -17,9 +22,23 @@ object ColorData {
     private var colorList: List<OriginalColor> = mutableListOf()
 
     fun initData(context: Context): List<OriginalColor> {
+        val chineseColorList = loadJson(context, "colors.json")
+        val cfsColorList = loadJson(context, "cfs-color.json")
+        val tempColorList = chineseColorList + cfsColorList
+        colorList = tempColorList.sortedWith<OriginalColor> { o1, o2 ->
+            if (rgbToHsv(o1.getRGBColor())[0] == rgbToHsv(o2.getRGBColor())[0]) {
+                floor(rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1]).toInt()
+            } else {
+                floor(rgbToHsv(o2.getRGBColor())[0] - rgbToHsv(o1.getRGBColor())[0]).toInt()
+            }
+        }
+        return colorList
+    }
+
+    private fun loadJson(context: Context, jsonName: String): List<OriginalColor> {
         val stringBuilder = StringBuilder()
         try {
-            val isr = InputStreamReader(context.assets.open("colors.json"))
+            val isr = InputStreamReader(context.assets.open(jsonName))
             val br = BufferedReader(isr)
             var line: String?
             while (br.readLine().also { line = it } != null) {
@@ -32,17 +51,7 @@ object ColorData {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        val jsonString = stringBuilder.toString()
-        val tempColorList: List<OriginalColor> =
-            Gson().fromJson(jsonString, object : TypeToken<ArrayList<OriginalColor>>() {}.type)
-        colorList = tempColorList.sortedWith<OriginalColor> { o1, o2 ->
-            if (rgbToHsv(o1.getRGBColor())[0] == rgbToHsv(o2.getRGBColor())[0]) {
-                floor(rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1]).toInt()
-            } else {
-                floor(rgbToHsv(o2.getRGBColor())[0] - rgbToHsv(o1.getRGBColor())[0]).toInt()
-            }
-        }
-        return colorList
+        return Gson().fromJson(stringBuilder.toString(), object : TypeToken<ArrayList<OriginalColor>>() {}.type)
     }
 
     fun getRandomColor(context: Context): OriginalColor {

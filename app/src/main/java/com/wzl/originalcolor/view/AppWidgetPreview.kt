@@ -29,10 +29,10 @@ class AppWidgetPreview @JvmOverloads constructor(
 //        initGradientBackground()
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
+//    override fun onDraw(canvas: Canvas) {
+//        super.onDraw(canvas)
 //        initGradientBackground()
-    }
+//    }
 
     fun setGradientColor(@ColorInt cardColor: Int, offsets: FloatArray? = null) {
 //        this.cardColor = cardColor

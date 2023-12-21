@@ -3,6 +3,8 @@
 一款基于中国传统色的轻量简洁配色工具
 已上架：应用宝、酷安（待上架）、App Store
 
+数据来源：[chinese-color](https://github.com/rianlu/chinese-color)
+
 ![](https://s3.bmp.ovh/imgs/2023/08/08/2655acde0e9792fa.png)
 ![](https://s3.bmp.ovh/imgs/2023/08/08/5e1c3ed9f07f3761.png)
 ![](https://s3.bmp.ovh/imgs/2023/08/08/6092ff65e14b6b5b.png)

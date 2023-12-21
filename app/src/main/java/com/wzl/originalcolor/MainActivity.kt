@@ -26,6 +26,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.search.CustomSearchView
 import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
+import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
@@ -242,6 +243,15 @@ class MainActivity : AppCompatActivity() {
 
                     else -> false
                 }
+            }
+
+            // 点击标题栏跳转到当前设定的颜色
+            setOnClickListener {
+                val originalColor = ColorData.getThemeColor(this@MainActivity)
+                val position = colorViewModel.flowList.value.indexOf(originalColor)
+                binding.recyclerView.scrollToPositionWithOffset(
+                    position, if (position != 0) 16.dp(this@MainActivity) else 0
+                )
             }
         }
         colorViewModel.initData(this)

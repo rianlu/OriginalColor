@@ -27,7 +27,7 @@ open class GradientLayout @JvmOverloads constructor(
         initGradientBackground()
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         initGradientBackground()
     }
