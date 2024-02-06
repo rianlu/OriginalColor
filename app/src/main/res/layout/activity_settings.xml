@@ -71,7 +71,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/vibrationSwitchItem"
+            android:id="@+id/hapticFeedbackSwitchItem"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="?android:attr/selectableItemBackground"
@@ -84,10 +84,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/vibration" />
+                android:text="@string/haptic_feedback" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/vibrationSwitch"
+                android:id="@+id/hapticFeedbackSwitch"
                 style="@style/Widget.App.Switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
             android:paddingHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vibrationSwitchItem">
+            app:layout_constraintTop_toBottomOf="@+id/hapticFeedbackSwitchItem">
 
             <TextView
                 android:layout_width="wrap_content"

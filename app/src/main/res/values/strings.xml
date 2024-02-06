@@ -55,7 +55,7 @@
 
     <string name="app_version">版本</string>
     <string name="current_theme_color">当前主题色</string>
-    <string name="vibration">震动</string>
+    <string name="haptic_feedback">触觉反馈</string>
     <string name="period_refresh_widget">定时刷新小组件</string>
     <string name="share_app">分享APP</string>
     <string name="add_app_widget">添加小组件</string>

@@ -10,12 +10,14 @@ object Config {
     const val SP_PARAM_WIDGET_COLOR = "widget_color"
 
     const val DEFAULT_VIBRATION = true
+    const val DEFAULT_HAPTIC_FEEDBACK = true
     const val DEFAULT_PERIOD_REFRESH_WIDGET = false
     const val DEFAULT_PARAM_PRIVACY_POLICY = false
     const val DEFAULT_MIUI_SHORTCUT = false
 
     const val SP_SETTINGS = "settings"
     const val SP_PARAM_VIBRATION = "vibration"
+    const val SP_PARAM_HAPTIC_FEEDBACK = "haptic_feedback"
     const val SP_PARAM_PERIOD_REFRESH_WIDGET = "period_refresh_widget"
     const val SP_PARAM_PRIVACY_POLICY = "privacy_policy"
     const val SP_PARAM_MIUI_SHORTCUT = "miui_shortcut"

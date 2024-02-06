@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import android.view.animation.CycleInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageButton
@@ -31,6 +32,9 @@ import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.ColorItemDecoration
+import com.wzl.originalcolor.utils.HapticFeedbackUtil
+import com.wzl.originalcolor.utils.HapticFeedbackUtil.addHapticFeedback
+import com.wzl.originalcolor.utils.HapticFeedbackUtil.addStrongHapticFeedback
 import com.wzl.originalcolor.utils.PHONE_GRID_COUNT
 import com.wzl.originalcolor.utils.ProtocolDialogUtil
 import com.wzl.originalcolor.utils.PxExtensions.dp
@@ -39,7 +43,6 @@ import com.wzl.originalcolor.utils.SpUtil
 import com.wzl.originalcolor.utils.SystemBarUtil
 import com.wzl.originalcolor.utils.TABLET_GRID_COUNT
 import com.wzl.originalcolor.utils.UiModeUtil
-import com.wzl.originalcolor.utils.VibratorUtil
 import com.wzl.originalcolor.utils.WorkManagerUtil
 import com.wzl.originalcolor.viewmodel.ColorViewModel
 import com.wzl.originalcolor.widget.ColorWidgetProvider
@@ -74,8 +77,7 @@ class MainActivity : AppCompatActivity() {
         if (isPad) {
             gridCount = TABLET_GRID_COUNT
         }
-        VibratorUtil.updateVibration(SpUtil.getVibrationState(this))
-
+        HapticFeedbackUtil.update(SpUtil.getHapticFeedbackState(this))
         adapter = ColorAdapter().also {
             it.setItemAnimation(BaseQuickAdapter.AnimationType.AlphaIn)
             it.addOnItemChildClickListener(R.id.originalColorCard) { adapter, view, position ->
@@ -91,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 adapter.getItem(position)?.let { originColor ->
                     val themeColor = originColor.HEX
                     SpUtil.saveLocalThemeColor(this, themeColor)
-                    VibratorUtil.vibrate(this)
+                    view.addStrongHapticFeedback()
                     updateGlobalThemeColor(themeColor, this)
                     refreshWidget()
                 }
@@ -224,7 +226,7 @@ class MainActivity : AppCompatActivity() {
                     .setDuration(500)
                     .setInterpolator(CycleInterpolator(1F))
                     .start()
-                VibratorUtil.vibrate(this@MainActivity)
+                addHapticFeedback()
                 val randomPosition = Random.nextInt(0, adapter.itemCount)
                 binding.recyclerView.scrollToPositionWithOffset(
                     randomPosition, 16.dp(this@MainActivity)
@@ -247,6 +249,7 @@ class MainActivity : AppCompatActivity() {
 
             // 点击标题栏跳转到当前设定的颜色
             setOnClickListener {
+                addHapticFeedback()
                 val originalColor = ColorData.getThemeColor(this@MainActivity)
                 val position = colorViewModel.flowList.value.indexOf(originalColor)
                 binding.recyclerView.scrollToPositionWithOffset(

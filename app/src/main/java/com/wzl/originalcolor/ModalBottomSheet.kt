@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.Outline
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RoundRectShape
 import android.hardware.Sensor
@@ -16,6 +17,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
@@ -223,6 +225,12 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
     }
 
     private fun View.setCornerBackground(radius: Int, @ColorInt color: Int) {
+        clipToOutline = true
+        outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, radius.dp(requireContext()).toFloat())
+            }
+        }
         setCornerBackground(radius, radius, radius, radius, color)
     }
 

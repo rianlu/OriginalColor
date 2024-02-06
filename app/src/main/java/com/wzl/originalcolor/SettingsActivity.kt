@@ -20,12 +20,13 @@ import com.google.android.material.materialswitch.MaterialSwitch
 import com.wzl.originalcolor.databinding.ActivitySettingsBinding
 import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
+import com.wzl.originalcolor.utils.HapticFeedbackUtil
+import com.wzl.originalcolor.utils.HapticFeedbackUtil.addHapticFeedback
 import com.wzl.originalcolor.utils.MaterialDialogThemeUtil
 import com.wzl.originalcolor.utils.ProtocolDialogUtil
 import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.SpUtil
-import com.wzl.originalcolor.utils.VibratorUtil
 import com.wzl.originalcolor.utils.WorkManagerUtil
 import com.wzl.originalcolor.widget.ColorWidgetProvider
 import java.io.File
@@ -52,8 +53,7 @@ class SettingsActivity : AppCompatActivity() {
         val themeColorHex = originalColor.HEX
         val themeColor = Color.parseColor(themeColorHex)
         initCustomThemeColor(themeColor)
-        binding.settingsTopAppBar
-            .setNavigationOnClickListener { finish() }
+        binding.settingsTopAppBar.setNavigationOnClickListener { finish() }
 
         binding.appVersion.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             packageManager.getPackageInfo(
@@ -77,13 +77,14 @@ class SettingsActivity : AppCompatActivity() {
             modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
         }
 
-        binding.vibrationSwitch.isChecked = SpUtil.getVibrationState(this)
-        binding.vibrationSwitchItem.setOnClickListener {
-            binding.vibrationSwitch.isChecked = !binding.vibrationSwitch.isChecked
+        binding.hapticFeedbackSwitch.isChecked = SpUtil.getHapticFeedbackState(this)
+        binding.hapticFeedbackSwitchItem.setOnClickListener {
+            binding.hapticFeedbackSwitch.isChecked = !binding.hapticFeedbackSwitch.isChecked
         }
-        binding.vibrationSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            SpUtil.saveVibrationState(this, isChecked)
-            VibratorUtil.updateVibration(isChecked)
+        binding.hapticFeedbackSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            SpUtil.saveHapticFeedbackState(this, isChecked)
+            buttonView.addHapticFeedback()
+            HapticFeedbackUtil.update(isChecked)
         }
 
         binding.periodRefreshSwitch.isChecked = SpUtil.getWidgetRefreshState(this)
@@ -92,6 +93,7 @@ class SettingsActivity : AppCompatActivity() {
         }
         binding.periodRefreshSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             SpUtil.saveWidgetRefreshState(this, isChecked)
+            buttonView.addHapticFeedback()
             if (isChecked) {
                 WorkManagerUtil.startWork(this)
             } else {
@@ -108,7 +110,6 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.addAppWidgetItem.setOnClickListener {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return@setOnClickListener
             showAddWidgetDialog(this, themeColorHex)
         }
 
@@ -119,7 +120,7 @@ class SettingsActivity : AppCompatActivity() {
         }
         binding.cacheSize.text = calculateFileSize(size)
         binding.clearCacheItem.setOnClickListener {
-            VibratorUtil.vibrate(this)
+            it.addHapticFeedback()
             clearShareCaches(cachePath)
             binding.cacheSize.text = calculateFileSize(0)
         }
@@ -215,7 +216,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // Author
         binding.authorText.setTextColor(themeColor)
-        binding.vibrationSwitch.updateTheme(themeColor)
+        binding.hapticFeedbackSwitch.updateTheme(themeColor)
         binding.periodRefreshSwitch.updateTheme(themeColor)
     }
 

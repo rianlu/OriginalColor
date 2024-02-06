@@ -26,9 +26,9 @@ object VibratorUtil {
         } else {
             context.getSystemService(VIBRATOR_SERVICE) as Vibrator
         }
-        val vibrationWaveFormDurationPattern =
-            longArrayOf(0, milliseconds)
-        vibrator.vibrate(VibrationEffect.createWaveform(vibrationWaveFormDurationPattern, -1))
+        val timings = longArrayOf(0, milliseconds)
+        val amplitudes = intArrayOf(0, 100)
+        vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
     }
 
     fun updateVibration(state: Boolean) {

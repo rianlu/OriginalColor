@@ -23,7 +23,7 @@
     <string name="share_to">Share to</string>
     <string name="empty_data">No data</string>
     <string name="app_version">Version</string>
-    <string name="vibration">Vibration</string>
+    <string name="haptic_feedback">Haptic Feedback</string>
     <string name="period_refresh_widget">Regular refresh widget</string>
     <string name="share_app">Share App</string>
     <string name="add_app_widget">Add Widget</string>

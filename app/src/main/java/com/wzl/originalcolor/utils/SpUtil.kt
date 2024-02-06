@@ -44,21 +44,42 @@ object SpUtil {
         }
     }
 
-    fun getVibrationState(context: Context): Boolean {
+    // 震动相关
+//    fun getVibrationState(context: Context): Boolean {
+//        val settingsSp = context.applicationContext.getSharedPreferences(
+//            Config.SP_SETTINGS, Context.MODE_PRIVATE
+//        )
+//        return settingsSp.getBoolean(
+//            Config.SP_PARAM_VIBRATION, Config.DEFAULT_VIBRATION
+//        )
+//    }
+//
+//    fun saveVibrationState(context: Context, isChecked: Boolean) {
+//        val settingsSp = context.applicationContext.getSharedPreferences(
+//            Config.SP_SETTINGS, Context.MODE_PRIVATE
+//        )
+//        settingsSp.edit().apply {
+//            putBoolean(Config.SP_PARAM_VIBRATION, isChecked)
+//            apply()
+//        }
+//    }
+
+    // 触觉反馈
+    fun getHapticFeedbackState(context: Context): Boolean {
         val settingsSp = context.applicationContext.getSharedPreferences(
             Config.SP_SETTINGS, Context.MODE_PRIVATE
         )
         return settingsSp.getBoolean(
-            Config.SP_PARAM_VIBRATION, Config.DEFAULT_VIBRATION
+            Config.SP_PARAM_HAPTIC_FEEDBACK, Config.DEFAULT_HAPTIC_FEEDBACK
         )
     }
 
-    fun saveVibrationState(context: Context, isChecked: Boolean) {
+    fun saveHapticFeedbackState(context: Context, isChecked: Boolean) {
         val settingsSp = context.applicationContext.getSharedPreferences(
             Config.SP_SETTINGS, Context.MODE_PRIVATE
         )
         settingsSp.edit().apply {
-            putBoolean(Config.SP_PARAM_VIBRATION, isChecked)
+            putBoolean(Config.SP_PARAM_HAPTIC_FEEDBACK, isChecked)
             apply()
         }
     }
