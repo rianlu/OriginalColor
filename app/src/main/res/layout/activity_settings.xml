@@ -15,236 +15,41 @@
         app:navigationIcon="@drawable/ic_back"
         app:title="@string/btn_back" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/settingsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/copyrightText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settingsTopAppBar">
+        app:layout_constraintTop_toBottomOf="@+id/settingsTopAppBar" />
 
-        <FrameLayout
-            android:id="@+id/appVersionItem"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+    <TextView
+        android:id="@+id/copyrightText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/color_data_copyright"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/authorText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/app_version" />
-
-            <TextView
-                android:id="@+id/appVersion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:alpha="0.5" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/themeColorItem"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appVersionItem">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/current_theme_color" />
-
-            <TextView
-                android:id="@+id/themeColor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/hapticFeedbackSwitchItem"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/themeColorItem">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/haptic_feedback" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/hapticFeedbackSwitch"
-                style="@style/Widget.App.Switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:background="@null"
-                android:checked="true"
-                android:clickable="false"
-                android:focusable="false" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/periodRefreshSwitchItem"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/hapticFeedbackSwitchItem">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/period_refresh_widget" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/periodRefreshSwitch"
-                style="@style/Widget.App.Switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:background="@null"
-                android:checked="true"
-                android:clickable="false"
-                android:focusable="false" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/addAppWidgetItem"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/periodRefreshSwitchItem">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/add_app_widget" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/shareAppItem"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addAppWidgetItem">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/share_app" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/clearCacheItem"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shareAppItem">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/clear_cache" />
-
-            <TextView
-                android:id="@+id/cacheSize"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:alpha="0.5" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/userAgreementItem"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/clearCacheItem">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/user_agreement" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/privacyPolicyItem"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userAgreementItem">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/privacy_policy" />
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/copyrightText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="16dp"
-            android:layout_margin="16dp"
-            android:text="@string/color_data_copyright"
-            android:textSize="13sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/privacyPolicyItem" />
-
-        <TextView
-            android:id="@+id/authorText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:gravity="center"
-            android:padding="16dp"
-            android:text="@string/author_info"
-            android:textColor="@color/primary_color"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:fontFamily="monospace"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/authorText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/author_info"
+        android:textColor="@color/primary_color"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,7 +13,7 @@ object HapticFeedbackUtil {
 
     fun View.addHapticFeedback(feedbackConstants: Int = HapticFeedbackConstants.CLOCK_TICK) {
         if (!state) return
-            performHapticFeedback(feedbackConstants, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING)
+        performHapticFeedback(feedbackConstants, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING)
     }
 
     fun View.addStrongHapticFeedback() {
