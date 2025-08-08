@@ -27,6 +27,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.search.CustomSearchView
 import com.wzl.originalcolor.adapter.ColorAdapter
 import com.wzl.originalcolor.databinding.ActivityMainBinding
+import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.isLight
@@ -46,6 +47,7 @@ import com.wzl.originalcolor.utils.UiModeUtil
 import com.wzl.originalcolor.utils.WorkManagerUtil
 import com.wzl.originalcolor.viewmodel.ColorViewModel
 import com.wzl.originalcolor.widget.ColorWidgetProvider
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -259,9 +261,6 @@ class MainActivity : AppCompatActivity() {
         }
         colorViewModel.initData(this)
 
-        // 每次打开刷新 Widget
-        refreshWidget()
-
         // 开启定时刷新
         if (SpUtil.getWidgetRefreshState(this)) {
             WorkManagerUtil.startWork(this)
@@ -280,12 +279,20 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
 
         // Widget 点击跳转
-        intent?.getSerializableExtra("widgetColor")?.let { widgetColor ->
-            val position = colorViewModel.flowList.value.indexOf(widgetColor)
-            binding.recyclerView.scrollToPositionWithOffset(
-                position, 16.dp(this@MainActivity)
-            )
+        // 优先使用小组件点击传入的颜色
+        val widgetColorFromIntent = intent?.getSerializableExtra("widgetColor") as? OriginalColor
+        val widgetColor: OriginalColor = widgetColorFromIntent ?: run {
+            val periodRefresh = SpUtil.getWidgetRefreshState(this)
+            if (periodRefresh) {
+                ColorData.getWidgetColor(this) ?: ColorData.getThemeColor(this)
+            } else {
+                ColorData.getThemeColor(this)
+            }
         }
+        val position = colorViewModel.flowList.value.indexOf(widgetColor)
+        binding.recyclerView.scrollToPositionWithOffset(
+            position, 16.dp(this@MainActivity)
+        )
 
         // 搜索 Shortcut
         intent?.getBooleanExtra("shortcut_search", false)?.let {
@@ -296,12 +303,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshWidget() {
+        // 主动设置主题色，清除小组件颜色，自动同步主题色
+        ColorData.clearWidgetColor(this)
+        // 4x2
         sendBroadcast(Intent(this, ColorWidgetProvider::class.java).apply {
             action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
             val ids = AppWidgetManager.getInstance(this@MainActivity)
                 .getAppWidgetIds(ComponentName(this@MainActivity, ColorWidgetProvider::class.java))
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
         })
+
     }
 
     private fun RecyclerView.scrollToPositionWithOffset(position: Int, offset: Int = 0) {

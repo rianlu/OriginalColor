@@ -12,6 +12,7 @@ import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.SpUtil
 import com.wzl.originalcolor.widget.ColorWidgetProvider
 
+
 class WidgetWorker(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
     override fun doWork(): Result {
@@ -19,6 +20,8 @@ class WidgetWorker(appContext: Context, workerParams: WorkerParameters) :
         // 重新生成颜色
         val newOriginalColor = ColorData.getRandomColor(applicationContext)
         SpUtil.saveWidgetColor(applicationContext, newOriginalColor.HEX)
+        SpUtil.saveLocalThemeColor(applicationContext, newOriginalColor.HEX)
+        // 4x2
         applicationContext.sendBroadcast(
             Intent(
                 applicationContext,
@@ -33,6 +36,7 @@ class WidgetWorker(appContext: Context, workerParams: WorkerParameters) :
                     )
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
             })
+
         return Result.success()
     }
 }

@@ -9,22 +9,31 @@ import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.SpUtil
 
-class ColorWidgetProvider : AppWidgetProvider() {
+open class ColorWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        // 获取当前小组件颜色
+        // 是否开启定时刷新
         val periodRefresh = SpUtil.getWidgetRefreshState(context)
         val originalColor: OriginalColor = if (periodRefresh) {
-            ColorData.getWidgetColor(context)
+            ColorData.getWidgetColor(context) ?: ColorData.getThemeColor(context)
         } else {
             ColorData.getThemeColor(context)
         }
         appWidgetIds.forEach { appWidgetId ->
-            val remoteViews = RemoteViewsUtil.getWideWidgetView(context, originalColor)
+            val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
+            val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+            val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+            val rows = getCellSize(minWidth)
+            val columns = getCellSize(minHeight)
+            val remoteViews = if (rows == 1 || columns == 1) {
+                RemoteViewsUtil.getSmallWidgetView(context, originalColor)
+            } else {
+                RemoteViewsUtil.getWideWidgetView(context, originalColor)
+            }
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
         }
     }
@@ -43,11 +52,11 @@ class ColorWidgetProvider : AppWidgetProvider() {
         val columns = getCellSize(minHeight)
         val periodRefresh = SpUtil.getWidgetRefreshState(context)
         val originalColor: OriginalColor = if (periodRefresh) {
-            ColorData.getWidgetColor(context)
+            ColorData.getWidgetColor(context) ?: ColorData.getThemeColor(context)
         } else {
             ColorData.getThemeColor(context)
         }
-        val remoteViews = if (rows <= 2 || columns == 1) {
+        val remoteViews = if (rows == 1 || columns == 1) {
             RemoteViewsUtil.getSmallWidgetView(context, originalColor)
         } else {
             RemoteViewsUtil.getWideWidgetView(context, originalColor)

@@ -21,8 +21,8 @@ import com.wzl.originalcolor.utils.PxExtensions.dp
 
 object RemoteViewsUtil {
 
-    fun getWideWidgetView(context: Context, randomColor: OriginalColor): RemoteViews {
-        return generateWidgetView(context, randomColor, R.layout.layout_wide_widget)
+    fun getWideWidgetView(context: Context, cardColor: OriginalColor): RemoteViews {
+        return generateWidgetView(context, cardColor, R.layout.layout_wide_widget)
     }
 
     fun getSmallWidgetView(context: Context, randomColor: OriginalColor): RemoteViews {
@@ -45,7 +45,7 @@ object RemoteViewsUtil {
         return RemoteViews(context.packageName, layoutId).also {
             // 小部件点击打开app平滑过渡
             // https://developer.android.com/develop/ui/views/appwidgets/enhance#enable-smoother-transitions
-            it.setInt(R.id.widgetBackground, "setBackgroundColor", cardColor)
+            // 由子视图绘制圆角背景，不再给根容器强制设置白底或色块
             it.setTextViewText(R.id.colorPinyin, originalColor.pinyin)
             it.setTextColor(R.id.colorPinyin, textColor.setAlpha(0.6F))
             it.setTextViewText(R.id.colorName, originalColor.NAME)
@@ -55,7 +55,7 @@ object RemoteViewsUtil {
             }
             val pendingIntent = PendingIntent.getActivity(
                 context, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_IMMUTABLE
             )
             it.setOnClickPendingIntent(R.id.colorBackground, pendingIntent)
         }.also {

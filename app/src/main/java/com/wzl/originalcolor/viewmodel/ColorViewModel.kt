@@ -60,7 +60,7 @@ class ColorViewModel : ViewModel() {
         }
     }
 
-    fun Context.getLocaleStringResource(
+    private fun Context.getLocaleStringResource(
         resourceId: Int,
         localeName: String = "zh-CN"
     ): String {

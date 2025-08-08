@@ -29,7 +29,7 @@
                 app:layout_collapseMode="pin"
                 app:menu="@menu/app_bar_menu"
                 app:navigationIcon="@drawable/ic_random_cube"
-                app:navigationContentDescription="@string/chip_green"
+                app:navigationContentDescription="@string/menu_random"
                 app:navigationIconTint="@color/primary_color"
                 app:title="@string/app_name" />
 

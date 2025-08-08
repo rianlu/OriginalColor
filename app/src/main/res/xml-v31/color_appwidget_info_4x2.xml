@@ -5,8 +5,8 @@
 
     android:minWidth="250dp"
     android:minHeight="110dp"
-    android:minResizeWidth="57dp"
-    android:minResizeHeight="51dp"
+    android:minResizeWidth="250dp"
+    android:minResizeHeight="110dp"
     android:maxResizeWidth="530dp"
     android:maxResizeHeight="450dp"
 
@@ -15,5 +15,5 @@
     android:targetCellHeight="2"
     android:updatePeriodMillis="0"
     android:widgetCategory="home_screen"
-    android:widgetFeatures="reconfigurable">
-</appwidget-provider>
+    android:widgetFeatures="reconfigurable"/>
+

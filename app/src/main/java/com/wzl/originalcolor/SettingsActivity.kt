@@ -82,9 +82,10 @@ class SettingsActivity : AppCompatActivity() {
                 getString(R.string.period_refresh_widget),
                 SpUtil.getWidgetRefreshState(this)
             ) { position, isChecked ->
-                adapter.updateSwitchState(position, !isChecked)
-                SpUtil.saveWidgetRefreshState(this, !isChecked)
-                if (isChecked) {
+                val newState = !isChecked
+                adapter.updateSwitchState(position, newState)
+                SpUtil.saveWidgetRefreshState(this, newState)
+                if (newState) {
                     WorkManagerUtil.startWork(this)
                 } else {
                     WorkManagerUtil.cancelWork(this)
@@ -166,10 +167,10 @@ class SettingsActivity : AppCompatActivity() {
         val serviceComponent = ComponentName(this, ColorWidgetProvider::class.java)
         val extras = Bundle()
         // 恢复为主题色
-        if (!SpUtil.getWidgetRefreshState(this)) {
-            SpUtil.saveWidgetColor(this, themeColorHex)
-        }
-        val originalColor = ColorData.getWidgetColor(this)
+//        if (!SpUtil.getWidgetRefreshState(this)) {
+//            SpUtil.saveWidgetColor(this, themeColorHex)
+//        }
+        val originalColor = ColorData.getThemeColor(this)
         val remoteViews = RemoteViewsUtil.getWideWidgetView(this, originalColor)
         extras.putParcelable(AppWidgetManager.EXTRA_APPWIDGET_PREVIEW, remoteViews)
         AppWidgetManager.getInstance(this)

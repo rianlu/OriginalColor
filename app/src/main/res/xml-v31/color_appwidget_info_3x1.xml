@@ -1,0 +1,17 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/layout_small_widget"
+    android:previewImage="@drawable/appwidget_preview"
+    android:previewLayout="@layout/layout_app_widget_preview"
+
+    android:minWidth="180dp"
+    android:minHeight="70dp"
+    android:minResizeWidth="180dp"
+    android:minResizeHeight="70dp"
+
+    android:resizeMode="horizontal"
+    android:targetCellWidth="3"
+    android:targetCellHeight="1"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable"/>
+

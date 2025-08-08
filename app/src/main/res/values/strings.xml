@@ -23,6 +23,7 @@
 
     <string name="copied_to_clipboard">已复制到剪切板</string>
     <string name="menu_info">关于</string>
+    <string name="menu_random">随机</string>
     <string name="menu_settings">设置</string>
     <string name="menu_favorite_list" translatable="false">喜欢列表</string>
     <string name="quick_filter">快速筛选</string>

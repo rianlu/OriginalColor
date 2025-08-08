@@ -55,7 +55,7 @@ object ColorData {
     }
 
     fun getRandomColor(context: Context): OriginalColor {
-        if (colorList.isNotEmpty()) {
+        if (colorList.isEmpty()) {
             initData(context)
         }
         val randomPosition = Random.nextInt(0, colorList.size)
@@ -64,19 +64,24 @@ object ColorData {
 
     fun getThemeColor(context: Context): OriginalColor {
         val hex = SpUtil.getLocalThemeColor(context)
-        return findColor(context, hex)
+        return findColor(context, hex) ?: getRandomColor(context)
     }
 
-    fun getWidgetColor(context: Context): OriginalColor {
+    fun getWidgetColor(context: Context): OriginalColor? {
         val hex = SpUtil.getWidgetColor(context)
+        if (hex.isEmpty()) return null
         return findColor(context, hex)
     }
 
-    private fun findColor(context: Context, hex: String): OriginalColor {
-        if (colorList.isNotEmpty()) {
+    fun clearWidgetColor(context: Context) {
+        SpUtil.saveWidgetColor(context, "")
+    }
+
+    private fun findColor(context: Context, hex: String): OriginalColor? {
+        if (colorList.isEmpty()) {
             initData(context)
         }
-        return colorList.find { it.HEX == hex } ?: getRandomColor(context)
+        return colorList.find { it.HEX == hex }
     }
 
     private fun rgbToHsv(color: Int): FloatArray {
