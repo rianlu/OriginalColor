@@ -22,6 +22,11 @@ object Config {
     const val SP_PARAM_PRIVACY_POLICY = "privacy_policy"
     const val SP_PARAM_MIUI_SHORTCUT = "miui_shortcut"
 
+    // One-time guides
+    const val SP_PARAM_GUIDE_LONG_PRESS = "guide_long_press"
+    const val SP_PARAM_GUIDE_TITLE_TAP = "guide_title_tap"
+
+    const val SP_PARAM_GUIDE_RANDOM = "guide_random"
 
     const val WIDGET_WORKER_TAG = "widget_worker_tag"
 }

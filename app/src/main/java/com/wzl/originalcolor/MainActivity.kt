@@ -12,6 +12,7 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
+import android.view.View
 import android.view.animation.CycleInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageButton
@@ -33,9 +34,12 @@ import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.ColorItemDecoration
+import com.wzl.originalcolor.utils.FirstRunGuide
+import com.wzl.originalcolor.utils.GuideUtil
 import com.wzl.originalcolor.utils.HapticFeedbackUtil
 import com.wzl.originalcolor.utils.HapticFeedbackUtil.addHapticFeedback
 import com.wzl.originalcolor.utils.HapticFeedbackUtil.addStrongHapticFeedback
+import com.wzl.originalcolor.utils.Once
 import com.wzl.originalcolor.utils.PHONE_GRID_COUNT
 import com.wzl.originalcolor.utils.ProtocolDialogUtil
 import com.wzl.originalcolor.utils.PxExtensions.dp
@@ -68,8 +72,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 是否显示隐私弹窗
-        ProtocolDialogUtil.show(this)
+        // 是否显示隐私弹窗（确认后再启动引导链）
+        ProtocolDialogUtil.show(this) {
+            // 用户同意后启动引导链
+            FirstRunGuide.maybeShow(this@MainActivity, binding.recyclerView, binding.topAppBar, getToolbarNavView())
+        }
 
         // 初始化 ShortcutManager
         initShortcutManager()
@@ -98,6 +105,8 @@ class MainActivity : AppCompatActivity() {
                     view.addStrongHapticFeedback()
                     updateGlobalThemeColor(themeColor, this)
                     refreshWidget()
+                    // 引导：触发长按完成
+                    FirstRunGuide.onLongPressed(this, binding.recyclerView, binding.topAppBar, getToolbarNavView())
                 }
                 true
             }
@@ -235,6 +244,8 @@ class MainActivity : AppCompatActivity() {
                 )
                 fabSearchStateFlow.value = randomPosition == 0 ||
                     (randomPosition == 1 && isPad)
+                // 引导：触发随机点击完成，并告知目标位置，便于第二步精确锚定
+                FirstRunGuide.onRandomClicked(this@MainActivity, binding.recyclerView, this, getToolbarNavView(), randomPosition)
             }
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
@@ -257,6 +268,8 @@ class MainActivity : AppCompatActivity() {
                 binding.recyclerView.scrollToPositionWithOffset(
                     position, if (position != 0) 16.dp(this@MainActivity) else 0
                 )
+                // 引导：触发标题点击完成
+                FirstRunGuide.onTitleTapped(this@MainActivity, binding.recyclerView, this, getToolbarNavView())
             }
         }
         colorViewModel.initData(this)
@@ -415,4 +428,20 @@ class MainActivity : AppCompatActivity() {
         checkedIconTint = ColorStateList(states, dynamicColors)
         setTextColor(ColorStateList(states, dynamicColors))
     }
+
+    private fun getToolbarNavView(): View {
+        val toolbar = binding.topAppBar
+        for (i in 0 until toolbar.childCount) {
+            val child = toolbar.getChildAt(i)
+            if (child is ImageButton) {
+                val cdToolbar = toolbar.navigationContentDescription
+                val cdChild = child.contentDescription
+                if (cdToolbar == null || cdChild == cdToolbar) {
+                    return child
+                }
+            }
+        }
+        return toolbar
+    }
+
 }

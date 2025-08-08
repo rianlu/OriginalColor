@@ -19,8 +19,8 @@ class WidgetWorker(appContext: Context, workerParams: WorkerParameters) :
 
         // 重新生成颜色
         val newOriginalColor = ColorData.getRandomColor(applicationContext)
+        // 仅更新小组件颜色，不覆盖 App 主题色
         SpUtil.saveWidgetColor(applicationContext, newOriginalColor.HEX)
-        SpUtil.saveLocalThemeColor(applicationContext, newOriginalColor.HEX)
         // 4x2
         applicationContext.sendBroadcast(
             Intent(

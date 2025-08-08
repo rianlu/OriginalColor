@@ -62,7 +62,7 @@
     <string name="add_app_widget">添加小组件</string>
     <string name="clear_cache">清除缓存</string>
     <string name="empty_list_hint">抱歉，没有找到～</string>
-    
+
     <string name="dialog_shortcut_permission_title">快捷方式权限</string>
     <string name="dialog_shortcut_permission_message">由于MIUI系统的限制，需要手动授予桌面快捷方式的权限。才能够添加小组件到主屏幕</string>
     <string name="dialog_shortcut_permission_position_button">好的</string>
@@ -115,4 +115,9 @@
 <p>如果您对我们隐私政策有任何疑问或建议，请随时通过<strong>aifengyeah@163.com</strong>联系我们。</p>
 ]]>
     </string>
+
+    <!-- Guides -->
+    <string name="guide_long_press">长按颜色卡片可设置为主题色</string>
+    <string name="guide_title_tap">轻触标题栏可快速定位到当前主题色</string>
+    <string name="guide_random">点击可滚动到随机颜色位置</string>
 </resources>

@@ -36,4 +36,8 @@
     <string name="dialog_shortcut_permission_position_button">OK</string>
     <string name="current_theme_color">Current Theme Color</string>
     <string name="menu_random">Random</string>
+
+    <string name="guide_long_press">Long press the color card to set it as the theme color</string>
+    <string name="guide_title_tap">Tap the title bar to quickly locate the current theme color</string>
+    <string name="guide_random">Tap to scroll to a random color position</string>
 </resources>

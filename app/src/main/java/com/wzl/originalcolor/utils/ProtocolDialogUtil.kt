@@ -13,11 +13,11 @@ import kotlin.system.exitProcess
 
 object ProtocolDialogUtil {
 
-    fun show(context: Context) {
-//        if ((SpUtil.getPrivacyPolicyState(context)) &&
-//                    (BuildConfig.FLAVOR == BuildConfig.var_base)
-//        )
-        if (SpUtil.getPrivacyPolicyState(context)) return
+    fun show(context: Context, onAccepted: (() -> Unit)? = null) {
+        if (SpUtil.getPrivacyPolicyState(context)) {
+            onAccepted?.invoke()
+            return
+        }
         val hexColor = SpUtil.getLocalThemeColor(context)
         val themeColor = Color.parseColor(hexColor)
         val rootView =
@@ -35,15 +35,17 @@ object ProtocolDialogUtil {
                 showPrivacyPolicy(context)
             }
         }
+        var accepted = false
         MaterialDialogThemeUtil.dynamicMaterialDialogBuilder(context, themeColor)
             .setTitle("使用须知")
             .setView(rootView)
-            .setNegativeButton("不同意") { p0, p1 -> exitProcess(0) }
-            .setPositiveButton("同意") { p0, p1 ->
-                SpUtil.savePrivacyPolicyState(
-                    context,
-                    true
-                )
+            .setNegativeButton("不同意") { _, _ -> exitProcess(0) }
+            .setPositiveButton("同意") { _, _ ->
+                SpUtil.savePrivacyPolicyState(context, true)
+                accepted = true
+            }
+            .setOnDismissListener {
+                if (accepted) onAccepted?.invoke()
             }
             .setCancelable(false)
             .show().also { dialog ->
