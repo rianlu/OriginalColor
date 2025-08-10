@@ -63,6 +63,12 @@ class MainActivity : AppCompatActivity() {
     private var gridCount: Int = PHONE_GRID_COUNT
     private val colorViewModel by viewModels<ColorViewModel>()
 
+    // Pending widget scroll
+    private var pendingWidgetColor: OriginalColor? = null
+
+    // Item decoration reference for dynamic span update
+    private var colorItemDecoration: ColorItemDecoration? = null
+
     // FAB State
     private val fabSearchStateFlow = MutableStateFlow(true)
 
@@ -114,7 +120,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(this@MainActivity, gridCount)
-            addItemDecoration(ColorItemDecoration(this@MainActivity, gridCount))
+            colorItemDecoration = ColorItemDecoration(this@MainActivity, gridCount)
+            addItemDecoration(colorItemDecoration!!)
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -134,9 +141,14 @@ class MainActivity : AppCompatActivity() {
                 colorViewModel.flowList.collect { list ->
                     binding.emptyListPlaceholder.isVisible = list.isEmpty()
                     adapter.submitList(list)
-                    binding.recyclerView.scrollToPositionWithOffset(
-                        0, 16.dp(this@MainActivity)
-                    )
+                    // 冷启动时处理 Pending 的小组件跳转滚动
+                    pendingWidgetColor?.let { color ->
+                        val pos = list.indexOf(color)
+                        if (pos >= 0) {
+                            binding.recyclerView.scrollToPositionWithOffset(pos, 16.dp(this@MainActivity))
+                            pendingWidgetColor = null
+                        }
+                    }
                 }
             }
             launch {
@@ -291,21 +303,20 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
-        // Widget 点击跳转
+        // Widget 点击跳转（支持冷启动）
         // 优先使用小组件点击传入的颜色
         val widgetColorFromIntent = intent?.getSerializableExtra("widgetColor") as? OriginalColor
-        val widgetColor: OriginalColor = widgetColorFromIntent ?: run {
-            val periodRefresh = SpUtil.getWidgetRefreshState(this)
-            if (periodRefresh) {
-                ColorData.getWidgetColor(this) ?: ColorData.getThemeColor(this)
+        if (widgetColorFromIntent != null) {
+            // 若数据还未加载，先缓存，待 flowList 有数据时再滚动
+            if (colorViewModel.flowList.value.isEmpty()) {
+                pendingWidgetColor = widgetColorFromIntent
             } else {
-                ColorData.getThemeColor(this)
+                val position = colorViewModel.flowList.value.indexOf(widgetColorFromIntent)
+                if (position >= 0) binding.recyclerView.scrollToPositionWithOffset(position, 16.dp(this@MainActivity))
             }
+        } else {
+            // 非 widget 入口或无传值，维持现有逻辑（可选）
         }
-        val position = colorViewModel.flowList.value.indexOf(widgetColor)
-        binding.recyclerView.scrollToPositionWithOffset(
-            position, 16.dp(this@MainActivity)
-        )
 
         // 搜索 Shortcut
         intent?.getBooleanExtra("shortcut_search", false)?.let {
@@ -367,11 +378,13 @@ class MainActivity : AppCompatActivity() {
         // FAB
         binding.fabSearch.apply {
             backgroundTintList = ColorStateList.valueOf(themeColor)
-            imageTintList = ColorStateList.valueOf(if (themeColor.isLight()) {
-                themeColor.brightness(-0.5F)
-            } else {
-                themeColor.brightness(0.5F)
-            })
+            imageTintList = ColorStateList.valueOf(
+                if (themeColor.isLight()) {
+                    themeColor.brightness(-0.5F)
+                } else {
+                    themeColor.brightness(0.5F)
+                }
+            )
         }
 
         // Search Chips
@@ -385,6 +398,9 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             binding.recyclerView.verticalScrollbarThumbDrawable?.setTint(themeColor)
         }
+
+        // 调整列数（初次主题更新/布局完成后）
+        binding.root.post { adjustGridSpanByWindow() }
     }
 
     private fun initShortcutManager() {
@@ -428,6 +444,44 @@ class MainActivity : AppCompatActivity() {
         checkedIconTint = ColorStateList(states, dynamicColors)
         setTextColor(ColorStateList(states, dynamicColors))
     }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        binding.root.post { adjustGridSpanByWindow() }
+    }
+
+    private fun adjustGridSpanByWindow() {
+        val lm = binding.recyclerView.layoutManager as GridLayoutManager
+        val widthPx = binding.recyclerView.width.takeIf { it > 0 } ?: binding.root.width
+        if (widthPx <= 0) return
+        val isPad = ScreenUtil.isPad(this)
+        // 颜色卡片期望的最小可视宽度（不含外侧左右边距与列间距），可按需微调
+        val minItemDp = 200
+        val minItemPx = minItemDp.dp(this)
+        // 与 ColorItemDecoration 一致的边距设定
+        val marginPx = 16.dp(this)
+        val outerPadding = marginPx * 2 // 左右外侧
+        val interSpacing = marginPx     // 列间距（每侧 8dp 合计 16dp）
+        val available = (widthPx - outerPadding).coerceAtLeast(0)
+
+        val targetSpan = if (!isPad) {
+            // 手机设备：始终 1 列
+            PHONE_GRID_COUNT
+        } else {
+            // 平板：最多 2 列；需保证两列下每个 item 宽度 >= 最小宽度
+            val twoColItemWidth = (available - interSpacing) / 2
+            if (twoColItemWidth >= minItemPx) TABLET_GRID_COUNT else PHONE_GRID_COUNT
+        }
+
+        if (targetSpan != lm.spanCount) {
+            lm.spanCount = targetSpan
+            colorItemDecoration?.let { binding.recyclerView.removeItemDecoration(it) }
+            colorItemDecoration = ColorItemDecoration(this, targetSpan)
+            binding.recyclerView.addItemDecoration(colorItemDecoration!!)
+            binding.recyclerView.post { adapter.notifyDataSetChanged() }
+        }
+    }
+
 
     private fun getToolbarNavView(): View {
         val toolbar = binding.topAppBar

@@ -21,7 +21,7 @@ open class GradientLayout @JvmOverloads constructor(
     @ColorInt var cardColor = resources.getColor(R.color.primary_color, null)
     private var gradientDrawable = GradientDrawable()
     private var radius = 16.dp(context).toFloat()
-    private var offsets = floatArrayOf(0F, 0.3F, 1F)
+    private var offsets = floatArrayOf(0F, 0.4F, 1F)
 
     init {
         initGradientBackground()
@@ -39,7 +39,7 @@ open class GradientLayout @JvmOverloads constructor(
     }
 
     private fun initGradientBackground() {
-        val startColor = if (isLightMode) cardColor.setAlpha(0.7F)
+        val startColor = if (isLightMode) mixWithWhite(cardColor, 0.35f)
         else cardColor.brightness(0.2F)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             gradientDrawable.setColors(
@@ -53,3 +53,14 @@ open class GradientLayout @JvmOverloads constructor(
         background = gradientDrawable
     }
 }
+
+    private fun mixWithWhite(@androidx.annotation.ColorInt color: Int, fraction: Float): Int {
+        val f = fraction.coerceIn(0f, 1f)
+        val r = android.graphics.Color.red(color)
+        val g = android.graphics.Color.green(color)
+        val b = android.graphics.Color.blue(color)
+        val nr = (r + (255 - r) * f).toInt()
+        val ng = (g + (255 - g) * f).toInt()
+        val nb = (b + (255 - b) * f).toInt()
+        return android.graphics.Color.rgb(nr, ng, nb)
+    }

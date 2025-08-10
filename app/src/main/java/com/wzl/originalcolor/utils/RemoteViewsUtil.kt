@@ -59,13 +59,13 @@ object RemoteViewsUtil {
             )
             it.setOnClickPendingIntent(R.id.colorBackground, pendingIntent)
         }.also {
-            // 渐变背景
-            val startColor = if (isLightMode) cardColor.setAlpha(0.7F)
+            // 渐变背景（浅色模式避免半透明导致的背景透出问题）
+            val startColor = if (isLightMode) mixWithWhite(cardColor, 0.35f)
             else cardColor.brightness(0.2F)
             val gradientBitmap = generateGradientBitmap(
                 context,
                 intArrayOf(startColor, startColor, cardColor),
-                floatArrayOf(0F, if (isSmallWidget) 0.6F else 0.4F, 1F)
+                floatArrayOf(0F, 0.4F, 1F)
             )
             it.setImageViewBitmap(R.id.colorBackground, gradientBitmap)
         }
@@ -91,4 +91,16 @@ object RemoteViewsUtil {
             16.dp(context).toFloat(), 16.dp(context).toFloat(), paint)
         return bitmap
     }
+
+    private fun mixWithWhite(@androidx.annotation.ColorInt color: Int, fraction: Float): Int {
+        val f = fraction.coerceIn(0f, 1f)
+        val r = Color.red(color)
+        val g = Color.green(color)
+        val b = Color.blue(color)
+        val nr = (r + (255 - r) * f).toInt()
+        val ng = (g + (255 - g) * f).toInt()
+        val nb = (b + (255 - b) * f).toInt()
+        return Color.rgb(nr, ng, nb)
+    }
+
 }
