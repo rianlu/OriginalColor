@@ -31,17 +31,69 @@ object BitmapUtil {
         view.layout(0, 0, view.measuredWidth, view.measuredHeight)
         val bmp = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val c = Canvas(bmp)
-        c.drawColor(Color.TRANSPARENT)
-        if (roundPx != 0f) {
-            val rect = Rect(0, 0, bmp.width, bmp.height)
-            val rectF = RectF(rect)
-            val paint = Paint()
-            paint.isAntiAlias = true
-            c.drawRoundRect(rectF, roundPx, roundPx, paint)
+        // 透明底（供支持透明的分享方使用）
+        if (roundPx > 0f) {
+            val rectF = RectF(0f, 0f, bmp.width.toFloat(), bmp.height.toFloat())
+            val path = android.graphics.Path().apply {
+                addRoundRect(rectF, roundPx, roundPx, android.graphics.Path.Direction.CW)
+            }
+            c.save()
+            c.clipPath(path)
+            c.drawColor(Color.TRANSPARENT)
+            view.draw(c)
+            c.restore()
+        } else {
+            c.drawColor(Color.TRANSPARENT)
+            view.draw(c)
         }
-        view.draw(c)
         return bmp
     }
+
+        fun viewToBitmapWithBackground(view: View, width: Int, height: Int, roundPx: Float = 0f, @androidx.annotation.ColorInt backgroundColor: Int): Bitmap {
+            val measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY)
+            val measuredHeight = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
+            view.measure(measuredWidth, measuredHeight)
+            view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+            val bmp = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+            val c = Canvas(bmp)
+            if (roundPx > 0f) {
+                val rectF = RectF(0f, 0f, bmp.width.toFloat(), bmp.height.toFloat())
+                val path = android.graphics.Path().apply {
+                    addRoundRect(rectF, roundPx, roundPx, android.graphics.Path.Direction.CW)
+                }
+                c.save()
+                c.clipPath(path)
+                c.drawColor(backgroundColor)
+                view.draw(c)
+                c.restore()
+            } else {
+                c.drawColor(backgroundColor)
+                view.draw(c)
+            }
+            return bmp
+        }
+
+        fun shareBitmapJpeg(context: Context, bitmap: Bitmap, fileName: String) {
+            val cachePath = File(context.externalCacheDir, "share_cards/")
+            cachePath.mkdirs()
+            val file = File(cachePath, "$fileName.jpg")
+            try {
+                FileOutputStream(file).use { fos ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 95, fos)
+                }
+            } catch (_: Exception) {}
+            val myImageFileUri = FileProvider.getUriForFile(
+                context, context.applicationContext.packageName + ".provider",
+                file
+            )
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            intent.putExtra(Intent.EXTRA_STREAM, myImageFileUri)
+            intent.type = "image/jpeg"
+            context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_to)))
+        }
+
 
     fun shareBitmap(context: Context, bitmap: Bitmap, fileName: String) {
         val cachePath = File(context.externalCacheDir, "share_cards/")

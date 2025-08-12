@@ -141,13 +141,17 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
             shareView.findViewById<ConstraintLayout>(R.id.shareCardView)
                 .setCornerBackground(16, backgroundColor)
 
-            val bitmap = BitmapUtil.viewToBitmap(
+            val bg = Color.WHITE
+            val bitmap = BitmapUtil.viewToBitmapWithBackground(
                 shareView,
                 400.dp(requireContext()),
                 250.dp(requireContext()),
-                16.dp(requireContext()).toFloat()
+                16.dp(requireContext()).toFloat(),
+                bg
             )
+            // 兼容部分平台对 PNG 透明通道处理不一致，必要时可改用 JPEG 输出
             BitmapUtil.shareBitmap(requireContext(), bitmap, originalColor.NAME)
+            // 或：BitmapUtil.shareBitmapJpeg(requireContext(), bitmap, originalColor.NAME)
             dismiss()
         }
         // 显示动画
