@@ -23,6 +23,7 @@ class SettingsAdapter(private val settings: List<SettingItem>, private val theme
     companion object {
         const val VIEW_TYPE_TEXT = 0
         const val VIEW_TYPE_SWITCH = 1
+        const val VIEW_TYPE_FOOTER = 2
     }
 
     class TextViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,6 +38,11 @@ class SettingsAdapter(private val settings: List<SettingItem>, private val theme
         val switchView: MaterialSwitch = itemView.findViewById(R.id.settingSwitch)
     }
 
+    class FooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val copyrightText: TextView = itemView.findViewById(R.id.copyrightText)
+        val authorText: TextView = itemView.findViewById(R.id.authorText)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_TEXT -> {
@@ -48,6 +54,11 @@ class SettingsAdapter(private val settings: List<SettingItem>, private val theme
                 val itemView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.settings_item_switch, parent, false)
                 SwitchViewHolder(itemView)
+            }
+            VIEW_TYPE_FOOTER -> {
+                val itemView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.settings_item_footer, parent, false)
+                FooterViewHolder(itemView)
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
@@ -80,6 +91,11 @@ class SettingsAdapter(private val settings: List<SettingItem>, private val theme
                     holder.switchView.updateTheme(themeColor)
                 }
             }
+            is FooterViewHolder -> {
+                holder.copyrightText.movementMethod = android.text.method.LinkMovementMethod.getInstance()
+                holder.copyrightText.setLinkTextColor(themeColor)
+                holder.authorText.setTextColor(themeColor)
+            }
         }
     }
 
@@ -90,7 +106,7 @@ class SettingsAdapter(private val settings: List<SettingItem>, private val theme
         return when (setting) {
             is SettingItem.Text -> VIEW_TYPE_TEXT
             is SettingItem.Switch -> VIEW_TYPE_SWITCH
-            else -> throw IllegalArgumentException("Invalid setting type")
+            is SettingItem.Footer -> VIEW_TYPE_FOOTER
         }
     }
 

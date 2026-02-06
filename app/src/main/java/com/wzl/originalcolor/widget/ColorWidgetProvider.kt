@@ -8,6 +8,9 @@ import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorData
 import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.SpUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 open class ColorWidgetProvider : AppWidgetProvider() {
 
@@ -16,25 +19,32 @@ open class ColorWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        // 是否开启定时刷新
-        val periodRefresh = SpUtil.getWidgetRefreshState(context)
-        val originalColor: OriginalColor = if (periodRefresh) {
-            ColorData.getWidgetColor(context) ?: ColorData.getThemeColor(context)
-        } else {
-            ColorData.getThemeColor(context)
-        }
-        appWidgetIds.forEach { appWidgetId ->
-            val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
-            val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-            val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
-            val rows = getCellSize(minWidth)
-            val columns = getCellSize(minHeight)
-            val remoteViews = if (rows == 1 || columns == 1) {
-                RemoteViewsUtil.getSmallWidgetView(context, originalColor)
-            } else {
-                RemoteViewsUtil.getWideWidgetView(context, originalColor)
+        val pendingResult = goAsync()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // 是否开启定时刷新
+                val periodRefresh = SpUtil.getWidgetRefreshState(context)
+                val originalColor: OriginalColor = if (periodRefresh) {
+                    ColorData.getWidgetColor(context) ?: ColorData.getThemeColor(context)
+                } else {
+                    ColorData.getThemeColor(context)
+                }
+                appWidgetIds.forEach { appWidgetId ->
+                    val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
+                    val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+                    val minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+                    val rows = getCellSize(minWidth)
+                    val columns = getCellSize(minHeight)
+                    val remoteViews = if (rows == 1 || columns == 1) {
+                        RemoteViewsUtil.getSmallWidgetView(context, originalColor)
+                    } else {
+                        RemoteViewsUtil.getWideWidgetView(context, originalColor)
+                    }
+                    appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
+                }
+            } finally {
+                pendingResult.finish()
             }
-            appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
         }
     }
 
@@ -46,22 +56,32 @@ open class ColorWidgetProvider : AppWidgetProvider() {
     ) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         if (context == null || appWidgetManager == null) return
-        val minWidth: Int = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) ?: 0
-        val minHeight: Int = newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) ?: 0
-        val rows = getCellSize(minWidth)
-        val columns = getCellSize(minHeight)
-        val periodRefresh = SpUtil.getWidgetRefreshState(context)
-        val originalColor: OriginalColor = if (periodRefresh) {
-            ColorData.getWidgetColor(context) ?: ColorData.getThemeColor(context)
-        } else {
-            ColorData.getThemeColor(context)
+
+        val pendingResult = goAsync()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val minWidth: Int =
+                    newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) ?: 0
+                val minHeight: Int =
+                    newOptions?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) ?: 0
+                val rows = getCellSize(minWidth)
+                val columns = getCellSize(minHeight)
+                val periodRefresh = SpUtil.getWidgetRefreshState(context)
+                val originalColor: OriginalColor = if (periodRefresh) {
+                    ColorData.getWidgetColor(context) ?: ColorData.getThemeColor(context)
+                } else {
+                    ColorData.getThemeColor(context)
+                }
+                val remoteViews = if (rows == 1 || columns == 1) {
+                    RemoteViewsUtil.getSmallWidgetView(context, originalColor)
+                } else {
+                    RemoteViewsUtil.getWideWidgetView(context, originalColor)
+                }
+                appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
+            } finally {
+                pendingResult.finish()
+            }
         }
-        val remoteViews = if (rows == 1 || columns == 1) {
-            RemoteViewsUtil.getSmallWidgetView(context, originalColor)
-        } else {
-            RemoteViewsUtil.getWideWidgetView(context, originalColor)
-        }
-        appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
     }
 
     private fun getCellSize(size: Int): Int {

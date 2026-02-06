@@ -111,14 +111,13 @@ class SettingsActivity : AppCompatActivity() {
             SettingItem.Text(getString(R.string.privacy_policy)) {
                 ProtocolDialogUtil.showPrivacyPolicy(this)
             },
+            SettingItem.Footer // Add Footer Item
         )
 
         binding.settingsRecyclerView.layoutManager = LinearLayoutManager(this)
         adapter = SettingsAdapter(settings, themeColor)
         binding.settingsRecyclerView.adapter = adapter
 
-        // 文本包含链接跳转
-        binding.copyrightText.movementMethod = LinkMovementMethod.getInstance()
         initCustomThemeColor(themeColor)
         binding.settingsTopAppBar.setNavigationOnClickListener { finish() }
 
@@ -201,28 +200,6 @@ class SettingsActivity : AppCompatActivity() {
             setTitleTextColor(themeColor)
             setNavigationIconTint(themeColor)
         }
-
-        // Copyright
-        binding.copyrightText.apply {
-            setLinkTextColor(themeColor)
-            val radius = 16.dp(this@SettingsActivity).toFloat()
-            background = ShapeDrawable(
-                RoundRectShape(
-                    floatArrayOf(radius, radius, radius, radius, radius, radius, radius, radius),
-                    null,
-                    null
-                )
-            ).apply {
-                paint.color = MaterialDialogThemeUtil.generateBackgroundViewColor(
-                    this@SettingsActivity,
-                    themeColor
-                )
-            }
-            setOnClickListener { }
-        }
-
-        // Author
-        binding.authorText.setTextColor(themeColor)
     }
 
     private fun getAppVersion(): String {

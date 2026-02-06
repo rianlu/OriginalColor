@@ -172,8 +172,9 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
 
     private fun initSensorManager() {
         sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        // SENSOR_DELAY_GAME provides smoother updates for UI animations
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-            SensorManager.SENSOR_DELAY_NORMAL)
+            SensorManager.SENSOR_DELAY_GAME)
     }
 
     override fun onStart() {
@@ -182,19 +183,64 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private var initDegree = -1F
-    override fun onSensorChanged(p0: SensorEvent?) {
-        val values = p0?.values ?: return
-//        Log.i("sensor: ", values.contentToString())
+    // Physics constants
+    private val ALPHA = 0.1f // Low-Pass Filter coefficient (Lower = smoother/heavier)
+    private val MAX_ANGLE = 15f // Max rotation angle in degrees
+    private val PARALLAX_FACTOR = 1.5f // Text movement multiplier
+    private val SHEEN_FACTOR = 4.0f // Sheen movement multiplier
+
+    private var lastX = 0f
+    private var lastY = 0f
+    private var baseDegreeX = 0f
+    private var isBaseSet = false
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        val values = event?.values ?: return
         val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-        val degreeX = if (isPortrait) values[1] * 9F else values[0] * 9F
-        val degreeY = if (isPortrait) values[0] * 9F else values[1] * 9F
-        if (initDegree == -1F) initDegree = degreeX
-        binding.colorCardView.animate()
-            .rotationX(degreeX - initDegree)
-            .rotationY(degreeY)
-            .setDuration(200)
-            .start()
+
+        // 1. Raw Data Mapping
+        // Map sensor data to rotation degrees.
+        // In portrait: X-axis sensor affects Y-axis rotation (tipping left/right)
+        // Y-axis sensor affects X-axis rotation (tipping up/down)
+        val targetX = (if (isPortrait) values[1] else values[0]) * 5f // Sensitivity adjusted
+        val targetY = (if (isPortrait) values[0] else values[1]) * 5f
+
+        // Set baseline on first frame to prevent initial jump
+        if (!isBaseSet) {
+            baseDegreeX = targetX
+            isBaseSet = true
+        }
+
+        // 2. Low-Pass Filter (Smoothing)
+        // smooth = old * (1-alpha) + new * alpha
+        lastX = lastX + ALPHA * ((targetX - baseDegreeX) - lastX)
+        lastY = lastY + ALPHA * (targetY - lastY)
+
+        // 3. Clamping (prevent extreme rotation)
+        val rotateX = lastX.coerceIn(-MAX_ANGLE, MAX_ANGLE)
+        val rotateY = lastY.coerceIn(-MAX_ANGLE, MAX_ANGLE)
+
+        // 4. Apply Transformations
+        // Card Rotation
+        binding.colorCardView.rotationX = rotateX
+        binding.colorCardView.rotationY = rotateY
+
+        // Specular Highlight (The "Glaze" Light)
+        // Light moves significantly to simulate reflection surface change
+        val sheen = binding.colorCardView.findViewById<View>(R.id.colorSheen)
+        sheen?.apply {
+            alpha = (0.2f + (Math.abs(rotateX) + Math.abs(rotateY)) / 45f).coerceIn(0f, 0.8f)
+            translationX = -rotateY * SHEEN_FACTOR
+            translationY = -rotateX * SHEEN_FACTOR
+        }
+
+        // Parallax Text (Floating Effect)
+        // Text moves slightly opposite to rotation to appear "floating above"
+        binding.colorName.translationX = rotateY * PARALLAX_FACTOR
+        binding.colorName.translationY = rotateX * PARALLAX_FACTOR
+        
+        binding.colorPinyin.translationX = rotateY * PARALLAX_FACTOR
+        binding.colorPinyin.translationY = rotateX * PARALLAX_FACTOR
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {

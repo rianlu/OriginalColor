@@ -61,7 +61,19 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/copyColorLayout"
-            app:strokeWidth="0dp" />
+            app:strokeWidth="0dp">
+
+            <!-- Specular Highlight Layer -->
+            <ImageView
+                android:id="@+id/colorSheen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_sheen"
+                android:alpha="0.0"
+                android:scaleX="2.0"
+                android:scaleY="2.0"
+                tools:alpha="0.5" />
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/copyColorLayout"

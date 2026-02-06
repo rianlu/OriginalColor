@@ -63,13 +63,13 @@ class MainActivity : AppCompatActivity() {
     private var gridCount: Int = PHONE_GRID_COUNT
     private val colorViewModel by viewModels<ColorViewModel>()
 
-    // Pending widget scroll
+    // 待处理的小组件滚动（用于冷启动或数据未加载时）
     private var pendingWidgetColor: OriginalColor? = null
 
-    // Item decoration reference for dynamic span update
+    // Item decoration 引用，用于动态调整 span
     private var colorItemDecoration: ColorItemDecoration? = null
 
-    // FAB State
+    // FAB 状态
     private val fabSearchStateFlow = MutableStateFlow(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,6 +87,12 @@ class MainActivity : AppCompatActivity() {
 
         // 初始化 ShortcutManager
         initShortcutManager()
+
+        // 处理小组件深度链接（冷启动）
+        val widgetColorFromIntent = intent?.getSerializableExtra("widgetColor") as? OriginalColor
+        if (widgetColorFromIntent != null) {
+            pendingWidgetColor = widgetColorFromIntent
+        }
 
         val isPad = ScreenUtil.isPad(this@MainActivity)
         updateGlobalThemeColor(SpUtil.getLocalThemeColor(this), this)
@@ -163,13 +169,15 @@ class MainActivity : AppCompatActivity() {
                             animate().alpha(1f).setDuration(300).start()
                         }
                     }
-                    adapter.submitList(list)
-                    // 冷启动时处理 Pending 的小组件跳转滚动
-                    pendingWidgetColor?.let { color ->
-                        val pos = list.indexOf(color)
-                        if (pos >= 0) {
-                            binding.recyclerView.scrollToPositionWithOffset(pos, 16.dp(this@MainActivity))
-                            pendingWidgetColor = null
+                    adapter.submitList(list) {
+                        // 冷启动时处理 Pending 的小组件跳转滚动
+                        // 使用 commitCallback 确保 ListDiff 异步计算完成且 RecyclerView 更新后再执行滚动
+                        pendingWidgetColor?.let { color ->
+                            val pos = list.indexOf(color)
+                            if (pos >= 0) {
+                                binding.recyclerView.scrollToPositionWithOffset(pos, 16.dp(this@MainActivity))
+                                pendingWidgetColor = null
+                            }
                         }
                     }
                 }
@@ -392,11 +400,13 @@ class MainActivity : AppCompatActivity() {
             setExpandedTitleColor(themeColor)
             setCollapsedTitleTextColor(themeColor)
         }
+        
         binding.topAppBar.apply {
-            // Toolbar NavigationIcon
             setNavigationIconTint(themeColor)
-            // 菜单——设置
-            menu.getItem(0).icon?.setTint(themeColor)
+            menu.forEach {
+                it.icon?.setTint(themeColor)
+            }
+            overflowIcon?.setTint(themeColor)
         }
         // FAB
         binding.fabSearch.apply {
@@ -410,14 +420,17 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        // Search Chips
+        // Loading
+        binding.loadingProgressBar.indeterminateTintList = ColorStateList.valueOf(themeColor)
+
+        // 搜索 Chips
         binding.searchInnerView.colorChipGroup.apply {
             forEach {
                 (it as Chip).updateThemeColor(themeColor)
             }
         }
 
-        // List Scrollbar
+        // 列表滚动条
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             binding.recyclerView.verticalScrollbarThumbDrawable?.setTint(themeColor)
         }

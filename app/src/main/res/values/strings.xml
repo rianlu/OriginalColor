@@ -29,7 +29,7 @@
     <string name="quick_filter">快速筛选</string>
     <string name="color_data_copyright" translatable="false">
         <p>Copyright © 2013 by <a href="http://dmyz.org/">Perchouli</a> Shanzhai to <a href="http://nipponcolors.com/">Nipponcolors</a>\n
-            参看: 色谱 中科院科技情报编委会名词室.科学出版社,1957. Adobe RGB / CMYK FOGRA39, Dot Gain 15% <img alt="Screenshot" src="http://zhongguose.com/img/share.jpg" width="1" /><a href="https://beian.miit.gov.cn/">沪ICP备17025116号-2</a>
+            参看: 色谱 中科院科技情报编委会名词室.科学出版社,1957. Adobe RGB / CMYK FOGRA39, Dot Gain 15% <a href="https://beian.miit.gov.cn/">沪ICP备17025116号-2</a>
         </p>
     </string>
     <string name="author_info" translatable="false">Designed by 禄眠</string>

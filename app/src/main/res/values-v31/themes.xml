@@ -2,15 +2,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     
     <style name="Theme.OriginalColor.Launcher" parent="Theme.OriginalColor">
-        <!-- Android 12+ Splash Screen API -->
+        <!-- Android 12+ 启动页 API -->
         <item name="android:windowSplashScreenBackground">@color/ic_launcher_background</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_branding</item>
         <item name="android:windowSplashScreenAnimationDuration">500</item>
         
-        <!-- Legacy compatibility & Fallback -->
+        <!-- 旧版本兼容与兜底 -->
         <item name="android:windowBackground">@drawable/launcher_background</item>
 
-        <!-- Keep System Bars Transparent -->
+        <!-- 保持系统栏透明 -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>

@@ -12,4 +12,6 @@ sealed class SettingItem {
         var isChecked: Boolean,
         val onCheckedChange: (Int, Boolean) -> Unit,
     ) : SettingItem()
+
+    object Footer : SettingItem()
 }
