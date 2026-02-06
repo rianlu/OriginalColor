@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     private val fabSearchStateFlow = MutableStateFlow(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_OriginalColor)
         super.onCreate(null)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -94,7 +95,6 @@ class MainActivity : AppCompatActivity() {
         }
         HapticFeedbackUtil.update(SpUtil.getHapticFeedbackState(this))
         adapter = ColorAdapter().also {
-            it.setItemAnimation(BaseQuickAdapter.AnimationType.AlphaIn)
             it.addOnItemChildClickListener(R.id.originalColorCard) { adapter, view, position ->
                 val originalColor = adapter.getItem(position) ?: return@addOnItemChildClickListener
                 val modalBottomSheet = ModalBottomSheet(originalColor)
@@ -138,8 +138,31 @@ class MainActivity : AppCompatActivity() {
         }
         lifecycleScope.launch {
             launch {
-                colorViewModel.flowList.collect { list ->
-                    binding.emptyListPlaceholder.isVisible = list.isEmpty()
+                kotlinx.coroutines.flow.combine(
+                    colorViewModel.flowList,
+                    colorViewModel.isLoading
+                ) { list: List<OriginalColor>, loading: Boolean ->
+                    Pair(list, loading)
+                }.collect { (list, loading) ->
+                    if (loading) {
+                        binding.loadingProgressBar.visibility = View.VISIBLE
+                        binding.loadingProgressBar.alpha = 1f
+                        binding.recyclerView.visibility = View.INVISIBLE
+                        binding.emptyListPlaceholder.visibility = View.INVISIBLE
+                    } else {
+                        binding.loadingProgressBar.animate()
+                            .alpha(0f)
+                            .setDuration(300)
+                            .withEndAction { binding.loadingProgressBar.visibility = View.GONE }
+                            .start()
+                        
+                        val targetView = if (list.isEmpty()) binding.emptyListPlaceholder else binding.recyclerView
+                        targetView.apply {
+                            alpha = 0f
+                            visibility = View.VISIBLE
+                            animate().alpha(1f).setDuration(300).start()
+                        }
+                    }
                     adapter.submitList(list)
                     // 冷启动时处理 Pending 的小组件跳转滚动
                     pendingWidgetColor?.let { color ->

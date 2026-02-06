@@ -17,6 +17,11 @@
 
     <style name="Theme.OriginalColor" parent="Base.Theme.OriginalColor" />
 
+    <style name="Theme.OriginalColor.Launcher" parent="Theme.OriginalColor">
+        <item name="android:windowBackground">@drawable/launcher_background</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="S">@color/ic_launcher_background</item>
+    </style>
+
     <style name="Widget.App.Chip" parent="Widget.Material3.Chip.Filter">
         <item name="chipBackgroundColor">@color/background_tint</item>
         <item name="chipCornerRadius">14dp</item>

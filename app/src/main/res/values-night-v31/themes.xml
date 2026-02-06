@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    
+    <style name="Theme.OriginalColor.Launcher" parent="Theme.OriginalColor">
+        <!-- Android 12+ Splash Screen API (Dark Mode) -->
+        <item name="android:windowSplashScreenBackground">@color/ic_launcher_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_branding</item>
+        <item name="android:windowSplashScreenAnimationDuration">500</item>
+        
+        <!-- Legacy compatibility -->
+        <item name="android:windowBackground">@drawable/launcher_background</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

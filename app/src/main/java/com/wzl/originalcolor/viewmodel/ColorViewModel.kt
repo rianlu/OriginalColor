@@ -3,10 +3,12 @@ package com.wzl.originalcolor.viewmodel
 import android.content.Context
 import android.content.res.Configuration
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.wzl.originalcolor.R
 import com.wzl.originalcolor.model.OriginalColor
 import com.wzl.originalcolor.utils.ColorData
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 /**
@@ -23,50 +25,49 @@ class ColorViewModel : ViewModel() {
     var flowList = _flowLst
         private set
 
-    fun initData(context: Context): List<OriginalColor> {
-        if (colorList.isNotEmpty()) {
-            return colorList
+    private val _isLoading = MutableStateFlow(true)
+    var isLoading = _isLoading
+        private set
+
+    fun initData(context: Context) {
+        if (_flowLst.value.isNotEmpty()) {
+            return
         }
-        colorList = ColorData.initData(context)
-        _flowLst.value = colorList
-        return colorList
+        viewModelScope.launch {
+            val startTime = System.currentTimeMillis()
+            val list = ColorData.initData(context)
+            colorList = list
+            _flowLst.value = list
+            val elapsedTime = System.currentTimeMillis() - startTime
+            if (elapsedTime < 500) {
+                kotlinx.coroutines.delay(500 - elapsedTime)
+            }
+            _isLoading.value = false
+        }
     }
 
     // 其他：淡肉色 棕色 粉色 褐色 赭 醉瓜肉 淡咖啡 金驼
     // 筛选
     fun filterByTag(context: Context, tag: String) {
-        val filterTag = if (COLOR_MAPS.containsValue(tag)) {
-            tag
-        } else {
-            COLOR_MAPS.getValue(tag)
-        }
-        _flowLst.value = if (filterTag == context
-            .getLocaleStringResource(R.string.chip_full)) {
-            colorList
-        } else if (filterTag != context
-            .getLocaleStringResource(R.string.chip_other)) {
-            colorList.filter { it.NAME.last().toString() == filterTag }
-        } else {
-            colorList.filter {
-                !COLOR_TAGS.contains(it.NAME.last().toString())
-            }
+        val filterTag = COLOR_MAPS[tag] ?: tag
+        val allText = context.getString(R.string.chip_full)
+        val otherText = context.getString(R.string.chip_other)
+        
+        val fullList = colorList.ifEmpty { _flowLst.value }
+        
+        _flowLst.value = when (filterTag) {
+            allText -> fullList
+            otherText -> fullList.filter { !COLOR_TAGS.contains(it.NAME.last().toString()) }
+            else -> fullList.filter { it.NAME.last().toString() == filterTag }
         }
     }
 
     // 搜索
     fun searchByKeyword(keyword: String) {
-        _flowLst.value = colorList.filter {
+        val fullList = colorList.ifEmpty { _flowLst.value }
+        _flowLst.value = fullList.filter {
             it.NAME.contains(keyword) || it.pinyin.contains(keyword)
         }
-    }
-
-    private fun Context.getLocaleStringResource(
-        resourceId: Int,
-        localeName: String = "zh-CN"
-    ): String {
-        val config = Configuration(resources.configuration)
-        config.setLocale(Locale(localeName))
-        return createConfigurationContext(config).getText(resourceId).toString()
     }
 }
 

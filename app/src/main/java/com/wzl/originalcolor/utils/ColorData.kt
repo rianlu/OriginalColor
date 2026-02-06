@@ -21,18 +21,27 @@ object ColorData {
 
     private var colorList: List<OriginalColor> = mutableListOf()
 
-    fun initData(context: Context): List<OriginalColor> {
+    suspend fun initData(context: Context): List<OriginalColor> = withContext(Dispatchers.IO) {
+        if (colorList.isEmpty()) {
+            loadAndSort(context)
+        }
+        colorList
+    }
+
+    private fun ensureLoaded(context: Context) {
+        if (colorList.isEmpty()) {
+            loadAndSort(context)
+        }
+    }
+
+    private fun loadAndSort(context: Context) {
         val chineseColorList = loadJson(context, "colors.json")
         val cfsColorList = loadJson(context, "cfs-color.json")
         val tempColorList = chineseColorList + cfsColorList
-        colorList = tempColorList.sortedWith<OriginalColor> { o1, o2 ->
-            if (rgbToHsv(o1.getRGBColor())[0] == rgbToHsv(o2.getRGBColor())[0]) {
-                floor(rgbToHsv(o2.getRGBColor())[1] - rgbToHsv(o1.getRGBColor())[1]).toInt()
-            } else {
-                floor(rgbToHsv(o2.getRGBColor())[0] - rgbToHsv(o1.getRGBColor())[0]).toInt()
-            }
-        }
-        return colorList
+        colorList = tempColorList.sortedWith(
+            compareByDescending<OriginalColor> { rgbToHsv(it.getRGBColor())[0] }
+                .thenByDescending { rgbToHsv(it.getRGBColor())[1] }
+        )
     }
 
     private fun loadJson(context: Context, jsonName: String): List<OriginalColor> {
@@ -55,9 +64,7 @@ object ColorData {
     }
 
     fun getRandomColor(context: Context): OriginalColor {
-        if (colorList.isEmpty()) {
-            initData(context)
-        }
+        ensureLoaded(context)
         val randomPosition = Random.nextInt(0, colorList.size)
         return colorList[randomPosition]
     }
@@ -78,9 +85,7 @@ object ColorData {
     }
 
     private fun findColor(context: Context, hex: String): OriginalColor? {
-        if (colorList.isEmpty()) {
-            initData(context)
-        }
+        ensureLoaded(context)
         return colorList.find { it.HEX == hex }
     }
 

@@ -66,7 +66,7 @@ class ColorDiffCallback : DiffUtil.ItemCallback<OriginalColor>() {
     }
 
     override fun areContentsTheSame(oldItem: OriginalColor, newItem: OriginalColor): Boolean {
-        return oldItem.HEX == newItem.HEX
+        return oldItem == newItem
     }
 
     override fun getChangePayload(oldItem: OriginalColor, newItem: OriginalColor): Any? {

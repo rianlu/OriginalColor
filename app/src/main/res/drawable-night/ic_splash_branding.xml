@@ -1,0 +1,77 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Removed Background Path -->
+
+    <!-- ======================== PATH 1 (evenOdd with Gradient Fill) ======================== -->
+    <!-- Path 1: Inner Gradient Fill -->
+    <path android:pathData="M36,32.5H40C41.93,32.5 43.5,34.07 43.5,36V71C43.5,74.59 40.59,77.5 38,77.5C35.41,77.5 32.5,74.59 32.5,71V36C32.5,34.13 33.97,32.6 35.82,32.5L36,32.5Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endX="38"
+                android:endY="79"
+                android:startX="38"
+                android:startY="31"
+                android:type="linear">
+                <item
+                    android:color="#00E46C4D"
+                    android:offset="0" /> <!-- paint0_linear_309_31 -->
+                <item
+                    android:color="#FFE46C4D"
+                    android:offset="0.838542" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Path 1: Black Border (1dp) using evenOdd (Adapted for Dark Mode) -->
+    <path
+        android:fillColor="#FF000000"
+        android:fillType="evenOdd"
+        android:pathData="M35,31.5H41C42.93,31.5 44.5,33.07 44.5,35V72C44.5,75.59 41.59,78.5 38,78.5C34.41,78.5 31.5,75.59 31.5,72V35C31.5,33.13 32.97,31.6 34.82,31.5L35,31.5Z M36,32.5H40C41.93,32.5 43.5,34.07 43.5,36V71C43.5,74.59 40.59,77.5 38,77.5C35.41,77.5 32.5,74.59 32.5,71V36C32.5,34.13 33.97,32.6 35.82,32.5L36,32.5Z" />
+
+
+    <!-- ======================== PATH 2 (evenOdd with Gradient Fill) ======================== -->
+    <path android:pathData="M61.76016,44.277881 C60.40798,43.055841 58.3306,43.085441 57.03457,44.331211 L34.33408,67.030041 C33.00311,68.350311 33.01452,70.441041 34.35334,71.767891 L38.37936,75.707991 C39.70423,77.020511 41.79469,76.999651 43.11187,75.666991 L65.81136,52.968161 C67.14133,51.647891 67.12992,49.557161 65.79109,48.230311 L61.76016,44.277881 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endX="35.9497"
+                android:endY="74.093"
+                android:startX="65.0929"
+                android:startY="44.9497"
+                android:type="linear">
+                <item
+                    android:color="#00E46C4D"
+                    android:offset="0" /> <!-- paint1_linear_309_31 -->
+                <item
+                    android:color="#FFE46C4D"
+                    android:offset="0.45" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Path 2: Black Border (1dp) (Adapted for Dark Mode) -->
+  <path
+      android:fillColor="#FF000000"
+      android:fillType="evenOdd"
+      android:pathData="M62.4181 43.1L66.8607 47.4246C68.2275 48.7915 68.2275 51.0075 66.8607 53.3744L44.3743 75.8608C42.0074 77.2276 40.7913 78.8 38.4245 76.8608L33.1819 71.6182C32.8151 70.2514 31.5151 67.0353 34.1819 65.6684L56.6683 43.182C58.9925 41.8578 61.1136 41.8167 62.4876 43.0584L62.6181 43.182Z M61.76016,44.277881 C60.40798,43.055841 58.3306,43.085441 57.03457,44.331211 L34.33408,67.030041 C33.00311,68.350311 33.01452,70.441041 34.35334,71.767891 L38.37936,75.707991 C39.70423,77.020511 41.79469,76.999651 43.11187,75.666991 L65.81136,52.968161 C67.14133,51.647891 67.12992,49.557161 65.79109,48.230311 L61.76016,44.277881 Z" />
+
+
+    <!-- ======================== PATH 3 (Original: Pure Fill with Stroke) ======================== -->
+    <path
+        android:fillColor="#E46C4D"
+        android:pathData="M31.5,72C31.5,68.4101 34.4101,65.5 38,65.5H75C76.933,65.5 78.5,67.067 78.5,69V75C78.5,76.933 76.933,78.5 75,78.5H38L37.665,78.4912C34.2309,78.3169 31.5,75.4775 31.5,72Z"
+        android:strokeWidth="1"
+        android:strokeColor="#000000" /> <!-- Black Stroke -->
+
+    <!-- Small Circle Path (Keep White? or Black?) -->
+    <!-- Assuming this is a decorative dot. White looks OK on black surface, or does it mean to be a hole? -->
+    <!-- Original was white on white background (invisible). If it's a hole, it should be black. -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M38,72m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+
+</vector>
