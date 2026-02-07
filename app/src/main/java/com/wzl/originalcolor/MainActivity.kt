@@ -94,6 +94,14 @@ class MainActivity : AppCompatActivity() {
             pendingWidgetColor = widgetColorFromIntent
         }
 
+        // 搜索 Shortcut (冷启动)
+        if (intent?.getBooleanExtra("shortcut_search", false) == true) {
+            // 使用 post 确保 View 初始化完成后再显示搜索框
+            binding.root.post {
+                binding.colorSearchView.show()
+            }
+        }
+
         val isPad = ScreenUtil.isPad(this@MainActivity)
         updateGlobalThemeColor(SpUtil.getLocalThemeColor(this), this)
         if (isPad) {
@@ -400,7 +408,7 @@ class MainActivity : AppCompatActivity() {
             setExpandedTitleColor(themeColor)
             setCollapsedTitleTextColor(themeColor)
         }
-        
+
         binding.topAppBar.apply {
             setNavigationIconTint(themeColor)
             menu.forEach {

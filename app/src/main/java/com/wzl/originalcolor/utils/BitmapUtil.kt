@@ -91,6 +91,10 @@ object BitmapUtil {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             intent.putExtra(Intent.EXTRA_STREAM, myImageFileUri)
             intent.type = "image/jpeg"
+            
+            // Add ClipData for preview in share sheet
+            intent.clipData = android.content.ClipData.newRawUri(null, myImageFileUri)
+            
             context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_to)))
         }
 
@@ -119,6 +123,10 @@ object BitmapUtil {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.putExtra(Intent.EXTRA_STREAM, myImageFileUri)
         intent.type = "image/png"
+        
+        // Add ClipData for preview in share sheet (Important for Android 10+ and some ROMs like MIUI)
+        intent.clipData = android.content.ClipData.newRawUri(null, myImageFileUri)
+        
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_to)))
     }
 }

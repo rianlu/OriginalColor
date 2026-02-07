@@ -15,8 +15,8 @@ android {
         applicationId "com.wzl.originalcolor"
         minSdk 26
         targetSdk 34
-        versionCode 6
-        versionName "2.0.3"
+        versionCode 7
+        versionName "2.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -102,4 +102,7 @@ dependencies {
 
     // Guides
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
+
+    // QR Code
+    implementation 'com.google.zxing:core:3.5.2'
 }

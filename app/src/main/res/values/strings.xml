@@ -43,10 +43,8 @@
     <string name="btn_back">返回</string>
     <string name="btn_share">分享</string>
 
-    <string name="share_app_content">
-        简洁的颜色查询工具，基于中国传统色：\n
-        https://sj.qq.com/appdetail/com.wzl.originalcolor
-    </string>
+    <string name="share_app_poster_slogan">简洁的颜色查询工具，基于中国传统色</string>
+    <string name="share_app_poster_scan_tip">扫码下载体验</string>
     <string name="share_to">分享到</string>
     <!--    <string name="donate_first_hint">作者很懒的~</string>-->
     <!--    <string name="donate_second_hint">你还要继续吗？</string>-->

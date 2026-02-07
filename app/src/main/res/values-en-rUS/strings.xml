@@ -19,7 +19,8 @@
     <string name="quick_filter">Quick filter</string>
     <string name="btn_back">Back</string>
     <string name="btn_share">Share</string>
-    <string name="share_app_content">Simple color query tool, based on traditional Chinese colors: \nhttps://sj.qq.com/appdetail/com.wzl.originalcolor</string>
+    <string name="share_app_poster_slogan">Simple color tool based on traditional Chinese colors</string>
+    <string name="share_app_poster_scan_tip">Scan to download</string>
     <string name="share_to">Share to</string>
     <string name="empty_data">No data</string>
     <string name="app_version">Version</string>

@@ -5,8 +5,16 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Outline
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.PorterDuffXfermode
+import android.graphics.RectF
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RoundRectShape
 import android.hardware.Sensor
@@ -20,6 +28,7 @@ import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
@@ -35,10 +44,15 @@ import com.wzl.originalcolor.utils.ColorExtensions.brightness
 import com.wzl.originalcolor.utils.ColorExtensions.isLight
 import com.wzl.originalcolor.utils.ColorExtensions.setAlpha
 import com.wzl.originalcolor.utils.PxExtensions.dp
+import com.wzl.originalcolor.utils.QRCodeUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.core.graphics.toColorInt
+import com.wzl.originalcolor.utils.BitmapExtensions
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * @Author lu
@@ -71,7 +85,7 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         binding.colorCardView.cameraDistance = distance * scale
 
         initSensorManager()
-        val cardColor = Color.parseColor(originalColor.HEX)
+        val cardColor = originalColor.HEX.toColorInt()
         val isLightColor = cardColor.isLight()
         val textColor = originalColor.getRGBColor()
             .brightness(if (isLightColor) -0.1F else 0.1F)
@@ -126,34 +140,91 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         }
 
         binding.shareColor.setOnClickListener {
-            val shareView = layoutInflater.inflate(R.layout.layout_share_color_card, null, false)
-            shareView.findViewById<TextView>(R.id.colorName).apply {
-                text = originalColor.NAME
-                setTextColor(cardColor.brightness(-0.1f))
-            }
-            shareView.findViewById<TextView>(R.id.colorHEX).text = originalColor.HEX
-            shareView.findViewById<TextView>(R.id.colorRGB).text = originalColor.RGB.arrayToString()
-            shareView.findViewById<TextView>(R.id.colorCMYK).text =
-                originalColor.CMYK.arrayToString()
-            shareView.findViewById<View>(R.id.colorDisplayView)
-                .setCornerBackground(16, cardColor)
-            val backgroundColor = ColorUtils.blendARGB(cardColor, Color.WHITE, 0.5F)
-            shareView.findViewById<ConstraintLayout>(R.id.shareCardView)
-                .setCornerBackground(16, backgroundColor)
+            // 1. Inflate 新的海报布局
+            val shareView = layoutInflater.inflate(R.layout.layout_share_poster, null, false)
 
-            val bg = Color.WHITE
-            val bitmap = BitmapUtil.viewToBitmapWithBackground(
-                shareView,
-                400.dp(requireContext()),
-                250.dp(requireContext()),
-                16.dp(requireContext()).toFloat(),
-                bg
-            )
-            // 兼容部分平台对 PNG 透明通道处理不一致，必要时可改用 JPEG 输出
-            BitmapUtil.shareBitmap(requireContext(), bitmap, originalColor.NAME)
-            // 或：BitmapUtil.shareBitmapJpeg(requireContext(), bitmap, originalColor.NAME)
+            // 2. 获取控件
+            val colorBlock = shareView.findViewById<View>(R.id.colorBlock)
+            val tvName = shareView.findViewById<TextView>(R.id.tvColorName)
+            val tvPinyin = shareView.findViewById<TextView>(R.id.tvColorPinyin)
+            val tvHex = shareView.findViewById<TextView>(R.id.tvHexVal)
+            val tvRgb = shareView.findViewById<TextView>(R.id.tvRgbVal)
+            val tvCmyk = shareView.findViewById<TextView>(R.id.tvCmykVal)
+            val tvDate = shareView.findViewById<TextView>(R.id.tvDate)
+            val ivQrCode = shareView.findViewById<ImageView>(R.id.ivQrCode)
+
+            // 3. 绑定颜色与智能文字变色
+            val cardColorInt = Color.parseColor(originalColor.HEX)
+            colorBlock.setBackgroundColor(cardColorInt)
+
+            // 计算亮度 (0.0-1.0)，超过 0.7 认为是亮色背景
+            val isLightBg = ColorUtils.calculateLuminance(cardColorInt) > 0.7
+
+            // 【修复点】：Color.parseColor 是方法，需要用括号 ("#333333")
+            val headerTextColor = if (isLightBg) Color.parseColor("#333333") else Color.WHITE
+
+            tvName.setTextColor(headerTextColor)
+            // 拼音稍微透明一点
+            tvPinyin.setTextColor(ColorUtils.setAlphaComponent(headerTextColor, 200))
+
+            // 如果背景是亮色，去掉文字阴影，否则看起来很脏
+            if (isLightBg) {
+                tvName.setShadowLayer(0f, 0f, 0f, 0)
+                tvPinyin.setShadowLayer(0f, 0f, 0f, 0)
+            }
+
+            // 4. 绑定文本数据
+            tvName.text = originalColor.NAME
+            tvPinyin.text = originalColor.pinyin
+
+            // 直接设置数据，不拼接，确保清晰
+            tvHex.text = originalColor.HEX
+            // 使用逗号加空格分隔，更易读
+            tvRgb.text = originalColor.RGB.arrayToString().replace(" | ", ", ")
+            tvCmyk.text = originalColor.CMYK.arrayToString().replace(" | ", ", ")
+
+            val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+            tvDate.text = dateFormat.format(java.util.Date())
+
+            // 5. 生成标准黑白二维码 (最清晰)
+            val downloadUrl = "https://sj.qq.com/appdetail/com.wzl.originalcolor"
+            // transparentBackground = false 表示生成白底黑码
+            val qrBitmap = QRCodeUtil.createQRCode(downloadUrl, 200, transparentBackground = false)
+            ivQrCode.setImageBitmap(qrBitmap)
+
+            // 6. 测量与布局 (设定为 1080宽的竖屏海报)
+            val targetWidth = 1080
+            val targetHeight = 1920 // 16:9 的竖屏标准比例
+
+            val widthSpec = View.MeasureSpec.makeMeasureSpec(targetWidth, View.MeasureSpec.EXACTLY)
+            val heightSpec = View.MeasureSpec.makeMeasureSpec(targetHeight, View.MeasureSpec.EXACTLY)
+
+            // 强制 View 按照 1080x1920 进行测量
+            shareView.measure(widthSpec, heightSpec)
+            // 强制布局到这个矩形区域内
+            shareView.layout(0, 0, shareView.measuredWidth, shareView.measuredHeight)
+
+            // 7. 绘图
+            val rawBitmap = Bitmap.createBitmap(shareView.measuredWidth, shareView.measuredHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(rawBitmap)
+            // 绘制纯白背景
+            canvas.drawColor(Color.WHITE)
+            shareView.draw(canvas)
+
+            // 8. 强烈建议：保留纸张纹理
+            val finalBitmap = BitmapExtensions.createPaperTextureCard(rawBitmap)
+
+            // 回收资源
+            rawBitmap.recycle()
+            if (qrBitmap != null && !qrBitmap.isRecycled) {
+                qrBitmap.recycle()
+            }
+
+            // 分享
+            BitmapUtil.shareBitmapJpeg(requireContext(), finalBitmap, "OriginalColor_${originalColor.NAME}")
             dismiss()
         }
+
         // 显示动画
         val layoutAnimation = AnimationUtils.loadLayoutAnimation(
             context, R.anim.layout_bottom_to_top
@@ -168,6 +239,26 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
                 interpolator = LinearInterpolator()
             }
         flowingAnimator?.start()
+    }
+
+    /**
+     * 将 Bitmap 中的黑色像素替换为指定颜色 (用于二维码染色)
+     * @param source 原始二维码图片 (通常是黑白的)
+     * @param color 目标颜色
+     */
+    private fun tintBitmap(source: Bitmap, color: Int): Bitmap {
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        // 使用 SRC_IN 模式：只在源图像非透明的地方绘制新颜色
+        // 对于标准二维码，黑色部分是非透明的，白色部分通常是透明或白色
+        // 如果你的二维码库生成的背景是白色，可能需要先去除白色背景，或者使用 ColorFilter
+        val filter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+        paint.colorFilter = filter
+
+        val output = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(output)
+        canvas.drawBitmap(source, 0f, 0f, paint)
+
+        return output
     }
 
     private fun initSensorManager() {
@@ -226,10 +317,11 @@ class ModalBottomSheet(private val originalColor: OriginalColor) : BottomSheetDi
         binding.colorCardView.rotationY = rotateY
 
         // Specular Highlight (The "Glaze" Light)
-        // Light moves significantly to simulate reflection surface change
+        // Light moves significantly        // Specular Highlight (The "Glaze" Light)
         val sheen = binding.colorCardView.findViewById<View>(R.id.colorSheen)
         sheen?.apply {
-            alpha = (0.2f + (Math.abs(rotateX) + Math.abs(rotateY)) / 45f).coerceIn(0f, 0.8f)
+            // Base alpha 0.0 + dynamic up to 0.4 (Subtle but visible)
+            alpha = (0.0f + (Math.abs(rotateX) + Math.abs(rotateY)) / 30f).coerceIn(0f, 0.4f)
             translationX = -rotateY * SHEEN_FACTOR
             translationY = -rotateX * SHEEN_FACTOR
         }

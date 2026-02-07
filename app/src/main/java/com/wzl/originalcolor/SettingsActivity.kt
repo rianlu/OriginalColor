@@ -6,14 +6,20 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Build
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wzl.originalcolor.adapter.SettingsAdapter
@@ -27,8 +33,12 @@ import com.wzl.originalcolor.utils.PxExtensions.dp
 import com.wzl.originalcolor.utils.RemoteViewsUtil
 import com.wzl.originalcolor.utils.SpUtil
 import com.wzl.originalcolor.utils.WorkManagerUtil
+import com.wzl.originalcolor.utils.BitmapUtil
+import com.wzl.originalcolor.utils.QRCodeUtil
 import com.wzl.originalcolor.widget.ColorWidgetProvider
 import java.io.File
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.toColorInt
 
 /**
  * @Author lu
@@ -51,7 +61,7 @@ class SettingsActivity : AppCompatActivity() {
         cachePath = File(externalCacheDir, "share_cards/")
         val originalColor = ColorData.getThemeColor(this)
         val themeColorHex = originalColor.HEX
-        val themeColor = Color.parseColor(themeColorHex)
+        val themeColor = themeColorHex.toColorInt()
 
         val settings = listOf(
             SettingItem.Text(getString(R.string.app_version), getAppVersion()) {
@@ -92,11 +102,81 @@ class SettingsActivity : AppCompatActivity() {
                 }
             },
             SettingItem.Text(getString(R.string.share_app)) {
-                startActivity(Intent.createChooser(Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_content))
-                    type = "text/plain"
-                }, getString(R.string.share_to)))
+                // Inflate 海报布局
+                val shareView = layoutInflater.inflate(R.layout.layout_share_app_poster, null, false)
+
+                // 获取控件
+                val logoCard = shareView.findViewById<androidx.cardview.widget.CardView>(R.id.logoCard)
+                val ivAppIcon = shareView.findViewById<ImageView>(R.id.ivAppIcon)
+                val ivQrCode = shareView.findViewById<ImageView>(R.id.ivQrCode)
+                val tvDate = shareView.findViewById<TextView>(R.id.tvDate)
+
+                // 设置卡片背景为 App 主题色
+                logoCard.setCardBackgroundColor(themeColor)
+
+                // 计算亮度 (0.0 是黑, 1.0 是白)
+                val luminance = ColorUtils.calculateLuminance(themeColor)
+                // 计算背景亮度 (0.0 - 1.0)，大于 0.7 算亮色（比如米色、淡黄）
+//                val isLightBg = ColorUtils.calculateLuminance(themeColor) > 0.9
+                val isExtremelyLight = luminance > 0.9
+                val iconTintColor: Int
+                    // 如果背景太亮，就把 Logo 染成黑色；否则染成白色
+                if (isExtremelyLight) {
+                    iconTintColor = Color.parseColor("#FF5722")
+                } else {
+                    // 其他所有情况（深色、中性色、普通的浅色），统统保持纯白
+                    // 这样能最大程度保留你喜欢的“白色镂空”质感
+                    iconTintColor = Color.WHITE
+                }
+
+                // 给我们新建的透明底 Logo 染色
+                ivAppIcon.setColorFilter(iconTintColor)
+
+                // 设置当天日期
+                val dateFormat = java.text.SimpleDateFormat("yyyy.MM.dd", java.util.Locale.getDefault())
+                tvDate.text = dateFormat.format(java.util.Date())
+
+                // 生成下载二维码
+                val downloadUrl = "https://sj.qq.com/appdetail/com.wzl.originalcolor"
+                val qrBitmap = QRCodeUtil.createQRCode(downloadUrl, 300, transparentBackground = true)
+                if (qrBitmap != null) {
+                    // 【智能染色逻辑】
+                    // 计算主题色亮度。如果太浅(>0.7)，二维码用深灰(#333333)；否则用主题色。
+                    // 这样既好看，又能保证能扫出来。
+                    val isLight = ColorUtils.calculateLuminance(themeColor) > 0.7
+                    val qrColor = if (isLight) Color.parseColor("#FF5722") else themeColor
+
+                    // 染色！
+                    val tintedQr = tintBitmap(qrBitmap, qrColor)
+                    ivQrCode.setImageBitmap(tintedQr)
+                }
+
+                // 测量与布局 (1080px 宽竖版海报)
+                val targetWidth = 1080
+                // 高度自适应
+                val widthSpec = View.MeasureSpec.makeMeasureSpec(targetWidth, View.MeasureSpec.EXACTLY)
+                val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+
+                shareView.measure(widthSpec, heightSpec)
+                shareView.layout(0, 0, shareView.measuredWidth, shareView.measuredHeight)
+
+                // 绘图 (绘制白底)
+                val rawBitmap = Bitmap.createBitmap(shareView.measuredWidth, shareView.measuredHeight, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(rawBitmap)
+                canvas.drawColor(Color.WHITE)
+                shareView.draw(canvas)
+
+                // 加上质感纹理 (重要！保持风格统一)
+                val finalBitmap = com.wzl.originalcolor.utils.BitmapExtensions.createPaperTextureCard(rawBitmap)
+
+                // 回收
+                rawBitmap.recycle()
+                if (qrBitmap != null && !qrBitmap.isRecycled) {
+                    qrBitmap.recycle()
+                }
+
+                // 分享
+                BitmapUtil.shareBitmap(this, finalBitmap, "OriginalColor_Share")
             },
             SettingItem.Text(getString(R.string.add_app_widget)) {
                 showAddWidgetDialog(this, themeColorHex)
@@ -130,6 +210,17 @@ class SettingsActivity : AppCompatActivity() {
 //            buttonView.addHapticFeedback()
 //            HapticFeedbackUtil.update(isChecked)
 //        }
+    }
+
+    private fun tintBitmap(source: Bitmap, color: Int): Bitmap {
+        val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
+        val filter = android.graphics.PorterDuffColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN)
+        paint.colorFilter = filter
+
+        val output = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(output)
+        canvas.drawBitmap(source, 0f, 0f, paint)
+        return output
     }
 
     private fun showAddWidgetDialog(context: Context, themeColorHex: String) {
